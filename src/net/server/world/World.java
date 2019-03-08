@@ -1927,6 +1927,8 @@ public class World {
     }
     
     public final void shutdown() {
+        System.out.println("Shutting down " + GameConstants.WORLD_NAMES[id] + " (" + id + ")...");
+        
         for (Channel ch : getChannels()) {
             ch.shutdown();
         }
@@ -1970,6 +1972,6 @@ public class World {
         players = null;
         
         clearWorldData();
-        System.out.println("Finished shutting down world " + id + "\r\n");
+        System.out.println("Finished shutting down\r\n");
     }
 }

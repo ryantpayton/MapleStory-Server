@@ -180,7 +180,7 @@ public final class Channel {
                 channelSchedulers[i] = new OverallScheduler();
             }
             
-            System.out.println("    Channel " + getId() + ": Listening on port " + port);
+            System.out.println("\tChannel " + getId() + ": Listening on port " + port);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -195,7 +195,7 @@ public final class Channel {
 
     public final void shutdown() {
         try {
-            System.out.println("Shutting down Channel " + channel + " on World " + world);
+            //System.out.println("Shutting down Channel " + channel + " on World " + world);
             
             closeAllMerchants();
             disconnectAwayPlayers();
@@ -220,10 +220,10 @@ public final class Channel {
             acceptor.unbind();
             
             finishedShutdown = true;
-            System.out.println("Successfully shut down Channel " + channel + " on World " + world + "\r\n");
+            System.out.println("\tChannel " + channel + ": Shutdown successfully");
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Error while shutting down Channel " + channel + " on World " + world + "\r\n" + e);
+            System.err.println("\tChannel " + channel + ": Shutdown unsuccessfully:\r\n" + e);
         }
     }
     

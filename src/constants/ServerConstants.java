@@ -45,6 +45,9 @@ public class ServerConstants {
     public static final int MAX_ACCOUNT_LOGIN_ATTEMPT = 15;     //After N tries on an account, login on that account gets disabled for a short period.
     public static final int LOGIN_ATTEMPT_DURATION = 120;       //Period in seconds the login attempt remains registered on the system.
     
+    //Server name
+    public static String NAME;
+
     //Ip Configuration
     public static String HOST;
 
@@ -294,6 +297,9 @@ public class ServerConstants {
         Properties p = new Properties();
         try {
             p.load(new FileInputStream("configuration.ini"));
+
+            //Server Name
+            ServerConstants.NAME = p.getProperty("NAME");
 
             //Server Host
             ServerConstants.HOST = p.getProperty("HOST");

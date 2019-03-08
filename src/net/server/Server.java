@@ -391,7 +391,7 @@ public class Server {
                 return -1;
             }
             
-            System.out.println("Starting world " + i);
+            System.out.println("Loading " + GameConstants.WORLD_NAMES[i] + " (" + i + ")...");
             int exprate = getWorldProperty(p, "exprate", i, ServerConstants.EXP_RATE);
             int mesorate = getWorldProperty(p, "mesorate", i, ServerConstants.MESO_RATE);
             int droprate = getWorldProperty(p, "droprate", i, ServerConstants.DROP_RATE);
@@ -420,7 +420,7 @@ public class Server {
             channels.add(i, channelInfo);
 
             world.setServerMessage(p.getProperty("servermessage" + i));
-            System.out.println("Finished loading world " + i + "\r\n");
+            System.out.println("Finished loading\r\n");
             
             return i;
         } finally {
@@ -866,7 +866,7 @@ public class Server {
             System.exit(0);
         }
 
-        System.out.println("HeavenMS v" + ServerConstants.VERSION + " starting up.\r\n");
+        System.out.println("Starting " + ServerConstants.NAME + " v" + ServerConstants.VERSION + "...\r\n");
         
         if(ServerConstants.SHUTDOWNHOOK)
             Runtime.getRuntime().addShutdownHook(new Thread(shutdown(false)));
@@ -918,17 +918,17 @@ public class Server {
         
         long timeToTake = System.currentTimeMillis();
         SkillFactory.loadAllSkills();
-        System.out.println("Skills loaded in " + ((System.currentTimeMillis() - timeToTake) / 1000.0) + " seconds");
+        System.out.println("Skills:\tLoaded in " + ((System.currentTimeMillis() - timeToTake) / 1000.0) + " seconds");
 
         timeToTake = System.currentTimeMillis();
         //MapleItemInformationProvider.getInstance().getAllItems(); //unused, rofl
 
         CashItemFactory.getSpecialCashItems();
-        System.out.println("Items loaded in " + ((System.currentTimeMillis() - timeToTake) / 1000.0) + " seconds");
+        System.out.println("Items:\tLoaded in " + ((System.currentTimeMillis() - timeToTake) / 1000.0) + " seconds");
         
 	timeToTake = System.currentTimeMillis();
 	MapleQuest.loadAllQuest();
-	System.out.println("Quest loaded in " + ((System.currentTimeMillis() - timeToTake) / 1000.0) + " seconds\r\n");
+	System.out.println("Quests:\tLoaded in " + ((System.currentTimeMillis() - timeToTake) / 1000.0) + " seconds\r\n");
 	
         NewYearCardRecord.startPendingNewYearCardRequests();
         
@@ -958,9 +958,9 @@ public class Server {
             ex.printStackTrace();
         }
         
-        System.out.println("Listening on port 8484\r\n\r\n");
+        System.out.println("Listening on port 8484\r\n");
 
-        System.out.println("HeavenMS is now online.\r\n");
+        System.out.println(ServerConstants.NAME + " is now online\r\n");
         online = true;
         
         MapleSkillbookInformationProvider.getInstance();
@@ -1718,7 +1718,7 @@ public class Server {
     }
     
     private synchronized void shutdownInternal(boolean restart) {
-        System.out.println((restart ? "Restarting" : "Shutting down") + " the server!\r\n");
+        System.out.println((restart ? "Restarting" : "Shutting down") + " " + ServerConstants.NAME + " v" + ServerConstants.VERSION + "...\r\n");
         if (getWorlds() == null) return;//already shutdown
         for (World w : getWorlds()) {
             w.shutdown();
@@ -1764,7 +1764,7 @@ public class Server {
         TimerManager.getInstance().purge();
         TimerManager.getInstance().stop();
 
-        System.out.println("Worlds + Channels are offline.");
+        System.out.println(ServerConstants.NAME + " is now offline");
         acceptor.unbind();
         acceptor = null;
         if (!restart) {  // shutdown hook deadlocks if System.exit() method is used within its body chores, thanks MIKE for pointing that out
