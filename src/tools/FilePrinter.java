@@ -3,6 +3,7 @@ package tools;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
@@ -10,8 +11,7 @@ import java.util.Calendar;
 
 public class FilePrinter {
 
-    public static final String 
-            AUTOBAN_WARNING = "game/AutoBanWarning.txt",    // log naming version by Vcoc
+    public static final String AUTOBAN_WARNING = "game/AutoBanWarning.txt",
             AUTOBAN_DC = "game/AutoBanDC.txt",
             ACCOUNT_STUCK = "players/AccountStuck.txt",
             COMMAND_GM = "reports/Gm.txt",
@@ -62,24 +62,47 @@ public class FilePrinter {
             DEADLOCK_LOCKS = "deadlocks/Locks.txt",
             DEADLOCK_STATE = "deadlocks/State.txt",
             DISPOSED_LOCKS = "deadlocks/Disposed.txt";
-    
+
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); //for file system purposes, it's nice to use yyyy-MM-dd
     private static final String FILE_PATH = "logs/" + sdf.format(Calendar.getInstance().getTime()) + "/"; // + sdf.format(Calendar.getInstance().getTime()) + "/"
     private static final String ERROR = "error/";
 
+    public static void printStackTrace(final Exception exceptionToLog) {
+        try {
+            File file = new File(FILE_PATH + "StackTrace.txt");
+
+            if (file.getParentFile() != null) {
+                file.getParentFile().mkdirs();
+            }
+
+            try (FileOutputStream outputFileStream = new FileOutputStream(file, true); PrintStream printStream = new PrintStream(outputFileStream)) {
+                exceptionToLog.printStackTrace(printStream);
+                outputFileStream.write("\n---------------------------------\r\n".getBytes());
+
+                System.out.println("StackTrace logged");
+            }
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
+        }
+    }
+
     public static void printError(final String name, final Throwable t) {
         String stringT = getString(t);
-        
-    	System.out.println("Error thrown: " + name);
-    	System.out.println(stringT);
+
+        System.out.println("Error thrown: " + name);
+        System.out.println(stringT);
         System.out.println();
+
         FileOutputStream out = null;
         final String file = FILE_PATH + ERROR + name;
+
         try {
             File outputFile = new File(file);
+
             if (outputFile.getParentFile() != null) {
                 outputFile.getParentFile().mkdirs();
             }
+
             out = new FileOutputStream(file, true);
             out.write(stringT.getBytes());
             out.write("\r\n---------------------------------\r\n".getBytes());
@@ -99,17 +122,21 @@ public class FilePrinter {
 
     public static void printError(final String name, final Throwable t, final String info) {
         String stringT = getString(t);
-        
-    	System.out.println("Error thrown: " + name);
-    	System.out.println(stringT);
+
+        System.out.println("Error thrown: " + name);
+        System.out.println(stringT);
         System.out.println();
+
         FileOutputStream out = null;
         final String file = FILE_PATH + ERROR + name;
+
         try {
             File outputFile = new File(file);
+
             if (outputFile.getParentFile() != null) {
                 outputFile.getParentFile().mkdirs();
             }
+
             out = new FileOutputStream(file, true);
             out.write((info + "\r\n").getBytes());
             out.write(stringT.getBytes());
@@ -129,16 +156,20 @@ public class FilePrinter {
     }
 
     public static void printError(final String name, final String s) {
-    	System.out.println("Error thrown: " + name);
-    	System.out.println(s);
+        System.out.println("Error thrown: " + name);
+        System.out.println(s);
         System.out.println();
+
         FileOutputStream out = null;
         final String file = FILE_PATH + ERROR + name;
+
         try {
             File outputFile = new File(file);
+
             if (outputFile.getParentFile() != null) {
                 outputFile.getParentFile().mkdirs();
             }
+
             out = new FileOutputStream(file, true);
             out.write(s.getBytes());
             //out.write("\r\n---------------------------------\r\n".getBytes());
@@ -161,21 +192,27 @@ public class FilePrinter {
     }
 
     public static void print(final String name, final String s, boolean line) {
-    	System.out.println("Log: " + name);
-    	System.out.println(s);
+        System.out.println("Log: " + name);
+        System.out.println(s);
         System.out.println();
+
         FileOutputStream out = null;
         String file = FILE_PATH + name;
+
         try {
             File outputFile = new File(file);
+
             if (outputFile.getParentFile() != null) {
                 outputFile.getParentFile().mkdirs();
             }
+
             out = new FileOutputStream(file, true);
             out.write(s.getBytes());
+
             if (line) {
                 out.write("\r\n---------------------------------\r\n".getBytes());
             }
+
             out.write("\r\n".getBytes());
         } catch (IOException ess) {
             ess.printStackTrace();
@@ -194,6 +231,7 @@ public class FilePrinter {
         String retValue = null;
         StringWriter sw = null;
         PrintWriter pw = null;
+
         try {
             sw = new StringWriter();
             pw = new PrintWriter(sw);
@@ -204,6 +242,7 @@ public class FilePrinter {
                 if (pw != null) {
                     pw.close();
                 }
+
                 if (sw != null) {
                     sw.close();
                 }
@@ -211,6 +250,7 @@ public class FilePrinter {
                 ignore.printStackTrace();
             }
         }
+
         return retValue;
     }
 }
