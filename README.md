@@ -1,3 +1,7 @@
+> All credits go to Ronan C. P. Lana, Nexon, Wizet, and the contributors of HeavenMS and subsequent parties.
+> I do not take credit for any files located herein unless specifically specified otherwise.
+> Forked from [HeavenMS](https://github.com/ronancpl/HeavenMS) in order to have a history of changes made herein.
+
 ### Required Files
  * Use Git or checkout with SVN using [this](https://github.com/ryantpayton/MapleStory.git) web URL
    * I will refer to this location, for the source, later as **{source}**
@@ -14,8 +18,8 @@
 
 ### Creating a New Database
  1. Open **HeidiSQL**
- 2. Connect to your MySQL server with the parameters used while setting up MariaDB.
- 3. Right-click your open connection in the top-left panel.
+ 2. Connect to your MySQL server with the parameters used while setting up MariaDB
+ 3. Right-click your open connection in the top-left panel
  4. Expand **Create new**
  5. Click **Database**
  6. Type **maplestory** in the **name** field
@@ -24,7 +28,7 @@
 
 ### Preparing the Database
  1. Open **MySQL Query Browser**
- 2. Connect to your MySQL server with the parameters used while setting up MariaDB.
+ 2. Connect to your MySQL server with the parameters used while setting up MariaDB
  3. Click **File**
  4. Click **Open Script ...**
  5. Navigate to **{source}\sql**
@@ -34,7 +38,7 @@
 
 ### Creating an Account
  1. Open **HeidiSQL**
- 2. Connect to your MySQL server with the parameters used while setting up MariaDB.
+ 2. Connect to your MySQL server with the parameters used while setting up MariaDB
  3. Expand the **maplestory** database
  4. Click on the **accounts** table
  5. Click on the **Data** tab
@@ -47,7 +51,7 @@
  1. Navigate into the **{source}** folder
  2. Open **configuration.ini**
  3. Change **HOST** to the IP Address you want your server to listen on
- 4. Change **URL**, **DB_USER**, **DB_PASS** to the parameters used while setting up MariaDB.
+ 4. Change **URL**, **DB_USER**, **DB_PASS** to the parameters used while setting up MariaDB
 
 ### Build the Server
  1. Open **NetBeans IDE 8.0**
@@ -98,7 +102,7 @@
 
 ### Changing a character to a GM character
  1. Open **HeidiSQL**
- 2. Connect to your MySQL server with the parameters used while setting up MariaDB.
+ 2. Connect to your MySQL server with the parameters used while setting up MariaDB
  3. Expand the **maplestory** database
  4. Click on the **characters** table
  5. Click on the **Data** tab
