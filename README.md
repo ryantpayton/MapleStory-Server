@@ -1,18 +1,18 @@
-#### Required Files
+### Required Files
  * Use Git or checkout with SVN using [this](https://github.com/ryantpayton/MapleStory.git) web URL
    * I will refer to this location, for the source, later as **{source}**
- * Downlaod and install the following from [here](https://drive.google.com/drive/folders/0BzDsHSr-0V4MYVJ0TWIxd05hYUk):
+ * Download and install the following from [here](https://drive.google.com/drive/folders/0BzDsHSr-0V4MYVJ0TWIxd05hYUk):
    * current_wz
    * jdk-7u79-windows-x64.exe
    * ManagerMsv83.exe
      * I will refer to this location, for the client, later as **{client}**
    * mysql-query-browser-1.1.20-win.msi
    * netbeans-8.0.2-javase-windows.exe
- * Download the latest localhost [here](https://hostr.co/tsYsQzzV6xT0)
+ * Download the latest [localhost](https://hostr.co/tsYsQzzV6xT0)
  * Download and install [mariadb-10.0.19-win32.msi](https://downloads.mariadb.org/mariadb/10.0.19/)
- * Downlaod [STREDIT](http://www.craftnet.nl/Downloads/)
+ * Download [STREDIT](http://www.craftnet.nl/Downloads/)
 
-#### Creating a New Database
+### Creating a New Database
  1. Open **HeidiSQL**
  2. Connect to your MySQL server with the parameters used while setting up MariaDB.
  3. Right-click your open connection in the top-left panel.
@@ -22,7 +22,7 @@
  7. Click **OK**
  8. Close **HeidiSQL**
 
-#### Preparing the Database
+### Preparing the Database
  1. Open **MySQL Query Browser**
  2. Connect to your MySQL server with the parameters used while setting up MariaDB.
  3. Click **File**
@@ -32,7 +32,7 @@
  7. Repeat steps 3 - 6 for **db_drops.sql**
  8. Close **MySQL Query Browser**
 
-#### Creating an Account
+### Creating an Account
  1. Open **HeidiSQL**
  2. Connect to your MySQL server with the parameters used while setting up MariaDB.
  3. Expand the **maplestory** database
@@ -43,34 +43,34 @@
  8. Type a password into the **password** column
  9. Close **HeidiSQL**
 
-#### Configure Your Server
+### Configure Your Server
  1. Navigate into the **{source}** folder
  2. Open **configuration.ini**
  3. Change **HOST** to the IP Address you want your server to listen on
  4. Change **URL**, **DB_USER**, **DB_PASS** to the parameters used while setting up MariaDB.
 
-#### Build the Server
+### Build the Server
  1. Open **NetBeans IDE 8.0**
  2. Click **File**
- 3. CLick **Open Project...**
+ 3. Click **Open Project...**
  4. Navigate to **{source}**
  5. Click on the **{source}** folder
  5. Click **Open Project**
 ```TODO: Need to get UI text from here```
  6. Click **Manage Platforms...**
- 7. CLick **Add platform...**
- 8. CLick **Next >**
+ 7. Click **Add platform...**
+ 8. Click **Next >**
  8. Navigate to **C:\Program Files\Java**
- 9. CLick on **jdk1.7.0_60**
- 10. CLick **Next >**
+ 9. Click on **jdk1.7.0_60**
+ 10. Click **Next >**
  11. Click **Finish**
  12. Right-click on the newly opened project
  13. Click **Clean and Build**
  14. Close **NetBeans IDE 8.0**
 
-#### Preparing the Client
+### Preparing the Client
  1. Navigate into the **{client}** folder
- 2. Delete the **HShield** fodler
+ 2. Delete the **HShield** folder
  3. Delete **ASPLnchr.exe**, **MapleStory.exe**, and **Patcher.exe**
  4. Copy all files from **current_wz** into **{client}**
 ```TODO: Need to get UI text from here```
@@ -90,13 +90,13 @@
  17. Click **File**
  18. Click **Save**
 
-#### Testing the Client
+### Testing the Client
  1. Navigate into the **{source}** folder
  2. Run **launch.bat**
  3. Navigate into the **{client}** folder
  4. Run **MapleStory.exe**
 
-#### Changing a character to a GM character
+### Changing a character to a GM character
  1. Open **HeidiSQL**
  2. Connect to your MySQL server with the parameters used while setting up MariaDB.
  3. Expand the **maplestory** database
@@ -113,13 +113,13 @@
     * 6: Admin
  8. Close **HeidiSQL**
 
-#### Port-forwarding the server
+### Port-forwarding the server
  1. Port-forward the following ports:
     * MapleStory LoginServer 8484
     * MapleStory Scania Ch 1 - 3 7575 - 7577
 
-#### WZ Editing
+### WZ Editing
 ```TODO: Coming soon```
 
-#### MobBookUpdate
+### MobBookUpdate
 ```TODO: Coming soon```
