@@ -1769,7 +1769,7 @@
       </imgdir>
       <imgdir name="18">
         <imgdir name="0">
-          <string name="text" value="(5)#ePirate#n\n#rLevel 10 and over.#k Once he criteria is met, meet #bKyrin# at Nautilus and learn what it&apos;s like to be a true pirate.  "/>
+          <string name="text" value="(5)#ePirate#n\n#rLevel 10 and over.#k Once he criteria is met, meet #bKyrin#k at Nautilus and learn what it&apos;s like to be a true pirate.  "/>
         </imgdir>
         <imgdir name="1">
           <string name="text" value="#bTip.#k It is strongly recommended that the job advancement takes place as soon as your character is at an eligible level. "/>

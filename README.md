@@ -12,6 +12,7 @@
      * I will refer to this location, for the client, later as **{client}**
    * mysql-query-browser-1.1.20-win.msi
    * netbeans-8.0.2-javase-windows.exe
+   * HaSuite-211.7z
  * Download the latest [localhost](https://hostr.co/tsYsQzzV6xT0)
  * Download and install [mariadb-10.0.19-win32.msi](https://downloads.mariadb.org/mariadb/10.0.19/)
  * Download [STREDIT](http://www.craftnet.nl/Downloads/)
@@ -123,7 +124,31 @@
     * MapleStory Scania Ch 1 - 3 7575 - 7577
 
 ### WZ Editing
-```TODO: Coming soon```
+I am going to go over how to WZ Edit with using Heena as an example. I want to change the dialogue when you talk to her. The dialogue is either in the scripts as a .js file or in the .wz files. In this example it is the .wz file. Procedure may differ based on different scenarios but hopefully this will get you an idea on how navigate the .wz file and the basics of editing.
+ 1. Extract **HaSuite-211.7z**
+ 2. Navigate into the extracted folder
+ 3. Open **HaRepacker.exe**
+ 4. Change **BMS\GMS\MSEA** to **GMS (old)** in the drop-down menu
+ 5. Click **File**
+ 6. Click **Open...**
+ 7. Navigate into the **{client}** folder
+ 8. Click **String.wz**
+ 9. Click **Open**
+ 10. Expand **String.wz**
+ 11. Double-click on **Npc.img**
+ 12. Find **2101**
+ 13. Expand **2101**
+ 14. Click **d0**
+ 15. Change **traveller** to **traveler**
+ 16. Click **Apply Changed Value**
+ * ```Make sure maplestory is closed before proceeding, otherwise you will receive an unhandled excepetion error and you will have to redo your changes```
+ 17. Click **File**
+ 18. Click **Save...**
+ 19. Click **Save** again
+ 20. Click **String.wz**
+ 21. Click **Save** for the last time
+ 22. Click **Yes**
+ 23. Close **HaRepacker.exe**
 
 ### MobBookUpdate
 ```TODO: Coming soon```

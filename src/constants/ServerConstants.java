@@ -33,13 +33,13 @@ public class ServerConstants {
     public static final boolean ENABLE_PIC = true;                          // Pick true/false to enable or disable Pic. Delete character required PIC available.
     public static final boolean ENABLE_PIN = false;                         // Pick true/false to enable or disable Pin.
 
-    public static final int BYPASS_PIC_EXPIRATION = 20;                     // Enables PIC bypass, which will remain active for that account by that client machine for N minutes. Set 0 to disable.
-    public static final int BYPASS_PIN_EXPIRATION = 15;                     // Enables PIN bypass, which will remain active for that account by that client machine for N minutes. Set 0 to disable.
+    public static final int BYPASS_PIC_EXPIRATION = 0;                      // Enables PIC bypass, which will remain active for that account by that client machine for N minutes. Set 0 to disable.
+    public static final int BYPASS_PIN_EXPIRATION = 0;                      // Enables PIN bypass, which will remain active for that account by that client machine for N minutes. Set 0 to disable.
 
     public static final boolean AUTOMATIC_REGISTER = true;                  // Automatically register players when they login with a nonexistent username.
     public static final boolean BCRYPT_MIGRATION = true;                    // Performs a migration from old SHA-1 and SHA-512 password to bcrypt.
     public static final boolean COLLECTIVE_CHARSLOT = false;                // Available character slots are contabilized globally rather than per world server.
-    public static final boolean DETERRED_MULTICLIENT = true;                // Enables multi-client and suspicious remote IP detection on the login system. Besides blocking logging in with several client sessions on the same machine, this also blocks suspicious login attempts for players that tries to login on an account using several diferent remote addresses.
+    public static final boolean DETERRED_MULTICLIENT = false;               // Enables multi-client and suspicious remote IP detection on the login system. Besides blocking logging in with several client sessions on the same machine, this also blocks suspicious login attempts for players that tries to login on an account using several diferent remote addresses.
 
     // Multiclient Coordinator Configuration
     public static final int MAX_ALLOWED_ACCOUNT_HWID = 4;                   // Allows up to N concurrent HWID's for an account. HWID's remains linked to an account longer the more times it's used to login.
@@ -72,7 +72,7 @@ public class ServerConstants {
     public static final boolean USE_FIXED_RATIO_HPMP_UPDATE = false;        // Enables the custom-builtin HPMP update based on the current pool to max pool ratio.
     public static final boolean USE_FAMILY_SYSTEM = false;
     public static final boolean USE_DUEY = true;
-    public static final boolean USE_RANDOMIZE_HPMP_GAIN = true;             // Enables randomizing on MaxHP/MaxMP gains and INT accounting for the MaxMP gain.
+    public static final boolean USE_RANDOMIZE_HPMP_GAIN = false;            // Enables randomizing on MaxHP/MaxMP gains and INT accounting for the MaxMP gain.
     public static final boolean USE_STORAGE_ITEM_SORT = true;               // Enables storage "Arrange Items" feature.
     public static final boolean USE_ITEM_SORT = true;                       // Enables inventory "Item Sort/Merge" feature.
     public static final boolean USE_ITEM_SORT_BY_NAME = false;              // Item sorting based on name rather than id.
@@ -148,7 +148,7 @@ public class ServerConstants {
     public static final int PARTY_EXPERIENCE_MOD = 1;                       // Change for event stuff.
 
     // Miscellaneous Configuration
-    public static String TIMEZONE = "UTC-05:00";
+    public static String TIMEZONE = "GMT-5";
     public static boolean USE_DISPLAY_NUMBERS_WITH_COMMA = true;            // Enforce comma on displayed strings (use this when USE_UNITPRICE_WITH_COMMA is active and you still want to display comma-separated values).
     public static boolean USE_UNITPRICE_WITH_COMMA = true;                  // Set this accordingly with the layout of the unitPrices on Item.wz XML's, whether it's using commas or dots to represent fractions.
     public static final byte MIN_UNDERLEVEL_TO_EXP_GAIN = 20;               // Characters are unable to get EXP from a mob if their level are under this threshold, only if "USE_ENFORCE_MOB_LEVEL_RANGE" is enabled. For bosses, this attribute is doubled.

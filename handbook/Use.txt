@@ -58,7 +58,7 @@
 2010004 - Lemon - Very sour.\nRecovers around 150 MP.
 2010005 - Honey - Fresh honey extracted from the beehive. \nRecovers around 30% of both HP and MP.
 2010006 - Pot of Honey - A pot full of fresh honey.\nRecovers 50% of both HP and MP.
-2010007 - Roger's Apple - A ripe, red apple.\nRecovers HP 30.nn#cTo eat Roger's Apple, simply double-click on it in your use inventory#.
+2010007 - Roger's Apple - A ripe, red apple.\nRecovers HP 30.\n\n#cTo eat Roger's Apple, simply double-click on it in your use inventory#.
 2010009 - Green Apple - Sour and crunchy green apple.\nRecovers MP +30.
 2011000 - Poisonous Mushroom - A very poisonous mushroom.
 2012000 - Drake's Blood - Drake's blood. nAttack +8 for 5 min.

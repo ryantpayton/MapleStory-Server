@@ -230,7 +230,7 @@
   </imgdir>
   <imgdir name="2010007">
     <string name="name" value="Roger&apos;s Apple"/>
-    <string name="desc" value="A ripe, red apple.\nRecovers HP 30.nn#cTo eat Roger&apos;s Apple, simply double-click on it in your use inventory#."/>
+    <string name="desc" value="A ripe, red apple.\nRecovers HP 30.\n\n#cTo eat Roger&apos;s Apple, simply double-click on it in your use inventory#."/>
   </imgdir>
   <imgdir name="2010009">
     <string name="name" value="Green Apple"/>
