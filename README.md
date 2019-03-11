@@ -7,12 +7,12 @@
    * I will refer to this location, for the source, later as **{source}**
  * Download and install the following from [here](https://drive.google.com/drive/folders/0BzDsHSr-0V4MYVJ0TWIxd05hYUk):
    * current_wz
+   * HaSuite-211.7z
    * jdk-7u79-windows-x64.exe
    * ManagerMsv83.exe
      * I will refer to this location, for the client, later as **{client}**
    * mysql-query-browser-1.1.20-win.msi
    * netbeans-8.0.2-javase-windows.exe
-   * HaSuite-211.7z
  * Download the latest [localhost](https://hostr.co/tsYsQzzV6xT0)
  * Download and install [mariadb-10.0.19-win32.msi](https://downloads.mariadb.org/mariadb/10.0.19/)
  * Download [STREDIT](http://www.craftnet.nl/Downloads/)
