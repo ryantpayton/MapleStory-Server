@@ -22,6 +22,7 @@ public class ServerConstants {
     public static final int WLDLIST_SIZE = 21;                              // Max possible worlds on the server.
     public static final int CHANNEL_SIZE = 20;                              // Max possible channels per world (which is 20, based on the channel list on login phase).
     public static final int CHANNEL_LOAD = 100;                             // Max players per channel (limit actually used to calculate the World server capacity).
+    public static final int CHANNEL_LOCKS = 20;                             // Total number of structure management locks each channel has.
 
     // Time in milliseconds
     public static final long RESPAWN_INTERVAL = 10 * 1000;                  // 10 seconds, 10,000 milliseconds
@@ -94,6 +95,7 @@ public class ServerConstants {
     public static final boolean USE_ENFORCE_ITEM_SUGGESTION = false;        // Forces the Owl of Minerva and the Cash Shop to always display the defined item array instead of those featured by the players.
     public static final boolean USE_ENFORCE_UNMERCHABLE_CASH = true;        // Forces players to not sell CASH items via merchants.
     public static final boolean USE_ENFORCE_UNMERCHABLE_PET = true;         // Forces players to not sell pets via merchants. (since non-named pets gets dirty name and other possible DB-related issues)
+    public static final boolean USE_ENFORCE_MERCHANT_SAVE = true;           // Forces automatic DB save on merchant owners, at every item movement on shop.
     public static final boolean USE_ENFORCE_MDOOR_POSITION = true;          // Forces mystic door to be spawned near spawnpoints.
     public static final boolean USE_SPAWN_LOOT_ON_ANIMATION = true;         // Makes loot appear some time after the mob has been killed (following the mob death animation, instead of instantly).
     public static final boolean USE_SPAWN_RELEVANT_LOOT = false;            // Forces to only spawn loots that are collectable by the player or any of their party members.
@@ -107,6 +109,7 @@ public class ServerConstants {
     public static final boolean USE_ENABLE_FULL_RESPAWN = true;             // At respawn task, always respawn missing mobs when they're available. Spawn count doesn't depend on how many players are currently there.
     public static final boolean USE_ENABLE_CHAT_LOG = false;                // Write in-game chat to log
     public static final boolean USE_REBIRTH_SYSTEM = false;                 // Flag to enable/disable rebirth system
+    public static final boolean USE_MAP_OWNERSHIP_SYSTEM = true;            // Flag to enable/disable map ownership system
 
     // Events/PQs Configuration
     public static final boolean USE_OLD_GMS_STYLED_PQ_NPCS = true;          // Enables PQ NPCs with similar behaviour to old GMS style, that skips info about the PQs and immediately tries to register the party in.
@@ -139,10 +142,11 @@ public class ServerConstants {
     public static final int DROP_RATE = 1;
     public static final int BOSS_DROP_RATE = 1;                             // NOTE: Boss drop rate OVERRIDES common drop rate, for bosses-only.
     public static final int QUEST_RATE = 1;                                 // Multiplier for Exp & Meso gains when completing a quest. Only available when USE_QUEST_RATE is true. Stacks with server Exp & Meso rates.
+    public static final int FISHING_RATE = 10;                              // Multiplier for success likelihood on meso thrown during fishing.
     public static final int TRAVEL_RATE = 1;                                // Means of transportation rides/departs using 1/N of the default time.
 
     public static final double EQUIP_EXP_RATE = 1.0;                        // Rate for equipment exp gain, grows linearly. Set 1.0 for default (about 100~200 same-level range mobs killed to pass equip from level 1 to 2).
-    public static final double PARTY_BONUS_EXP_RATE = 1.0;                  // Rate for the party exp reward.
+    public static final float PARTY_BONUS_EXP_RATE = 1.0f;                  // Rate for the party exp reward.
     public static final double PQ_BONUS_EXP_RATE = 0.5;                     // Rate for the PQ exp reward.
 
     public static final int PARTY_EXPERIENCE_MOD = 1;                       // Change for event stuff.
