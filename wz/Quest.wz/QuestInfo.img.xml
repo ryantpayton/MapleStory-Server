@@ -2049,8 +2049,8 @@
   </imgdir>
   <imgdir name="1036">
     <string name="name" value="Robin the Walking Encyclopedia"/>
-    <string name="0" value="#bRobin#k, who exudes confidence as he stands at Snail Hunting Ground 1, apparently knows a lot about job advancements and stats. I better go talk to him right now."/>
-    <string name="1" value="Robin told me that he&apos;ll teach me all I need to know about the stats, AP, and job advancement, then quiz me on it. I better learn some things about Ap first before continuing with the quest of Robin the Walking Encyclopedia."/>
+    <string name="0" value="#bRobin#k, who exudes confidence as he stands at Dangerous Forest, apparently knows a lot about job advancements and stats. I better go talk to him right now."/>
+    <string name="1" value="Robin told me that he&apos;ll teach me all I need to know about the stats, AP, and job advancement, then quiz me on it. I better learn some things about AP first before continuing with the quest of Robin the Walking Encyclopedia."/>
     <string name="2" value="I was able to pass Robin&apos;s quiz. Phew..."/>
     <int name="area" value="20"/>
   </imgdir>
@@ -2069,7 +2069,7 @@
     <string name="name" value="Help Hunt the Snails"/>
     <string name="parent" value="Sam&apos;s Request"/>
     <int name="order" value="1"/>
-    <string name="0" value="#bSam#k at the Snail Hunting Ground 1 apparently is looking for me. I better go see him right now..."/>
+    <string name="0" value="#bSam#k at the Dangerous Forest apparently is looking for me. I better go see him right now..."/>
     <string name="1" value="Sam asked me to take care of some snails to protect #bMaria#k, who ventured off town to collect some mushrooms. I better slay #r10 Snails#k and notify Maria that the field is clear.\n\nSnail #r#a10371##k"/>
     <string name="2" value="I told Maria I took care of the snails."/>
     <int name="area" value="20"/>

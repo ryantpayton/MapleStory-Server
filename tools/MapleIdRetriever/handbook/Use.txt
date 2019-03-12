@@ -53,7 +53,7 @@
 2002029 - Ridley's Scroll of Defense - Why wear cumbersome armor when Ridley can provide the same protection, weightlessly and more comfortably!  (Legal Disclaimer: Effect is temporary) [Gives +100 Overall Defense for 10 minutes.]
 2010000 - Apple - A red, ripe, and tasty apple.\nRecovers around 30 HP
 2010001 - Meat - A tasty-looking meat. .\nRecovers around 100 HP.
-2010002 - Egg - A nutritious egg.nImproves around 50 HP.
+2010002 - Egg - A nutritious egg.\nImproves around 50 HP.
 2010003 - Orange - A sweet, tasty orange.\nRecovers around 50 MP.
 2010004 - Lemon - Very sour.\nRecovers around 150 MP.
 2010005 - Honey - Fresh honey extracted from the beehive. \nRecovers around 30% of both HP and MP.

@@ -210,7 +210,7 @@
   </imgdir>
   <imgdir name="2010002">
     <string name="name" value="Egg"/>
-    <string name="desc" value="A nutritious egg.nImproves around 50 HP."/>
+    <string name="desc" value="A nutritious egg.\nImproves around 50 HP."/>
   </imgdir>
   <imgdir name="2010003">
     <string name="name" value="Orange"/>
