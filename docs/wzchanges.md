@@ -58,14 +58,14 @@ Yoona obviously didn't think it'd be all that when she left town, only to realiz
 
      * 1040 > 1
 Before:
-Lucas told me to head to **#bthe East Field of Amherst#k** and find #bMai#k, who trains by herself there. He wanted me to to receive Mai's trainings. He said the training will definitely come in handy, since she used to apply her trades at Victoria Island...  #k\n\n#y1041# #b (#u1041#)#k\n#y1042#  #b(#u1042#)#k\n#y1043#  #b(#u1043#)#k\n#y1044# #b(#u1044#)#k\n
+Lucas told me to head to **#bthe East Field of Amherst#k** and find #bMai#k, who trains by herself there. He wanted me **to to** receive Mai's trainings. He said the training will definitely come in handy, since she used to apply her **trades** at Victoria Island...  #k\n\n#y1041# #b (#u1041#)#k\n#y1042#  #b(#u1042#)#k\n#y1043#  #b(#u1043#)#k\n#y1044# #b(#u1044#)#k\n
 After:
-Lucas told me to head to the **#bEntrance to Adventurer Training Center#k** and find #bMai#k, who trains by herself there. He wanted me to receive Mai's trainings. He said the training will definitely come in handy, since she used to apply her trainings at Victoria Island...  #k\n\n#y1041# #b (#u1041#)#k\n#y1042#  #b(#u1042#)#k\n#y1043#  #b(#u1043#)#k\n#y1044# #b(#u1044#)#k\n
+Lucas told me to head to the **#bEntrance to Adventurer Training Center#k** and find #bMai#k, who trains by herself there. He wanted me **to** receive Mai's trainings. He said the training will definitely come in handy, since she used to apply her **trainings** at Victoria Island...  #k\n\n#y1041# #b (#u1041#)#k\n#y1042#  #b(#u1042#)#k\n#y1043#  #b(#u1043#)#k\n#y1044# #b(#u1044#)#k\n
 
      * 1041
        * 0
 Before:
-I was finally introduced to the person that'll train me through Lucas. Apparently, at **the #bEast Field of Amherst#k**, I can find #bMai#k training by herself. I better head East.
+I was finally introduced to the person that'll train me through Lucas. Apparently, at the **#bEast Field of Amherst#k**, I can find #bMai#k training by herself. I better head East.
 After:
 I was finally introduced to the person that'll train me through Lucas. Apparently, at the **#bEntrance to Adventurer Training Center#k**, I can find #bMai#k training by herself. I better head East.
 
