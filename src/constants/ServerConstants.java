@@ -69,7 +69,7 @@ public class ServerConstants {
     public static final boolean USE_MAXRANGE_ECHO_OF_HERO = true;
     public static final boolean USE_MTS = true;
     public static final boolean USE_AUTOHIDE_GM = true;                     // When enabled, GMs are automatically hidden when joining. Thanks to Steven Deblois (steven1152).
-    public static final boolean USE_BUYBACK_SYSTEM = true;                  // Enables the custom-builtin buyback system, to be used by dead players when clicking the MTS button.
+    public static final boolean USE_BUYBACK_SYSTEM = false;                 // Enables the custom-builtin buyback system, to be used by dead players when clicking the MTS button.
     public static final boolean USE_FIXED_RATIO_HPMP_UPDATE = false;        // Enables the custom-builtin HPMP update based on the current pool to max pool ratio.
     public static final boolean USE_FAMILY_SYSTEM = false;
     public static final boolean USE_DUEY = true;

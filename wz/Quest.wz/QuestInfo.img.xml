@@ -690,7 +690,7 @@
     <int name="order" value="2"/>
     <string name="0" value="Let&apos;s solve Rain&apos;s 2nd Quiz."/>
     <string name="1" value="What would be Rain&apos;s 2nd Quiz?"/>
-    <string name="2" value="I found out from Rain&apos;s Quiz that the wearable items can be equipped by double-clicking onthe item."/>
+    <string name="2" value="I found out from Rain&apos;s Quiz that the wearable items can be equipped by double-clicking on the item."/>
     <int name="area" value="20"/>
   </imgdir>
   <imgdir name="10100">
@@ -826,7 +826,7 @@
     <string name="parent" value="Rain&apos;s Maple Quiz"/>
     <int name="order" value="4"/>
     <string name="1" value="You can solve Rain&apos;s Quizzes if you carefully think about it."/>
-    <string name="2" value="Rain&apos;s 4th Quiz was finding the hot-key for picking up the items on the ground. That&apos;s easy~ it&apos;s &quot; Z&quot; of course~ But I found out I can also pick up items with the number key &quot;0&quot;..."/>
+    <string name="2" value="Rain&apos;s 4th Quiz was finding the hot-key for picking up the items on the ground. That&apos;s easy~ it&apos;s &quot;Z&quot; of course~ But I found out I can also pick up items with the number key &quot;0&quot;..."/>
     <int name="area" value="20"/>
     <string name="0" value="Let&apos;s solve #b#p12101##k&apos;s fourth Quiz."/>
   </imgdir>
@@ -844,7 +844,7 @@
     <string name="parent" value="Rain&apos;s Maple Quiz"/>
     <int name="order" value="6"/>
     <string name="1" value="Finally, it&apos;s the 6th Quiz. I&apos;m happy that my Maple knowledge can be used here like this. Why don&apos;t I go for the 6th Quiz? "/>
-    <string name="2" value="I learned that every time my level goes up, I get 5 Ability Points(AP) that I can upgrade my abilities. I can see the detail with the hot-key &quot;S&quot;."/>
+    <string name="2" value="I learned that every time my level goes up, I get 5 Ability Points (AP) that I can upgrade my abilities. I can see the detail with the hot-key &quot;S&quot;."/>
     <int name="area" value="20"/>
     <string name="0" value="Shall we solve #b#p12101##k&apos;s sixth Quiz?"/>
   </imgdir>
@@ -892,7 +892,7 @@
   <imgdir name="1020">
     <string name="name" value="Pio and the Recycling"/>
     <string name="0" value="I gathered up the recycling materials that Pio asked for, and he said he&apos;ll make me something nice in return..."/>
-    <string name="1" value="Pio promised to make me a nice relaxing chair with the recylicing materials I gathered up for him."/>
+    <string name="1" value="Pio promised to make me a nice relaxing chair with the recycling materials I gathered up for him."/>
     <string name="2" value="I helped Pio gather up the recycling materials, and he made a nice comfortable chair."/>
     <int name="area" value="20"/>
   </imgdir>
@@ -2109,7 +2109,7 @@
   <imgdir name="1039">
     <string name="name" value="Helping Out Yoona"/>
     <string name="0" value="Apparently #bYoona#k is in a bit of trouble after wandering outside Amherst."/>
-    <string name="1" value="Yoona obviously didn&apos;t think it&apos;d be all that when she left town, only to realize that there were lots of monsters outside. To help her return home, she asked me to take care of some#rBlue Snails#k and #rShrooms#k.\n\nBlue Snail #r#a10391##k  \nShroom #r#a10392##k"/>
+    <string name="1" value="Yoona obviously didn&apos;t think it&apos;d be all that when she left town, only to realize that there were lots of monsters outside. To help her return home, she asked me to take care of some #rBlue Snails#k and #rShrooms#k.\n\nBlue Snail #r#a10391##k  \nShroom #r#a10392##k"/>
     <string name="2" value="I told Yoona that I have taken care of some Blue Snails and Shrooms."/>
     <int name="area" value="20"/>
   </imgdir>
@@ -2200,7 +2200,7 @@
   <imgdir name="1040">
     <string name="name" value="Chief&apos;s Introduction"/>
     <string name="0" value="For taking care of the snails for the safety of Maria, #bLucas#k offered to introduce me to a person that&apos;ll train me. Who would that be? I better go see him."/>
-    <string name="1" value="Lucas told me to head to #bthe East Field of Amherst#k and find #bMai#k, who trains by herself there. He wanted me to to receive Mai&apos;s trainings. He said the training will definitely come in handy, since she used to apply her trades at Victoria Island...  #k\n\n#y1041# #b (#u1041#)#k\n#y1042#  #b(#u1042#)#k\n#y1043#  #b(#u1043#)#k\n#y1044# #b(#u1044#)#k\n"/>
+    <string name="1" value="Lucas told me to head to the #bEntrance to Adventurer Training Center#k and find #bMai#k, who trains by herself there. He wanted me to receive Mai&apos;s trainings. He said the training will definitely come in handy, since she used to apply her trainings at Victoria Island...  #k\n\n#y1041# #b (#u1041#)#k\n#y1042#  #b(#u1042#)#k\n#y1043#  #b(#u1043#)#k\n#y1044# #b(#u1044#)#k\n"/>
     <string name="2" value="I completed all of Mai&apos;s Trainings and returned to Lucas."/>
     <int name="area" value="20"/>
   </imgdir>
@@ -2231,8 +2231,8 @@
     <string name="name" value="Mai&apos;s First Training"/>
     <string name="parent" value="Mai&apos;s Training!"/>
     <int name="order" value="1"/>
-    <string name="0" value="I was finally introduced to the person that&apos;ll train me through Lucas. Apparently, at the #bEast Field of Amherst#k, I can find #bMai#k training by herself. I better head East."/>
-    <string name="1" value="Mai instructed me to work on my hunting by first working on easy monsters. She then instructed me to hunt #r5 Stumps#k and collect #b3 Tree Branches#k. \n\nStump #r#a10411##k #i4000003# #t4000003# #b#c4000003# #k/3"/>
+    <string name="0" value="I was finally introduced to the person that&apos;ll train me through Lucas. Apparently, at the #bEntrance to Adventurer Training Center#k, I can find #bMai#k training by herself. I better head East."/>
+    <string name="1" value="Mai instructed me to work on my hunting by first working on easy monsters. She then instructed me to hunt #r5 Stumps#k and collect #b3 Tree Branches#k. \n\nStump #r#a10411##k\n#i4000003# #t4000003# #b#c4000003# #k/ 3"/>
     <string name="2" value="I managed to hunt 5 Stumps, gathered all the branches, and reported them to Mai."/>
     <int name="area" value="20"/>
   </imgdir>
@@ -2371,7 +2371,7 @@
     <string name="name" value="Mai&apos;s Third Training"/>
     <string name="parent" value="Mai&apos;s Training!"/>
     <int name="order" value="3"/>
-    <string name="1" value="After coming back from hunting 5 Red Snails, Mai told me it&apos;s time for me to hunt even more powerful monsters. She then instructed me to hunt #r3 Slimes#k and bring back #b1 Squishy Liquid#k. \n\nSlime #r#a10431##k #i4000004# #t4000004# #b#c4000004# #k/1"/>
+    <string name="1" value="After coming back from hunting 5 Red Snails, Mai told me it&apos;s time for me to hunt even more powerful monsters. She then instructed me to hunt #r3 Slimes#k and bring back #b1 Squishy Liquid#k. \n\nSlime #r#a10431##k\n#i4000004# #t4000004# #b#c4000004# #k/ 1"/>
     <string name="2" value="After succesfully hunting Slimes, I obtained the Squishy Liquid and reported it to Mai."/>
     <int name="area" value="20"/>
   </imgdir>
@@ -2649,8 +2649,8 @@
   </imgdir>
   <imgdir name="1045">
     <string name="name" value="Bari&apos;s Test"/>
-    <string name="0" value="At the #bWest Field of Southperry#k, #bBari#k seems to be looking for me..."/>
-    <string name="1" value="Bari told me he had been requested by Mai to test my skills, and instructed me to defeat the most powerful monster in Maple Island, #rOrange Mushroom#k, and bring back #b1 Orange Mushroom Cap#k. \n\nOrange Mushroom #r#a10451##k n#i4000001# #t4000001# #b#c4000001# #k/1"/>
+    <string name="0" value="At the #bEntrance to Adventurer Training Center#k, #bBari#k seems to be looking for me..."/>
+    <string name="1" value="Bari told me he had been requested by Mai to test my skills, and instructed me to defeat the most powerful monster in Maple Island, #rOrange Mushroom#k, and bring back #b1 Orange Mushroom Cap#k. \n\nOrange Mushroom #r#a10451##k \n#i4000001# #t4000001# #b#c4000001# #k/ 1"/>
     <string name="2" value="I was able to defeat Orange Mushroom and bring back an Orange Mushroom Cap to Bari. This completed all of Mai&apos;s trainings. I think I&apos;m now ready to take on the Victoria Island."/>
     <int name="area" value="20"/>
   </imgdir>
@@ -4738,7 +4738,7 @@ You can now begin the &quot;Manji&apos;s Request&quot; quest.
   <imgdir name="2081">
     <string name="name" value="A Lesson on Job Advancement"/>
     <string name="0" value="What do I have to do to choose a job of my liking? I&apos;ll have to see Olaf of Lith Harbor."/>
-    <string name="1" value="I&apos;ll have to listen to #p1002101# carely as he describes the in&apos;s and out&apos;s of each and every job, because he&apos;ll quiz me on it afterwards."/>
+    <string name="1" value="I&apos;ll have to listen to #p1002101# carefully as he describes the in&apos;s and out&apos;s of each and every job, because he&apos;ll quiz me on it afterwards."/>
     <string name="2" value="I answered all the questions #p1002101# asked. I&apos;ll have to be at least on #blevel 10#k in order to become a #ba Warrior, a Thief, a Bowman, or a Pirate#k, and #blevel 8#k to become a #bMagician#k. Warrior-hopefuls will need to head over to Perion for job-advancement, Kerning City for thief-hopefuls, Ellinia for magician-hopefuls, and Henesys for Bowman-hopefuls."/>
     <int name="area" value="30"/>
   </imgdir>

@@ -52,7 +52,7 @@
 2002028 - T-1337 Supercharger - A charger for an advanced model cyborg. Looks like it would give quite a shock to the system! [Gives +25 Weapon Attack, +60 Magic Attack for 20 minutes.]
 2002029 - Ridley's Scroll of Defense - Why wear cumbersome armor when Ridley can provide the same protection, weightlessly and more comfortably!  (Legal Disclaimer: Effect is temporary) [Gives +100 Overall Defense for 10 minutes.]
 2010000 - Apple - A red, ripe, and tasty apple.\nRecovers around 30 HP
-2010001 - Meat - A tasty-looking meat. .\nRecovers around 100 HP.
+2010001 - Meat - A tasty-looking meat.\nRecovers around 100 HP.
 2010002 - Egg - A nutritious egg.\nImproves around 50 HP.
 2010003 - Orange - A sweet, tasty orange.\nRecovers around 50 MP.
 2010004 - Lemon - Very sour.\nRecovers around 150 MP.
