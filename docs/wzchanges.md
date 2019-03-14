@@ -1,9 +1,79 @@
 # WZ Changes
- * Item.wz > Etc > 0416.img > 04161001 > book > 18 > 0 > text
+ * Item.wz > Etc > 0416.img > 04161001 > book
+   * 2 > 0 > text
 Before:
-(5)#ePirate#n\n#rLevel 10 and over.#k Once he criteria is met, meet **#bKyrin#** at Nautilus and learn what it's like to be a true pirate.  
+Even the very best at **one** went through growing pains of being a beginner. Please train diligently to become a significant player yourself!
 After:
-(5)#ePirate#n\n#rLevel 10 and over.#k Once he criteria is met, meet **#bKyrin#k** at Nautilus and learn what it's like to be a true pirate.  
+Even the very best at **once** went through growing pains of being a beginner. Please train diligently to become a significant player yourself!
+
+   * 3 > 1 > text
+Before:
+#eLeft, Right Arrow#n : Move left and right\n#eUp, Down Arrow#n : Use rope or ladder to climb up and down, use portal\n#eAlt #n: Jump\n#e**Ctrl#n:** Attack\n#eZ or 0 in NumPad #n: Pick up items\n#e**E#n:**  Opening equipment window\n#e**I#n:** Opening item window\n#e**S#n:** Opening ability window\n#e**K#n:** Opening skill window
+After:
+#eLeft, Right Arrow#n : Move left and right\n#eUp, Down Arrow#n : Use rope or ladder to climb up and down, use portal\n#eAlt #n: Jump\n#e**Ctrl #n:** Attack\n#eZ or 0 in NumPad #n: Pick up items\n#e**E #n:**  Opening equipment window\n#e**I #n:** Opening item window\n#e**S #n:** Opening ability window\n#e**K #n:** Opening skill window
+
+   * 7 > 1 > text
+Before:
+#e/partyinfo#n : Check out the information on the party members currently signed up in the party.\n#e/makeparty#n : Create a new party.\n#e/leaveparty#n : Leave the current party.\n#e/partyexpell#n : Forcefully expells a party member.**#b(Party Leader)#k**
+After:
+#e/partyinfo#n : Check out the information on the party members currently signed up in the party.\n#e/makeparty#n : Create a new party.\n#e/leaveparty#n : Leave the current party.\n#e/partyexpell#n : Forcefully expells a party member. **#b(Party Leader)#k**
+
+   * 10 > 1 > text
+Before:
+(4)#e Cash Item#n\n  Items that can be purchased in Cash Shop. Primarily for appearance, as well as some visual effects.**#rCash Items cost money, and Cash can be charged to purchase these items.#k**
+After:
+(4)#e Cash Item#n\n  Items that can be purchased in Cash Shop. Primarily for appearance, as well as some visual effects. **#rCash Items cost money, and Cash can be charged to purchase these items.#k**
+
+   * 11
+     * 1 > text
+Before:
+(1) **#eAP(Ability Point)#n**\nPoints that can be allocated to one of these categories: **Strength(STR)**, **Dexterity(DEX)**, **Intelligence(INT)**, **Luck(LUK)**, MaxHP, MaxMP. Earns 5 points for every level up.
+After:
+(1) **#eAP (Ability Point)#n**\nPoints that can be allocated to one of these categories: **Strength (STR)**, **Dexterity (DEX)**, **Intelligence (INT)**, **Luck (LUK)**, MaxHP, MaxMP. Earns 5 points for every level up.
+
+     * 2 > text
+Before:
+**#bStrength(STR)#k** - Essential to carry around heavy armors and weapons. Most important to the warriors, for it directly determines the level of attack the warrior performs.
+After:
+**#bStrength (STR)#k** - Essential to carry around heavy armors and weapons. Most important to the warriors, for it directly determines the level of attack the warrior performs.
+
+   * 12
+     * 0 > text
+Before:
+**#bDexterity(DEX)#k** - The higher this stat, the higher the accuracy and avoidability. The number one factor in determining the level of attack for bowmen.
+After:
+**#bDexterity (DEX)#k** - The higher this stat, the higher the accuracy and avoidability. The number one factor in determining the level of attack for bowmen.
+
+     * 1 > text
+Before:
+**#bIntelligence(INT)#k** - The higher this stat, the better magic attacks get, as well as affecting the Max MP if AP is used in this stat. The number one factor in determining the mage&apos;s Magic Attack.
+After:
+**#bIntelligence (INT)#k** - The higher this stat, the better magic attacks get, as well as affecting the Max MP if AP is used in this stat. The number one factor in determining the mage&apos;s Magic Attack.
+
+   * 13
+     * 0 > text
+Before:
+**#bLuck(LUK)#k** - The higher this stat is, the higher the avoidability, as well as a decrease in the EXP suffered from dying during the game. The number one factor in determining the level of attack for thieves.
+After:
+**#bLuck (LUK)#k** - The higher this stat is, the higher the avoidability, as well as a decrease in the EXP suffered from dying during the game. The number one factor in determining the level of attack for thieves.
+
+     * 1 > text
+Before:
+(2) **#eSP(Skill Point)#n**\nThese points are earned after the 1st job advancement, and the points can be allocated towards skills available for the job. Each subsequent level-up will give 3 skill points.
+After:
+(2) **#eSP (Skill Point)#n**\nThese points are earned after the 1st job advancement, and the points can be allocated towards skills available for the job. Each subsequent level-up will give 3 skill points.
+
+   * 14 > 1 > text
+Before:
+All characters may make the job advancement after reaching a **certin** level. #r1st job advancement occurs at Level 8~10, 2nd at Level 30, and 3rd at Level 70#k
+After:
+All characters may make the job advancement after reaching a **certain** level. #r1st job advancement occurs at Level 8~10, 2nd at Level 30, and 3rd at Level 70#k
+
+   * 18 > 0 > text
+Before:
+**(5)#ePirate#n**\n#rLevel 10 and over.#k Once **he** criteria is met, meet **#bKyrin#** at Nautilus and learn what it's like to be a true pirate.  
+After:
+**(5) #ePirate#n**\n#rLevel 10 and over.#k Once **the** criteria is met, meet **#bKyrin#k** at Nautilus and learn what it's like to be a true pirate.  
 
  * Quest.wz
    * QuestInfo.img
@@ -30,6 +100,19 @@ Before:
 Pio promised to make me a nice relaxing chair with the **recylicing** materials I gathered up for him.
 After:
 Pio promised to make me a nice relaxing chair with the **recycling** materials I gathered up for him.
+
+     * 1035
+       * 0
+Before:
+At **the East entrance of the Mushroom Town**, there&apos;s a fella named #bTodd#k who can teach me how to hunt in the world of Maple. I better go see him right now.
+After:
+At **In a Small Forest**, there&apos;s a fella named #bTodd#k who can teach me how to hunt in the world of Maple. I better go see him right now.
+
+       * 1
+Before:
+Todd instructed me that the #bCtrl#k key allows me to hunt in a basic manner, and told me to hunt the Jr. Sentinel nearby. I should hunt #rJr. Sentinel#k, grab 1 piece of #bJr. Sentinel Shellpiece#k and bring them to #bPeter#k to learn hunting methods using skills. \n\nJr. Sentinel #r#a1##k   \n\n#i4031802# #t4031802# **#b#c4031802##k/1**
+After:
+Todd instructed me that the #bCtrl#k key allows me to hunt in a basic manner, and told me to hunt the Jr. Sentinel nearby. I should hunt #rJr. Sentinel#k, grab 1 piece of #bJr. Sentinel Shellpiece#k and bring them to #bPeter#k to learn hunting methods using skills. \n\nJr. Sentinel #r#a1##k   \n\n#i4031802# #t4031802# **#b#c4031802# #k/ 1**
 
      * 1036
        * 0

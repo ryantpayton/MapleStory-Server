@@ -1992,8 +1992,8 @@
   </imgdir>
   <imgdir name="1035">
     <string name="name" value="Todd&apos;s Hunting Method"/>
-    <string name="0" value="At the East entrance of the Mushroom Town, there&apos;s a fella named #bTodd#k who can teach me how to hunt in the world of Maple. I better go see him right now."/>
-    <string name="1" value="Todd instructed me that the #bCtrl#k key allows me to hunt in a basic manner, and told me to hunt the Jr. Sentinel nearby. I should hunt #rJr. Sentinel#k, grab 1 piece of #bJr. Sentinel Shellpiece#k and bring them to #bPeter#k to learn hunting methods using skills. \n\nJr. Sentinel #r#a1##k   \n\n#i4031802# #t4031802# #b#c4031802##k/1"/>
+    <string name="0" value="At In a Small Forest, there&apos;s a fella named #bTodd#k who can teach me how to hunt in the world of Maple. I better go see him right now."/>
+    <string name="1" value="Todd instructed me that the #bCtrl#k key allows me to hunt in a basic manner, and told me to hunt the Jr. Sentinel nearby. I should hunt #rJr. Sentinel#k, grab 1 piece of #bJr. Sentinel Shellpiece#k and bring them to #bPeter#k to learn hunting methods using skills. \n\nJr. Sentinel #r#a1##k   \n\n#i4031802# #t4031802# #b#c4031802# #k/ 1"/>
     <string name="2" value="I have learned that skills can be accessed through pressing #bK#k to open the skill window, and unlike regular attacks, skills can only be accessed by raising the skill level by assigning skill points. He also told me that it&apos;s much easier to use the skill by saving it on the Quick Slot. I better do that."/>
     <int name="area" value="20"/>
   </imgdir>
