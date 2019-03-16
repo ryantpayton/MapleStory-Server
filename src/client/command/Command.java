@@ -1,35 +1,26 @@
-/*
-    This file is part of the HeavenMS MapleStory Server, commands OdinMS-based
-    Copyleft (L) 2016 - 2018 RonanLana
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as
-    published by the Free Software Foundation version 3 as published by
-    the Free Software Foundation. You may not use, modify or distribute
-    this program under any other version of the GNU Affero General Public
-    License.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
-
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-/*
-   @Author: Arthur L - Refactored command content into modules
-*/
 package client.command;
 
 import client.MapleClient;
+import java.util.ArrayList;
+import java.util.List;
+import org.javatuples.Quartet;
 
 public abstract class Command {
 
-    protected String description;
+    protected String name = "";
+    protected String description = "";
+    protected List<String> otherNames = new ArrayList<>();
+    protected List<Quartet<String, Boolean, List<String>, String>> parameters = new ArrayList<>();
 
     public abstract void execute(MapleClient client, String[] params);
+
+    public String getName() {
+        return name;
+    }
+
+    protected void setName(String name) {
+        this.name = name;
+    }
 
     public String getDescription() {
         return description;
@@ -39,15 +30,33 @@ public abstract class Command {
         this.description = description;
     }
 
+    public List<String> getOtherNames() {
+        return otherNames;
+    }
+
+    protected void setOtherNames(List<String> otherNames) {
+        this.otherNames = otherNames;
+    }
+
+    public List<Quartet<String, Boolean, List<String>, String>> getParameters() {
+        return parameters;
+    }
+
+    protected void setParameters(List<Quartet<String, Boolean, List<String>, String>> parameters) {
+        this.parameters = parameters;
+    }
+
     protected String joinStringFrom(String arr[], int start) {
         StringBuilder builder = new StringBuilder();
+
         for (int i = start; i < arr.length; i++) {
             builder.append(arr[i]);
+
             if (i != arr.length - 1) {
                 builder.append(" ");
             }
         }
+
         return builder.toString();
     }
 }
-

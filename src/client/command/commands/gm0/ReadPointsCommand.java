@@ -5,20 +5,20 @@ import client.MapleClient;
 import client.command.Command;
 
 public class ReadPointsCommand extends Command {
+
     {
-        setDescription("");
+        setName("points");
     }
 
     @Override
     public void execute(MapleClient client, String[] params) {
-
         MapleCharacter player = client.getPlayer();
+
         if (params.length > 2) {
             player.yellowMessage("Syntax: @points (rp|vp|all)");
             return;
         } else if (params.length == 0) {
-            player.yellowMessage("RewardPoints: " + player.getRewardPoints() + " | "
-                    + "VotePoints: " + player.getClient().getVotePoints());
+            player.yellowMessage("RewardPoints: " + player.getRewardPoints() + " | " + "VotePoints: " + player.getClient().getVotePoints());
             return;
         }
 
@@ -30,8 +30,7 @@ public class ReadPointsCommand extends Command {
                 player.yellowMessage("VotePoints: " + player.getClient().getVotePoints());
                 break;
             default:
-                player.yellowMessage("RewardPoints: " + player.getRewardPoints() + " | "
-                        + "VotePoints: " + player.getClient().getVotePoints());
+                player.yellowMessage("RewardPoints: " + player.getRewardPoints() + " | " + "VotePoints: " + player.getClient().getVotePoints());
                 break;
         }
     }

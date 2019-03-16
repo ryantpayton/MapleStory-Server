@@ -11,7 +11,8 @@ import java.util.TimeZone;
 public class TimeCommand extends Command {
 
     {
-        setDescription("");
+        setName("time");
+        setDescription("Shows the current server time.");
     }
 
     @Override

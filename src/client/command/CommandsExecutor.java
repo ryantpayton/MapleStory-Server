@@ -1,28 +1,6 @@
-/*
-    This file is part of the HeavenMS MapleStory Server, commands OdinMS-based
-    Copyleft (L) 2016 - 2018 RonanLana
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as
-    published by the Free Software Foundation version 3 as published by
-    the Free Software Foundation. You may not use, modify or distribute
-    this program under any other version of the GNU Affero General Public
-    License.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
-
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-/*
-   @Author: Arthur L - Refactored command content into modules
-*/
 package client.command;
 
+import client.MapleClient;
 import client.command.commands.gm0.*;
 import client.command.commands.gm1.*;
 import client.command.commands.gm2.*;
@@ -30,43 +8,43 @@ import client.command.commands.gm3.*;
 import client.command.commands.gm4.*;
 import client.command.commands.gm5.*;
 import client.command.commands.gm6.*;
-
-import client.MapleClient;
-
-import tools.FilePrinter;
-import tools.Pair;
-
+import constants.ServerConstants;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
+import org.javatuples.Quartet;
+import tools.FilePrinter;
 
 public class CommandsExecutor {
-    
+
     public static CommandsExecutor instance = new CommandsExecutor();
-    
+
     public static CommandsExecutor getInstance() {
         return instance;
     }
-    
+
     private static final char USER_HEADING = '@';
     private static final char GM_HEADING = '!';
-    
-    public static boolean isCommand(MapleClient client, String content){
+
+    public static boolean isCommand(MapleClient client, String content) {
         char heading = content.charAt(0);
-        if (client.getPlayer().isGM()){
-            return heading == USER_HEADING || heading == GM_HEADING;
+
+        if (client.getPlayer().isGM()) {
+            return heading == GM_HEADING;
         }
+
         return heading == USER_HEADING;
     }
 
     private HashMap<String, RegisteredCommand> registeredCommands = new HashMap<>();
-    private Pair<List<String>, List<String>> levelCommandsCursor;
-    private List<Pair<List<String>, List<String>>> commandsNameDesc = new ArrayList<>();
+    private Quartet<List<String>, List<String>, List<List<String>>, List<List<Quartet<String, Boolean, List<String>, String>>>> levelCommandsCursor;
+    private List<Quartet<List<String>, List<String>, List<List<String>>, List<List<Quartet<String, Boolean, List<String>, String>>>>> commandsNameDesc = new ArrayList<>();
+    private String commandHeading;
 
-    private CommandsExecutor(){
+    private CommandsExecutor() {
         registerLv0Commands();
         registerLv1Commands();
         registerLv2Commands();
@@ -76,12 +54,16 @@ public class CommandsExecutor {
         registerLv6Commands();
     }
 
-    public List<Pair<List<String>, List<String>>> getGmCommands() {
+    public String getHeading() {
+        return commandHeading;
+    }
+
+    public List<Quartet<List<String>, List<String>, List<List<String>>, List<List<Quartet<String, Boolean, List<String>, String>>>>> getGmCommands() {
         return commandsNameDesc;
     }
-    
-    public void handle(MapleClient client, String message){
-            if (client.tryacquireClient()) {
+
+    public void handle(MapleClient client, String message) {
+        if (client.tryacquireClient()) {
             try {
                 handleInternal(client, message);
             } finally {
@@ -91,308 +73,348 @@ public class CommandsExecutor {
             client.getPlayer().dropMessage(5, "Try again in a while... Latest commands are currently being processed.");
         }
     }
-    
-    private void handleInternal(MapleClient client, String message){
+
+    private void handleInternal(MapleClient client, String message) {
+        final char heading = message.charAt(0);
         final String splitRegex = "[ ]";
         String[] splitedMessage = message.substring(1).split(splitRegex, 2);
+
         if (splitedMessage.length < 2) {
             splitedMessage = new String[]{splitedMessage[0], ""};
         }
-        
-        client.getPlayer().setLastCommandMessage(splitedMessage[1]);    // thanks Tochi & Nulliphite for noticing string messages being marshalled lowercase
+
+        client.getPlayer().setLastCommandMessage(splitedMessage[1]); // Thanks Tochi & Nulliphite for noticing string messages being marshalled lowercase
         final String commandName = splitedMessage[0].toLowerCase();
         final String[] lowercaseParams = splitedMessage[1].toLowerCase().split(splitRegex);
-        
+
         final RegisteredCommand command = registeredCommands.get(commandName);
-        if (command == null){
-            client.getPlayer().yellowMessage("Command '" + commandName + "' is not available. See @commands for a list of available commands.");
+
+        if (command == null) {
+            client.getPlayer().yellowMessage("Command '" + commandName + "' is not available. See " + heading + "commands for a list of available commands.");
             return;
         }
-        if (client.getPlayer().gmLevel() < command.getRank()){
+
+        if (client.getPlayer().gmLevel() < command.getRank()) {
             client.getPlayer().yellowMessage("You not have permission to use this command.");
             return;
         }
+
         String[] params;
+
         if (lowercaseParams.length > 0) {
-             params = Arrays.copyOfRange(lowercaseParams, 0, lowercaseParams.length);
+            params = Arrays.copyOfRange(lowercaseParams, 0, lowercaseParams.length);
         } else {
             params = new String[]{};
         }
+
         try {
+            commandHeading = String.valueOf(heading);
+
             Command commandInstance = command.getCommandClass().newInstance();
             commandInstance.execute(client, params);
             writeLog(client, message);
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+        } catch (InstantiationException | IllegalAccessException ex) {
+            ex.printStackTrace();
         }
-
     }
 
-    private void writeLog(MapleClient client, String command){
+    private void writeLog(MapleClient client, String command) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-        FilePrinter.print(FilePrinter.USED_COMMANDS, client.getPlayer().getName() + " used: " + command + " on "
-                + sdf.format(Calendar.getInstance().getTime()));
+
+        FilePrinter.print(FilePrinter.USED_COMMANDS, client.getPlayer().getName() + " used: " + command + " on " + sdf.format(Calendar.getInstance().getTime()));
     }
 
-    private void addCommandInfo(String name, Class<? extends Command> commandClass) {
+    private void addCommand(int rank, Class<? extends Command> commandClass) {
         try {
-            levelCommandsCursor.getRight().add(commandClass.newInstance().getDescription());
-            levelCommandsCursor.getLeft().add(name);
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
-    
-    private void addCommand(String[] syntaxs, Class<? extends Command> commandClass){
-        for (String syntax : syntaxs){
-            addCommand(syntax, 0, commandClass);
-        }
-    }
-    private void addCommand(String syntax, Class<? extends Command> commandClass){
-        //for (String syntax : syntaxs){
-            addCommand(syntax, 0, commandClass);
-        //}
-    }
+            Command command = commandClass.newInstance();
+            String commandName = command.getName().toLowerCase();
+            List<String> otherNames = command.getOtherNames();
 
-    private void addCommand(String[] surtaxes, int rank, Class<? extends Command> commandClass){
-        for (String syntax : surtaxes){
-            addCommand(syntax, rank, commandClass);
+            if (registerCommand(commandName, rank, commandClass)) {
+                levelCommandsCursor.getValue0().add(commandName);
+                levelCommandsCursor.getValue1().add(command.getDescription());
+                levelCommandsCursor.getValue2().add(otherNames);
+                levelCommandsCursor.getValue3().add(command.getParameters());
+
+                if (otherNames.size() > 0) {
+                    for (String otherName : otherNames) {
+                        registerCommand(otherName, rank, commandClass);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 
-    private void addCommand(String syntax, int rank,  Class<? extends Command> commandClass){
-        if (registeredCommands.containsKey(syntax.toLowerCase())){
-            System.out.println("Error on register command with name: " + syntax + ". Already exists.");
-            return;
-        }
-        
+    private boolean registerCommand(String name, int rank, Class<? extends Command> commandClass) {
         RegisteredCommand registeredCommand = new RegisteredCommand(commandClass, rank);
-        
-        String commandName = syntax.toLowerCase();
-        addCommandInfo(commandName, commandClass);
-        registeredCommands.put(commandName, registeredCommand);
+        String commandName = name.toLowerCase();
+
+        if (registeredCommands.containsKey(commandName)) {
+            System.out.println("Error on register command with name: " + commandName + ". Already exists.");
+            return false;
+        } else {
+            registeredCommands.put(commandName, registeredCommand);
+            return true;
+        }
     }
 
-    private void registerLv0Commands(){
-        levelCommandsCursor = new Pair<>((List<String>) new ArrayList<String>(), (List<String>) new ArrayList<String>());
-        
-        addCommand(new String[]{"help", "commands"}, HelpCommand.class);
-        addCommand("droplimit", DropLimitCommand.class);
-        addCommand("time", TimeCommand.class);
-        addCommand("credits", StaffCommand.class);
-        addCommand("buyback", BuyBackCommand.class);
-        addCommand("uptime", UptimeCommand.class);
-        addCommand("gacha", GachaCommand.class);
-        addCommand("dispose", DisposeCommand.class);
-        addCommand("equiplv",  EquipLvCommand.class);
-        addCommand("showrates", ShowRatesCommand.class);
-        addCommand("rates", RatesCommand.class);
-        addCommand("online", OnlineCommand.class);
-        addCommand("gm", GmCommand.class);
-        addCommand("reportbug", ReportBugCommand.class);
-        addCommand("points", ReadPointsCommand.class);
-        addCommand("joinevent", JoinEventCommand.class);
-        addCommand("leaveevent", LeaveEventCommand.class);
-        addCommand("ranks", RanksCommand.class);
-        addCommand("str", StatStrCommand.class);
-        addCommand("dex", StatDexCommand.class);
-        addCommand("int", StatIntCommand.class);
-        addCommand("luk", StatLukCommand.class);
-        addCommand("enableauth", EnableAuthCommand.class);
-        addCommand("toggleexp", ToggleExpCommand.class);
-        addCommand("mylawn", MapOwnerClaimCommand.class);
-        
+    private void registerLv0Commands() {
+        levelCommandsCursor = new Quartet<>(
+                (List<String>) new ArrayList<String>(),
+                (List<String>) new ArrayList<String>(),
+                (List<List<String>>) new ArrayList<List<String>>(),
+                (List<List<Quartet<String, Boolean, List<String>, String>>>) new ArrayList<List<Quartet<String, Boolean, List<String>, String>>>()
+        );
+
+        addCommand(0, HelpCommand.class);
+        addCommand(0, DropLimitCommand.class);
+
+        if (ServerConstants.USE_BUYBACK_SYSTEM) {
+            addCommand(0, BuyBackCommand.class);
+        }
+
+        addCommand(0, TimeCommand.class);
+        addCommand(0, UptimeCommand.class);
+        addCommand(0, GachaCommand.class);
+        addCommand(0, DisposeCommand.class);
+        addCommand(0, EquipLvCommand.class);
+        addCommand(0, ShowRatesCommand.class);
+        addCommand(0, RatesCommand.class);
+        addCommand(0, OnlineCommand.class);
+        addCommand(0, GmCommand.class);
+        addCommand(0, ReportBugCommand.class);
+        addCommand(0, JoinEventCommand.class);
+        addCommand(0, LeaveEventCommand.class);
+        addCommand(0, RanksCommand.class);
+        addCommand(0, StatStrCommand.class);
+        addCommand(0, StatDexCommand.class);
+        addCommand(0, StatIntCommand.class);
+        addCommand(0, StatLukCommand.class);
+
+        addCommand(0, ReadPointsCommand.class);
+        addCommand(0, EnableAuthCommand.class);
+        addCommand(0, ToggleExpCommand.class);
+        addCommand(0, MapOwnerClaimCommand.class);
+
         commandsNameDesc.add(levelCommandsCursor);
     }
-
 
     private void registerLv1Commands() {
-        levelCommandsCursor = new Pair<>((List<String>) new ArrayList<String>(), (List<String>) new ArrayList<String>());
-        
-        addCommand("bosshp", 1, BossHpCommand.class);
-        addCommand("mobhp", 1, MobHpCommand.class);
-        addCommand("whatdropsfrom", 1, WhatDropsFromCommand.class);
-        addCommand("whodrops", 1, WhoDropsCommand.class);
-        addCommand("buffme", 1, BuffMeCommand.class);
-        addCommand("goto", 1, GotoCommand.class);
-        
+        levelCommandsCursor = new Quartet<>(
+                (List<String>) new ArrayList<String>(),
+                (List<String>) new ArrayList<String>(),
+                (List<List<String>>) new ArrayList<List<String>>(),
+                (List<List<Quartet<String, Boolean, List<String>, String>>>) new ArrayList<List<Quartet<String, Boolean, List<String>, String>>>()
+        );
+
+        addCommand(1, BossHpCommand.class);
+        addCommand(1, MobHpCommand.class);
+        addCommand(1, WhatDropsFromCommand.class);
+        addCommand(1, WhoDropsCommand.class);
+        addCommand(1, BuffMeCommand.class);
+        addCommand(1, GotoCommand.class);
+
         commandsNameDesc.add(levelCommandsCursor);
     }
 
+    private void registerLv2Commands() {
+        levelCommandsCursor = new Quartet<>(
+                (List<String>) new ArrayList<String>(),
+                (List<String>) new ArrayList<String>(),
+                (List<List<String>>) new ArrayList<List<String>>(),
+                (List<List<Quartet<String, Boolean, List<String>, String>>>) new ArrayList<List<Quartet<String, Boolean, List<String>, String>>>()
+        );
 
-    private void registerLv2Commands(){
-        levelCommandsCursor = new Pair<>((List<String>) new ArrayList<String>(), (List<String>) new ArrayList<String>());
-        
-        addCommand("recharge", 2, RechargeCommand.class);
-        addCommand("whereami", 2, WhereaMiCommand.class);
-        addCommand("hide", 2, HideCommand.class);
-        addCommand("unhide", 2, UnHideCommand.class);
-        addCommand("sp", 2, SpCommand.class);
-        addCommand("ap", 2, ApCommand.class);
-        addCommand("empowerme", 2, EmpowerMeCommand.class);
-        addCommand("buffmap", 2, BuffMapCommand.class);
-        addCommand("buff", 2, BuffCommand.class);
-        addCommand("bomb", 2, BombCommand.class);
-        addCommand("dc", 2, DcCommand.class);
-        addCommand("cleardrops", 2, ClearDropsCommand.class);
-        addCommand("clearslot", 2, ClearSlotCommand.class);
-        addCommand("clearsavelocs", 2, ClearSavedLocationsCommand.class);
-        addCommand("warp", 2, WarpCommand.class);
-        addCommand(new String[]{"warphere", "summon"}, 2, SummonCommand.class);
-        addCommand(new String[]{"warpto", "reach", "follow"}, 2, ReachCommand.class);
-        addCommand("gmshop", 2, GmShopCommand.class);
-        addCommand("heal", 2, HealCommand.class);
-        addCommand("item", 2, ItemCommand.class);
-        addCommand("drop", 2, ItemDropCommand.class);
-        addCommand("level", 2, LevelCommand.class);
-        addCommand("levelpro", 2, LevelProCommand.class);
-        addCommand("setstat", 2, SetStatCommand.class);
-        addCommand("maxstat", 2, MaxStatCommand.class);
-        addCommand("maxskill", 2, MaxSkillCommand.class);
-        addCommand("resetskill", 2, ResetSkillCommand.class);
-        addCommand("search", 2, SearchCommand.class);
-        addCommand("jail", 2, JailCommand.class);
-        addCommand("unjail", 2, UnJailCommand.class);
-        addCommand("job", 2, JobCommand.class);
-        addCommand("unbug", 2, UnBugCommand.class);
-        
+        addCommand(2, RechargeCommand.class);
+        addCommand(2, WhereAmICommand.class);
+        addCommand(2, HideCommand.class);
+        addCommand(2, UnHideCommand.class);
+        addCommand(2, SpCommand.class);
+        addCommand(2, ApCommand.class);
+        addCommand(2, EmpowerMeCommand.class);
+        addCommand(2, BuffMapCommand.class);
+        addCommand(2, BuffCommand.class);
+        addCommand(2, BombCommand.class);
+        addCommand(2, DcCommand.class);
+        addCommand(2, ClearDropsCommand.class);
+        addCommand(2, ClearSlotCommand.class);
+        addCommand(2, WarpCommand.class);
+        addCommand(2, WarpToCommand.class);
+        addCommand(2, WarpHereCommand.class);
+        addCommand(2, GmShopCommand.class);
+        addCommand(2, HealCommand.class);
+        addCommand(2, ItemCommand.class);
+        addCommand(2, ItemDropCommand.class);
+
+        addCommand(2, ClearSavedLocationsCommand.class);
+        addCommand(2, LevelCommand.class);
+        addCommand(2, LevelProCommand.class);
+        addCommand(2, SetStatCommand.class);
+        addCommand(2, MaxStatCommand.class);
+        addCommand(2, MaxSkillCommand.class);
+        addCommand(2, ResetSkillCommand.class);
+        addCommand(2, SearchCommand.class);
+        addCommand(2, JailCommand.class);
+        addCommand(2, UnJailCommand.class);
+        addCommand(2, JobCommand.class);
+        addCommand(2, UnBugCommand.class);
+
         commandsNameDesc.add(levelCommandsCursor);
     }
 
     private void registerLv3Commands() {
-        levelCommandsCursor = new Pair<>((List<String>) new ArrayList<String>(), (List<String>) new ArrayList<String>());
-        
-        addCommand("debuff", 3, DebuffCommand.class);
-        addCommand("fly", 3, FlyCommand.class);
-        addCommand("spawn", 3, SpawnCommand.class);
-        addCommand("mutemap", 3, MuteMapCommand.class);
-        addCommand("checkdmg", 3, CheckDmgCommand.class);
-        addCommand("inmap", 3, InMapCommand.class);
-        addCommand("reloadevents", 3, ReloadEventsCommand.class);
-        addCommand("reloaddrops", 3, ReloadDropsCommand.class);
-        addCommand("reloadportals", 3, ReloadPortalsCommand.class);
-        addCommand("reloadmap", 3, ReloadMapCommand.class);
-        addCommand("reloadshops", 3, ReloadShopsCommand.class);
-        addCommand("hpmp", 3, HpMpCommand.class);
-        addCommand("maxhpmp", 3, MaxHpMpCommand.class);
-        addCommand("music", 3, MusicCommand.class);
-        addCommand("monitor", 3, MonitorCommand.class);
-        addCommand("monitors", 3, MonitorsCommand.class);
-        addCommand("ignore", 3, IgnoreCommand.class);
-        addCommand("ignored", 3, IgnoredCommand.class);
-        addCommand("pos", 3, PosCommand.class);
-        addCommand("togglecoupon", 3, ToggleCouponCommand.class);
-        addCommand("togglewhitechat", 3, ChatCommand.class);
-        addCommand("fame", 3, FameCommand.class);
-        addCommand("givenx", 3, GiveNxCommand.class);
-        addCommand("givevp", 3, GiveVpCommand.class);
-        addCommand("givems", 3, GiveMesosCommand.class);
-        addCommand("giverp", 3, GiveRpCommand.class);
-        addCommand("id", 3, IdCommand.class);
-        addCommand("expeds", 3, ExpedsCommand.class);
-        addCommand("kill", 3, KillCommand.class);
-        addCommand("seed", 3, SeedCommand.class);
-        addCommand("maxenergy", 3, MaxEnergyCommand.class);
-        addCommand("killall", 3, KillAllCommand.class);
-        addCommand("notice", 3, NoticeCommand.class);
-        addCommand("rip", 3, RipCommand.class);
-        addCommand("openportal", 3, OpenPortalCommand.class);
-        addCommand("closeportal", 3, ClosePortalCommand.class);
-        addCommand("pe", 3, PeCommand.class);
-        addCommand("startevent", 3, StartEventCommand.class);
-        addCommand("endevent", 3, EndEventCommand.class);
-        addCommand("startmapevent", 3, StartMapEventCommand.class);
-        addCommand("stopmapevent", 3, StopMapEventCommand.class);
-        addCommand("online2", 3, OnlineTwoCommand.class);
-        addCommand("warpsnowball", 3, WarpSnowBallCommand.class);
-        addCommand("ban", 3, BanCommand.class);
-        addCommand("unban", 3, UnBanCommand.class);
-        addCommand("healmap", 3, HealMapCommand.class);
-        addCommand("healperson", 3, HealPersonCommand.class);
-        addCommand("hurt", 3, HurtCommand.class);
-        addCommand("killmap", 3, KillMapCommand.class);
-        addCommand("night", 3, NightCommand.class);
-        addCommand("npc", 3, NpcCommand.class);
-        addCommand("face", 3, FaceCommand.class);
-        addCommand("hair", 3, HairCommand.class);
-        addCommand("startquest", 3, QuestStartCommand.class);
-        addCommand("completequest", 3, QuestCompleteCommand.class);
-        addCommand("resetquest", 3, QuestResetCommand.class);
-        addCommand("timer", 3, TimerCommand.class);
-        addCommand("timermap", 3, TimerMapCommand.class);
-        addCommand("timerall", 3, TimerAllCommand.class);
-        addCommand("warpmap", 3, WarpMapCommand.class);
-        addCommand("warparea", 3, WarpAreaCommand.class);
+        levelCommandsCursor = new Quartet<>(
+                (List<String>) new ArrayList<String>(),
+                (List<String>) new ArrayList<String>(),
+                (List<List<String>>) new ArrayList<List<String>>(),
+                (List<List<Quartet<String, Boolean, List<String>, String>>>) new ArrayList<List<Quartet<String, Boolean, List<String>, String>>>()
+        );
+
+        addCommand(3, DebuffCommand.class);
+        addCommand(3, FlyCommand.class);
+        addCommand(3, SpawnCommand.class);
+        addCommand(3, MuteMapCommand.class);
+        addCommand(3, CheckDmgCommand.class);
+        addCommand(3, InMapCommand.class);
+        addCommand(3, ReloadEventsCommand.class);
+        addCommand(3, ReloadDropsCommand.class);
+        addCommand(3, ReloadPortalsCommand.class);
+        addCommand(3, ReloadMapCommand.class);
+        addCommand(3, ReloadShopsCommand.class);
+        addCommand(3, HpMpCommand.class);
+        addCommand(3, MaxHpMpCommand.class);
+        addCommand(3, MusicCommand.class);
+        addCommand(3, MonitorCommand.class);
+        addCommand(3, MonitorsCommand.class);
+        addCommand(3, IgnoreCommand.class);
+        addCommand(3, IgnoredCommand.class);
+        addCommand(3, PosCommand.class);
+        addCommand(3, ToggleCouponCommand.class);
+        addCommand(3, ChatCommand.class);
+        addCommand(3, FameCommand.class);
+        addCommand(3, GiveNxCommand.class);
+        addCommand(3, GiveVpCommand.class);
+        addCommand(3, GiveMesosCommand.class);
+        addCommand(3, GiveRpCommand.class);
+        addCommand(3, IdCommand.class);
+        addCommand(3, ExpedsCommand.class);
+        addCommand(3, KillCommand.class);
+        addCommand(3, SeedCommand.class);
+        addCommand(3, MaxEnergyCommand.class);
+        addCommand(3, KillAllCommand.class);
+        addCommand(3, NoticeCommand.class);
+        addCommand(3, RipCommand.class);
+        addCommand(3, OpenPortalCommand.class);
+        addCommand(3, ClosePortalCommand.class);
+        addCommand(3, PeCommand.class);
+        addCommand(3, StartEventCommand.class);
+        addCommand(3, EndEventCommand.class);
+        addCommand(3, StartMapEventCommand.class);
+        addCommand(3, StopMapEventCommand.class);
+        addCommand(3, OnlineTwoCommand.class);
+        addCommand(3, WarpSnowBallCommand.class);
+        addCommand(3, BanCommand.class);
+        addCommand(3, UnBanCommand.class);
+        addCommand(3, HealMapCommand.class);
+        addCommand(3, HealPersonCommand.class);
+        addCommand(3, HurtCommand.class);
+        addCommand(3, KillMapCommand.class);
+        addCommand(3, NightCommand.class);
+        addCommand(3, NpcCommand.class);
+        addCommand(3, FaceCommand.class);
+        addCommand(3, HairCommand.class);
+        addCommand(3, QuestStartCommand.class);
+        addCommand(3, QuestCompleteCommand.class);
+        addCommand(3, QuestResetCommand.class);
+        addCommand(3, TimerCommand.class);
+        addCommand(3, TimerMapCommand.class);
+        addCommand(3, TimerAllCommand.class);
+        addCommand(3, WarpMapCommand.class);
+        addCommand(3, WarpAreaCommand.class);
 
         commandsNameDesc.add(levelCommandsCursor);
     }
 
-    private void registerLv4Commands(){
-        levelCommandsCursor = new Pair<>((List<String>) new ArrayList<String>(), (List<String>) new ArrayList<String>());
-        
-        addCommand("servermessage", 4, ServerMessageCommand.class);
-        addCommand("proitem", 4, ProItemCommand.class);
-        addCommand("seteqstat", 4, SetEqStatCommand.class);
-        addCommand("exprate", 4, ExpRateCommand.class);
-        addCommand("mesorate", 4, MesoRateCommand.class);
-        addCommand("droprate", 4, DropRateCommand.class);
-        addCommand("questrate", 4, QuestRateCommand.class);
-        addCommand("travelrate", 4, TravelRateCommand.class);
-        addCommand("fishrate", 4, FishingRateCommand.class);
-        addCommand("itemvac", 4, ItemVacCommand.class);
-        addCommand("forcevac", 4, ForceVacCommand.class);
-        addCommand("zakum", 4, ZakumCommand.class);
-        addCommand("horntail", 4, HorntailCommand.class);
-        addCommand("pinkbean", 4, PinkbeanCommand.class);
-        addCommand("pap", 4, PapCommand.class);
-        addCommand("pianus", 4, PianusCommand.class);
-        addCommand("cake", 4, CakeCommand.class);
-        addCommand("playernpc", 4, PlayerNpcCommand.class);
-        addCommand("playernpcremove", 4, PlayerNpcRemoveCommand.class);
-        addCommand("pnpc", 4, PnpcCommand.class);
-        addCommand("pnpcremove", 4, PnpcRemoveCommand.class);
-        addCommand("pmob", 4, PmobCommand.class);
-        addCommand("pmobremove", 4, PmobRemoveCommand.class);
-        
+    private void registerLv4Commands() {
+        levelCommandsCursor = new Quartet<>(
+                (List<String>) new ArrayList<String>(),
+                (List<String>) new ArrayList<String>(),
+                (List<List<String>>) new ArrayList<List<String>>(),
+                (List<List<Quartet<String, Boolean, List<String>, String>>>) new ArrayList<List<Quartet<String, Boolean, List<String>, String>>>()
+        );
+
+        addCommand(4, ServerMessageCommand.class);
+        addCommand(4, ProItemCommand.class);
+        addCommand(4, SetEqStatCommand.class);
+        addCommand(4, ExpRateCommand.class);
+        addCommand(4, MesoRateCommand.class);
+        addCommand(4, DropRateCommand.class);
+        addCommand(4, QuestRateCommand.class);
+        addCommand(4, TravelRateCommand.class);
+        addCommand(4, FishingRateCommand.class);
+        addCommand(4, ItemVacCommand.class);
+        addCommand(4, ForceVacCommand.class);
+        addCommand(4, ZakumCommand.class);
+        addCommand(4, HorntailCommand.class);
+        addCommand(4, PinkbeanCommand.class);
+        addCommand(4, PapCommand.class);
+        addCommand(4, PianusCommand.class);
+        addCommand(4, CakeCommand.class);
+        addCommand(4, PlayerNpcCommand.class);
+        addCommand(4, PlayerNpcRemoveCommand.class);
+        addCommand(4, PnpcCommand.class);
+        addCommand(4, PnpcRemoveCommand.class);
+        addCommand(4, PmobCommand.class);
+        addCommand(4, PmobRemoveCommand.class);
+
         commandsNameDesc.add(levelCommandsCursor);
     }
 
-    private void registerLv5Commands(){
-        levelCommandsCursor = new Pair<>((List<String>) new ArrayList<String>(), (List<String>) new ArrayList<String>());
-        
-        addCommand("debug", 5, DebugCommand.class);
-        addCommand("set", 5, SetCommand.class);
-        addCommand("showpackets", 5, ShowPacketsCommand.class);
-        addCommand("showmovelife", 5, ShowMoveLifeCommand.class);
-        addCommand("showsessions", 5, ShowSessionsCommand.class);
-        addCommand("iplist", 5, IpListCommand.class);
-        
+    private void registerLv5Commands() {
+        levelCommandsCursor = new Quartet<>(
+                (List<String>) new ArrayList<String>(),
+                (List<String>) new ArrayList<String>(),
+                (List<List<String>>) new ArrayList<List<String>>(),
+                (List<List<Quartet<String, Boolean, List<String>, String>>>) new ArrayList<List<Quartet<String, Boolean, List<String>, String>>>()
+        );
+
+        addCommand(5, DebugCommand.class);
+        addCommand(5, SetCommand.class);
+        addCommand(5, ShowPacketsCommand.class);
+        addCommand(5, ShowMoveLifeCommand.class);
+        addCommand(5, ShowSessionsCommand.class);
+        addCommand(5, IpListCommand.class);
+
         commandsNameDesc.add(levelCommandsCursor);
     }
 
-    private void registerLv6Commands(){
-        levelCommandsCursor = new Pair<>((List<String>) new ArrayList<String>(), (List<String>) new ArrayList<String>());
-        
-        addCommand("setgmlevel", 6, SetGmLevelCommand.class);
-        addCommand("warpworld", 6, WarpWorldCommand.class);
-        addCommand("saveall", 6, SaveAllCommand.class);
-        addCommand("dcall", 6, DCAllCommand.class);
-        addCommand("mapplayers", 6, MapPlayersCommand.class);
-        addCommand("getacc", 6, GetAccCommand.class);
-        addCommand("shutdown", 6, ShutdownCommand.class);
-        addCommand("clearquestcache", 6, ClearQuestCacheCommand.class);
-        addCommand("clearquest", 6, ClearQuestCommand.class);
-        addCommand("supplyratecoupon", 6, SupplyRateCouponCommand.class);
-        addCommand("spawnallpnpcs", 6, SpawnAllPNpcsCommand.class);
-        addCommand("eraseallpnpcs", 6, EraseAllPNpcsCommand.class);
-        addCommand("addchannel", 6, ServerAddChannelCommand.class);
-        addCommand("addworld", 6, ServerAddWorldCommand.class);
-        addCommand("removechannel", 6, ServerRemoveChannelCommand.class);
-        addCommand("removeworld", 6, ServerRemoveWorldCommand.class);
-        
+    private void registerLv6Commands() {
+        levelCommandsCursor = new Quartet<>(
+                (List<String>) new ArrayList<String>(),
+                (List<String>) new ArrayList<String>(),
+                (List<List<String>>) new ArrayList<List<String>>(),
+                (List<List<Quartet<String, Boolean, List<String>, String>>>) new ArrayList<List<Quartet<String, Boolean, List<String>, String>>>()
+        );
+
+        addCommand(6, SetGmLevelCommand.class);
+        addCommand(6, WarpWorldCommand.class);
+        addCommand(6, SaveAllCommand.class);
+        addCommand(6, DCAllCommand.class);
+        addCommand(6, MapPlayersCommand.class);
+        addCommand(6, GetAccCommand.class);
+        addCommand(6, ShutdownCommand.class);
+        addCommand(6, ClearQuestCacheCommand.class);
+        addCommand(6, ClearQuestCommand.class);
+        addCommand(6, SupplyRateCouponCommand.class);
+        addCommand(6, SpawnAllPNpcsCommand.class);
+        addCommand(6, EraseAllPNpcsCommand.class);
+        addCommand(6, ServerAddChannelCommand.class);
+        addCommand(6, ServerAddWorldCommand.class);
+        addCommand(6, ServerRemoveChannelCommand.class);
+        addCommand(6, ServerRemoveWorldCommand.class);
+
         commandsNameDesc.add(levelCommandsCursor);
     }
-
 }
