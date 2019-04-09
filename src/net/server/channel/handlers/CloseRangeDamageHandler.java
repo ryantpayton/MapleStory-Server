@@ -172,7 +172,7 @@ public final class CloseRangeDamageHandler extends AbstractDealDamageHandler {
                 }
             }
         }
-        if ((chr.getSkillLevel(SkillFactory.getSkill(NightWalker.VANISH)) > 0 || chr.getSkillLevel(SkillFactory.getSkill(Rogue.DARK_SIGHT)) > 0) && chr.getBuffedValue(MapleBuffStat.DARKSIGHT) != null) {// && chr.getBuffSource(MapleBuffStat.DARKSIGHT) != 9101004
+        if ((chr.getSkillLevel(SkillFactory.getSkill(NightWalker.VANISH)) > 0 || chr.getSkillLevel(SkillFactory.getSkill(Rogue.DARK_SIGHT)) > 0) && chr.getBuffedValue(MapleBuffStat.DARKSIGHT) != null) {// && chr.getBuffSource(MapleBuffStat.DARKSIGHT) != SuperGM.HIDE
             chr.cancelEffectFromBuffStat(MapleBuffStat.DARKSIGHT);
             chr.cancelBuffStats(MapleBuffStat.DARKSIGHT);
         } else if(chr.getSkillLevel(SkillFactory.getSkill(WindArcher.WIND_WALK)) > 0 && chr.getBuffedValue(MapleBuffStat.WIND_WALK) != null) {

@@ -181,7 +181,13 @@ public class MaplePacketCreator {
                         }
                 }
 
-                mplew.write(chr.getLevel()); // level
+                // level
+                if (ServerConstants.USE_CUSTOM_CLIENT) {
+                    mplew.writeShort(chr.getLevel());
+                } else {
+                    mplew.write(chr.getLevel());
+                }
+
                 mplew.writeShort(chr.getJob().getId()); // job
                 mplew.writeShort(chr.getStr()); // str
                 mplew.writeShort(chr.getDex()); // dex

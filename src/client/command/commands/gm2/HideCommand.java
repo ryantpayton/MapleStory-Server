@@ -4,6 +4,7 @@ import client.SkillFactory;
 import client.command.Command;
 import client.MapleClient;
 import client.MapleCharacter;
+import constants.skills.SuperGM;
 
 public class HideCommand extends Command {
 
@@ -15,6 +16,6 @@ public class HideCommand extends Command {
     @Override
     public void execute(MapleClient c, String[] params) {
         MapleCharacter player = c.getPlayer();
-        SkillFactory.getSkill(9101004).getEffect(SkillFactory.getSkill(9101004).getMaxLevel()).applyTo(player);
+        SkillFactory.getSkill(SuperGM.HIDE).getEffect(SkillFactory.getSkill(SuperGM.HIDE).getMaxLevel()).applyTo(player);
     }
 }

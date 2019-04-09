@@ -297,6 +297,7 @@ public class ServerConstants {
 
     // Cut-scenes for beginners
     public static final boolean SHOW_CUT_SCENES = false;                    // Whether to show cut-scnes when creating a character and taking the ship to Lith Harbor (Need to implement Lith Harbor cut-scene)
+    public static final boolean USE_CUSTOM_CLIENT = false;                  // Whether to use a custom client or not
 
     // Properties
     static {
