@@ -14,8 +14,9 @@
    * mysql-query-browser-1.1.20-win.msi
    * netbeans-8.0.2-javase-windows.exe
  * Download the latest [localhost](https://hostr.co/tsYsQzzV6xT0)
- * Download and install [mariadb-10.0.19-win32.msi](https://downloads.mariadb.org/mariadb/10.0.19/)
+ * Download and install [mariadb-10.0.38-win32.msi](https://downloads.mariadb.org/mariadb/10.0.38/)
  * Download [STREDIT](http://www.craftnet.nl/Downloads/)
+   * I will refer to this location, for the extracted STREDIT, later as **{edit}**
 
 ### Creating a New Database
  1. Open **HeidiSQL**
@@ -60,40 +61,61 @@
  3. Click **Open Project...**
  4. Navigate to **{source}**
  5. Click on the **{source}** folder
- 5. Click **Open Project**
-```TODO: Need to get UI text from here```
- 6. Click **Manage Platforms...**
- 7. Click **Add platform...**
- 8. Click **Next >**
- 8. Navigate to **C:\Program Files\Java**
- 9. Click on **jdk1.7.0_60**
- 10. Click **Next >**
- 11. Click **Finish**
- 12. Right-click on the newly opened project
- 13. Click **Clean and Build**
- 14. Close **NetBeans IDE 8.0**
+ 6. Click **Open Project**
+ 7. If prompted to resolve **Project Problems** continue with **Resolve Project Problems** otherwise continue with **No Project Problems**
+
+##### Resolve Project Problems
+ 1. Click **Resolve Problems...**
+ 2. Click **Resolve...**
+ 3. Complete steps 1 - 7 from **Combined Procedure**
+ 4. Click **Close** again
+ 5. Continue with **Continued Steps**
+
+##### No Project Problems
+ 1. Right-click on the newly opened project
+ 2. Click **Properties**
+ 3. Click **Libraries**
+ 4. Click **Manage Platforms...**
+ 5. Click **Add Platform...**
+ 6. Complete steps 1 - 7 from **Combined Procedure**
+ 7. Click **OK**
+ 8. Continue with **Continued Steps**
+
+##### Combined Procedure
+ 1. Check **Java Standard Edition**, if not already selected
+ 2. Click **Next >**
+ 3. Navigate to **C:\Program Files\Java**
+ 4. Click on **jdk1.7.0_XX**
+ 5. Click **Next >**
+ 6. Click **Finish**
+ 7. Click **Close**
+
+##### Continued Steps
+ 1. Right-click on the newly opened project
+ 2. Click **Clean and Build**
+ 3. Close **NetBeans IDE 8.0**
 
 ### Preparing the Client
  1. Navigate into the **{client}** folder
  2. Delete the **HShield** folder
  3. Delete **ASPLnchr.exe**, **MapleStory.exe**, and **Patcher.exe**
  4. Copy all files from **current_wz** into **{client}**
-```TODO: Need to get UI text from here```
- 5. Click **Yes** when prompted to replace files
+ 5. Click **Replace the files in the destionation**
  6. Copy **HeavenMS-localhost-WINDOW.exe** into the **{client}** folder
  7. Rename **HeavenMS-localhost-WINDOW.exe** to **MapleStory.exe**
- 7. Open **STREDIT.exe**
- 8. Click **File**
- 9. Expand **Open..**
- 10. Click **Open new file...**
- 11. Navigate into the **{client}** folder
- 12. Click **MapleStory.exe**
- 13. Click **Open**
- 14. Click **No**
- 15. Click **No** again
- 16. Change all three IPs listed in the **Configured IPs** section to match **HOST** in the **configuration.ini** file
- 17. Click **File**
- 18. Click **Save**
+ 8. Navigate into the **{edit}** folder
+ 8. Open **STREDIT.exe**
+ 9. Click **File**
+ 10. Expand **Open..**
+ 11. Click **Open new file...**
+ 12. Navigate into the **{client}** folder
+ 13. Click **MapleStory.exe**
+ 14. Click **Open**
+ 15. Click **No**
+ 16. Click **No** again
+ 17. Change all three IPs listed in the **Configured IPs** section to match **HOST** in the **configuration.ini** file
+ 18. Click **File**
+ 19. Click **Save**
 
 ### Testing the Client
  1. Navigate into the **{source}** folder
