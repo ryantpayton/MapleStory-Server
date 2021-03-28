@@ -1,124 +1,86 @@
-﻿/logs/**
-.idea/
-*.lnk
+# URL: https://github.com/github/gitignore/blob/master/Global/JetBrains.gitignore
+# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
+# Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
-# build files
+# User-specific stuff
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
 
-/build/
-/dist/
-/nbproject/
+# Generated files
+.idea/**/contentModel.xml
 
-/tools/MapleArrowFetcher/build/
-/tools/MapleArrowFetcher/dist/
-/tools/MapleArrowFetcher/nbproject/
+# Sensitive or high-churn files
+.idea/**/dataSources/
+.idea/**/dataSources.ids
+.idea/**/dataSources.local.xml
+.idea/**/sqlDataSources.xml
+.idea/**/dynamic.xml
+.idea/**/uiDesigner.xml
+.idea/**/dbnavigator.xml
 
-/tools/MapleBossHpBarFetcher/build/
-/tools/MapleBossHpBarFetcher/dist/
-/tools/MapleBossHpBarFetcher/nbproject/
+# Gradle
+.idea/**/gradle.xml
+.idea/**/libraries
 
-/tools/MapleCashCosmeticsChecker/build/
-/tools/MapleCashCosmeticsChecker/dist/
-/tools/MapleCashCosmeticsChecker/nbproject/
+# Gradle and Maven with auto-import
+# When using Gradle or Maven with auto-import, you should exclude module files,
+# since they will be recreated, and may cause churn.  Uncomment if using
+# auto-import.
+# .idea/artifacts
+# .idea/compiler.xml
+# .idea/jarRepositories.xml
+# .idea/modules.xml
+# .idea/*.iml
+# .idea/modules
+# *.iml
+# *.ipr
 
-/tools/MapleCashCosmeticsFetcher/build/
-/tools/MapleCashCosmeticsFetcher/dist/
-/tools/MapleCashCosmeticsFetcher/nbproject/
+# CMake
+cmake-build-*/
 
-/tools/MapleCashDropFetcher/build/
-/tools/MapleCashDropFetcher/dist/
-/tools/MapleCashDropFetcher/nbproject/
+# Mongo Explorer plugin
+.idea/**/mongoSettings.xml
 
-/tools/MapleCashVegaChecker/build/
-/tools/MapleCashVegaChecker/dist/
-/tools/MapleCashVegaChecker/nbproject/
+# File-based project format
+*.iws
 
-/tools/MapleCodeCouponGenerator/build/
-/tools/MapleCodeCouponGenerator/dist/
-/tools/MapleCodeCouponGenerator/nbproject/
+# IntelliJ
+out/
 
-/tools/MapleCouponInstaller/build/
-/tools/MapleCouponInstaller/dist/
-/tools/MapleCouponInstaller/nbproject/
+# mpeltonen/sbt-idea plugin
+.idea_modules/
 
-/tools/MapleDojoUpdater/build/
-/tools/MapleDojoUpdater/dist/
-/tools/MapleDojoUpdater/nbproject/
+# JIRA plugin
+atlassian-ide-plugin.xml
 
-/tools/MapleEmptyItemWzChecker/build/
-/tools/MapleEmptyItemWzChecker/dist/
-/tools/MapleEmptyItemWzChecker/nbproject/
+# Cursive Clojure plugin
+.idea/replstate.xml
 
-/tools/MapleEquipmentOmnileveler/build/
-/tools/MapleEquipmentOmnileveler/dist/
-/tools/MapleEquipmentOmnileveler/nbproject/
+# Crashlytics plugin (for Android Studio and IntelliJ)
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
 
-/tools/MapleEventMethodFiller/build/
-/tools/MapleEventMethodFiller/dist/
-/tools/MapleEventMethodFiller/nbproject/
+# Editor-based Rest Client
+.idea/httpRequests
 
-/tools/MapleIdRetriever/build/
-/tools/MapleIdRetriever/dist/
-/tools/MapleIdRetriever/nbproject/
+# Android studio 3.1+ serialized cache file
+.idea/caches/build_file_checksums.ser
 
-/tools/MapleInvalidItemIdFetcher/build/
-/tools/MapleInvalidItemIdFetcher/dist/
-/tools/MapleInvalidItemIdFetcher/nbproject/
+# URL: https://github.com/github/gitignore/blob/master/Global/NetBeans.gitignore
+**/nbproject/private/
+**/nbproject/Makefile-*.mk
+**/nbproject/Package-*.bash
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
 
-/tools/MapleInvalidItemWithNoNameFetcher/build/
-/tools/MapleInvalidItemWithNoNameFetcher/dist/
-/tools/MapleInvalidItemWithNoNameFetcher/nbproject/
-
-/tools/MapleMapInfoRetriever/build/
-/tools/MapleMapInfoRetriever/dist/
-/tools/MapleMapInfoRetriever/nbproject/
-
-/tools/MapleMesoFetcher/build/
-/tools/MapleMesoFetcher/dist/
-/tools/MapleMesoFetcher/nbproject/
-
-/tools/MapleMobBookIndexer/build/
-/tools/MapleMobBookIndexer/dist/
-/tools/MapleMobBookIndexer/nbproject/
-
-/tools/MapleMobBookUpdate/build/
-/tools/MapleMobBookUpdate/dist/
-/tools/MapleMobBookUpdate/nbproject/
-
-/tools/MapleQuestItemCountFetcher/build/
-/tools/MapleQuestItemCountFetcher/dist/
-/tools/MapleQuestItemCountFetcher/nbproject/
-
-/tools/MapleQuestItemFetcher/build/
-/tools/MapleQuestItemFetcher/dist/
-/tools/MapleQuestItemFetcher/nbproject/
-
-/tools/MapleQuestlineFetcher/build/
-/tools/MapleQuestlineFetcher/dist/
-/tools/MapleQuestlineFetcher/nbproject/
-
-/tools/MapleQuestMesoFetcher/build/
-/tools/MapleQuestMesoFetcher/dist/
-/tools/MapleQuestMesoFetcher/nbproject/
-
-/tools/MapleReactorDropFetcher/build/
-/tools/MapleReactorDropFetcher/dist/
-/tools/MapleReactorDropFetcher/nbproject/
-
-/tools/MapleSkillMakerFetcher/build/
-/tools/MapleSkillMakerFetcher/dist/
-/tools/MapleSkillMakerFetcher/nbproject/
-
-/tools/MapleSkillMakerReagentIndexer/build/
-/tools/MapleSkillMakerReagentIndexer/dist/
-/tools/MapleSkillMakerReagentIndexer/nbproject/
-
-/tools/MapleWorldmapChecker/build/
-/tools/MapleWorldmapChecker/dist/
-/tools/MapleWorldmapChecker/nbproject/
-
-/tools/SpiderDropFetcher/build/
-/tools/SpiderDropFetcher/dist/
-/tools/SpiderDropFetcher/nbproject/
-
-/out
-*.onetoc2
+# Custom
+logs/
+wz*/

@@ -1,8 +1,8 @@
 package client.command.commands.gm2;
 
-import client.command.Command;
-import client.MapleClient;
 import client.MapleCharacter;
+import client.MapleClient;
+import client.command.Command;
 import provider.MapleData;
 import provider.MapleDataProvider;
 import provider.MapleDataProviderFactory;
@@ -10,13 +10,13 @@ import provider.MapleDataTool;
 import server.MapleItemInformationProvider;
 import server.quest.MapleQuest;
 import tools.Pair;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class SearchCommand extends Command {
-
     private static MapleData npcStringData;
     private static MapleData mobStringData;
     private static MapleData skillStringData;
@@ -26,7 +26,7 @@ public class SearchCommand extends Command {
         setName("search");
 
         setOtherNames(
-                (List<String>) new ArrayList<>(Arrays.asList("lookup"))
+                (List<String>) new ArrayList<>(Arrays.asList("lookup", "find"))
         );
 
         MapleDataProvider dataProvider = MapleDataProviderFactory.getDataProvider(new File("wz/String.wz"));
@@ -48,7 +48,7 @@ public class SearchCommand extends Command {
         StringBuilder sb = new StringBuilder();
 
         String search = joinStringFrom(params, 1);
-        long start = System.currentTimeMillis(); // For the lulz
+        long start = System.currentTimeMillis();
         MapleData data = null;
 
         if (!params[0].equalsIgnoreCase("ITEM")) {
@@ -77,9 +77,8 @@ public class SearchCommand extends Command {
                     for (MapleData searchData : data.getChildren()) {
                         name = MapleDataTool.getString(searchData.getChildByPath("name"), "NO-NAME");
 
-                        if (name.toLowerCase().contains(search.toLowerCase())) {
+                        if (name.toLowerCase().contains(search.toLowerCase()))
                             sb.append("#b").append(Integer.parseInt(searchData.getName())).append("#k - #r").append(name).append("\r\n");
-                        }
                     }
                 } else if (searchType == 1) {
                     String mapName, streetName;
@@ -89,9 +88,8 @@ public class SearchCommand extends Command {
                             mapName = MapleDataTool.getString(searchData.getChildByPath("mapName"), "NO-NAME");
                             streetName = MapleDataTool.getString(searchData.getChildByPath("streetName"), "NO-NAME");
 
-                            if (mapName.toLowerCase().contains(search.toLowerCase()) || streetName.toLowerCase().contains(search.toLowerCase())) {
+                            if (mapName.toLowerCase().contains(search.toLowerCase()) || streetName.toLowerCase().contains(search.toLowerCase()))
                                 sb.append("#b").append(Integer.parseInt(searchData.getName())).append("#k - #r").append(streetName).append(" - ").append(mapName).append("\r\n");
-                            }
                         }
                     }
                 } else {
@@ -100,9 +98,8 @@ public class SearchCommand extends Command {
 
                         String parentName = mq.getParentName();
 
-                        if (!parentName.isEmpty()) {
+                        if (!parentName.isEmpty())
                             sb.append(parentName).append(" - ");
-                        }
 
                         sb.append(mq.getName()).append("\r\n");
                     }
@@ -110,10 +107,9 @@ public class SearchCommand extends Command {
             }
         } else {
             for (Pair<Integer, String> itemPair : MapleItemInformationProvider.getInstance().getAllItems()) {
-                if (sb.length() < 32654) {//ohlol
-                    if (itemPair.getRight().toLowerCase().contains(search.toLowerCase())) {
+                if (sb.length() < Short.MAX_VALUE) { // 32654
+                    if (itemPair.getRight().toLowerCase().contains(search.toLowerCase()))
                         sb.append("#b").append(itemPair.getLeft()).append("#k - #r").append(itemPair.getRight()).append("\r\n");
-                    }
                 } else {
                     sb.append("#bCouldn't load all items, there are too many results.\r\n");
                     break;
@@ -121,11 +117,10 @@ public class SearchCommand extends Command {
             }
         }
 
-        if (sb.length() == 0) {
+        if (sb.length() == 0)
             sb.append("#bNo ").append(params[0].toLowerCase()).append("s found.\r\n");
-        }
 
-        sb.append("\r\n#kLoaded within ").append((double) (System.currentTimeMillis() - start) / 1000).append(" seconds."); // Because I can, and it's free
+        sb.append("\r\n#kLoaded within ").append((double) (System.currentTimeMillis() - start) / 1000).append(" seconds.");
 
         c.getAbstractPlayerInteraction().npcTalk(9010000, sb.toString());
     }

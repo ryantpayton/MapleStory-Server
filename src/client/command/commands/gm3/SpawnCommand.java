@@ -16,23 +16,40 @@ public class SpawnCommand extends Command {
     public void execute(MapleClient c, String[] params) {
         MapleCharacter player = c.getPlayer();
 
-        if (params.length < 1) {
+        if (params.length < 1 || params.length > 2) {
             player.yellowMessage("Syntax: !spawn <mobid> [<mobqty>]");
             return;
         }
 
-        MapleMonster monster = MapleLifeFactory.getMonster(Integer.parseInt(params[0]));
+        int monsterId = 0;
+        int spawnCount = 1;
+        MapleMonster monster = null;
 
-        if (monster == null) {
+        try {
+            monsterId = Integer.parseInt(params[0]);
+        } catch (NumberFormatException nfe) {
+            player.yellowMessage("<mobid> must be an integer.");
             return;
         }
 
         if (params.length == 2) {
-            for (int i = 0; i < Integer.parseInt(params[1]); i++) {
-                player.getMap().spawnMonsterOnGroundBelow(MapleLifeFactory.getMonster(Integer.parseInt(params[0])), player.getPosition());
+            try {
+                spawnCount = Integer.parseInt(params[1]);
+            } catch (NumberFormatException nfe) {
+                player.yellowMessage("<mobqty> must be an integer.");
+                return;
             }
-        } else {
-            player.getMap().spawnMonsterOnGroundBelow(MapleLifeFactory.getMonster(Integer.parseInt(params[0])), player.getPosition());
+        }
+
+        monster = MapleLifeFactory.getMonster(monsterId);
+
+        if (monster == null) {
+            player.yellowMessage("mobid <" + monsterId + "> is invalid.");
+            return;
+        }
+
+        for (int i = 0; i < spawnCount; i++) {
+            player.getMap().spawnMonsterOnGroundBelow(monster, player.getPosition());
         }
     }
 }

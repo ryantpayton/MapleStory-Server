@@ -1,4 +1,4 @@
-﻿#THIS SQL MUST BE USED AFTER 'db_database.sql'
+#THIS SQL MUST BE USED AFTER 'db_database.sql'
 #NEXT SQL 'db_shopupdate.sql' IS OPTIONAL
 
 USE `maplestory`;

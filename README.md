@@ -11,43 +11,41 @@
    * jdk-7u79-windows-x64.exe
    * ManagerMsv83.exe
      * I will refer to this location, for the client, later as **{client}**
-   * mysql-query-browser-1.1.20-win.msi
    * netbeans-8.0.2-javase-windows.exe
  * Download the latest [localhost](https://hostr.co/tsYsQzzV6xT0)
- * Download and install [mariadb-10.0.38-win32.msi](https://downloads.mariadb.org/mariadb/10.0.38/)
+ * Download the latest [mariadb-*-win32.msi](https://downloads.mariadb.org/mariadb/)
  * Download [STREDIT](http://www.craftnet.nl/Downloads/)
    * I will refer to this location, for the extracted STREDIT, later as **{edit}**
 
 ### Creating a New Database
  1. Open **HeidiSQL**
- 2. Connect to your MySQL server with the parameters used while setting up MariaDB
- 3. Right-click your open connection in the top-left panel
- 4. Expand **Create new**
- 5. Click **Database**
- 6. Type **maplestory** in the **name** field
- 7. Click **OK**
- 8. Close **HeidiSQL**
+ 2. Click **New** in the bottom-left panel
+ 3. Type a name for the new session
+ 4. Fill in the **Hostname / IP**, **User** and **Password** with the parameters used while setting up MariaDB
+ 5. Click **Open**
+ 6. Right-click your open connection in the top-left panel
+ 7. Expand **Create new**
+ 8. Click **Database**
+ 9. Type **maplestory** in the **Name** field
+ 10. Click **OK**
 
 ### Preparing the Database
- 1. Open **MySQL Query Browser**
- 2. Connect to your MySQL server with the parameters used while setting up MariaDB
- 3. Click **File**
- 4. Click **Open Script ...**
- 5. Navigate to **{source}\sql**
- 6. Open and execute **db_database.sql**
- 7. Repeat steps 3 - 6 for **db_drops.sql**
- 8. Close **MySQL Query Browser**
+ 11. Click **maplestory** in the top-left panel
+ 12. Click **File**
+ 13. Click **Run SQL file...**
+ 14. Navigate to **{source}\sql**
+ 15. Open **db_database.sql**
+ 16. Repeat steps 12 - 14 for **db_drops.sql**
 
 ### Creating an Account
- 1. Open **HeidiSQL**
- 2. Connect to your MySQL server with the parameters used while setting up MariaDB
- 3. Expand the **maplestory** database
- 4. Click on the **accounts** table
- 5. Click on the **Data** tab
- 6. Press the **Insert** key
- 7. Type a username into the **name** column
- 8. Type a password into the **password** column
- 9. Close **HeidiSQL**
+ 19. Right-click the **maplestory** database and click **Refresh**
+ 20. Expand the **maplestory** database
+ 21. Click on the **accounts** table
+ 22. Click on the **Data** tab
+ 23. Press the **Insert** key
+ 24. Type a username into the **name** column
+ 25. Type a password into the **password** column
+ 26. Close **HeidiSQL**
 
 ### Configure Your Server
  1. Navigate into the **{source}** folder

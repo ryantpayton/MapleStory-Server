@@ -1,26 +1,42 @@
+/*
+ This file is part of the OdinMS Maple Story Server
+ Copyright (C) 2008 Patrick Huy <patrick.huy@frz.cc>
+ Matthias Butz <matze@odinms.de>
+ Jan Christian Meyer <vimes@odinms.de>
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation version 3 as published by
+ the Free Software Foundation. You may not use, modify or distribute
+ this program under any other version of the GNU Affero General Public
+ License.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Affero General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package constants;
+
+import tools.FilePrinter;
 
 import java.io.FileInputStream;
 import java.util.Properties;
-import tools.FilePrinter;
 
 public class ServerConstants {
-
     // Thread Tracker Configuration
     public static final boolean USE_THREAD_TRACKER = true;                  // [SEVERE] This deadlock auditing thing will bloat the memory as fast as the time frame one takes to lose track of a raindrop on a tempesting day. Only for debugging purposes.
-
-    // Database Configuration
-    public static String DB_URL = "";                                       // Initilization only, pulls from configuration.ini
-    public static String DB_USER = "";                                      // Initilization only, pulls from configuration.ini
-    public static String DB_PASS = "";                                      // Initilization only, pulls from configuration.ini
     public static final boolean DB_CONNECTION_POOL = true;                  // Installs a connection pool to hub DB connections. Set false to default.
 
-    // Server Version
-    public static short VERSION = 83;
-
     // Login Configuration
-    public static final int WLDLIST_SIZE = 21;                              // Max possible worlds on the server.
-    public static final int CHANNEL_SIZE = 20;                              // Max possible channels per world (which is 20, based on the channel list on login phase).
+    public static final int WLDLIST_SIZE = 5;                               // Max possible worlds on the server.
+
+    // These are based on the channel list on the world selection screen (UIWorldSelect)
+    public static final int CHANNEL_MIN_SIZE = 2;                           // Mininum number of required channels per world
+    public static final int CHANNEL_MAX_SIZE = 30;                          // Maximum possible channels per world
     public static final int CHANNEL_LOAD = 100;                             // Max players per channel (limit actually used to calculate the World server capacity).
     public static final int CHANNEL_LOCKS = 20;                             // Total number of structure management locks each channel has.
 
@@ -30,14 +46,11 @@ public class ServerConstants {
     public static final long RANKING_INTERVAL = 60 * 60 * 1000;             // 60 minutes, 3,600,000 milliseconds
     public static final long COUPON_INTERVAL = 60 * 60 * 1000;              // 60 minutes, 3,600,000 milliseconds
     public static final long UPDATE_INTERVAL = 777;                         // Dictates the frequency on which the "centralized server time" is updated.
-
     public static final boolean ENABLE_PIC = true;                          // Pick true/false to enable or disable Pic. Delete character required PIC available.
     public static final boolean ENABLE_PIN = false;                         // Pick true/false to enable or disable Pin.
-
     public static final int BYPASS_PIC_EXPIRATION = 0;                      // Enables PIC bypass, which will remain active for that account by that client machine for N minutes. Set 0 to disable.
     public static final int BYPASS_PIN_EXPIRATION = 0;                      // Enables PIN bypass, which will remain active for that account by that client machine for N minutes. Set 0 to disable.
-
-    public static final boolean AUTOMATIC_REGISTER = true;                  // Automatically register players when they login with a nonexistent username.
+    public static final boolean AUTOMATIC_REGISTER = false;                 // Automatically register players when they login with a nonexistent username.
     public static final boolean BCRYPT_MIGRATION = true;                    // Performs a migration from old SHA-1 and SHA-512 password to bcrypt.
     public static final boolean COLLECTIVE_CHARSLOT = false;                // Available character slots are contabilized globally rather than per world server.
     public static final boolean DETERRED_MULTICLIENT = false;               // Enables multi-client and suspicious remote IP detection on the login system. Besides blocking logging in with several client sessions on the same machine, this also blocks suspicious login attempts for players that tries to login on an account using several diferent remote addresses.
@@ -47,24 +60,9 @@ public class ServerConstants {
     public static final int MAX_ACCOUNT_LOGIN_ATTEMPT = 15;                 // After N tries on an account, login on that account gets disabled for a short period.
     public static final int LOGIN_ATTEMPT_DURATION = 120;                   // Period in seconds the login attempt remains registered on the system.
 
-    // Server name
-    public static String NAME;                                              // Name to be used when referencing the game (Initilization only, pulls from configuration.ini)
-
-    // IP Configuration
-    public static String HOST;                                              // Initilization only, pulls from configuration.ini
-
-    // Other Configuration
-    public static boolean JAVA_8;                                           // Every static function in AbstractPlayerInteraction are to be made non-static, and code comment sections uncommented after enabling this functionality. (Initilization only, pulls from configuration.ini)
-    public static boolean SHUTDOWNHOOK;                                     // Initilization only, pulls from configuration.ini
-
     // Server Flags
-    public static final boolean USE_CUSTOM_KEYSET = false;                  // Enables auto-setup of the custom keybindings when creating characters.
     public static final boolean USE_DEBUG = false;                          // Will enable some text prints on the client, oriented for debugging purposes.
     public static final boolean USE_DEBUG_SHOW_INFO_EQPEXP = false;         // Prints on the cmd all equip exp gain info.
-    public static boolean USE_DEBUG_SHOW_RCVD_PACKET = false;               // Prints on the cmd all received packet ids.
-    public static boolean USE_DEBUG_SHOW_RCVD_MVLIFE = false;               // Prints on the cmd all received move life content.
-    public static boolean USE_SUPPLY_RATE_COUPONS = true;                   // Allows rate coupons to be sold through the Cash Shop.
-
     public static final boolean USE_MAXRANGE = true;                        // Will send and receive packets from all events on a map, rather than those of only view range.
     public static final boolean USE_MAXRANGE_ECHO_OF_HERO = true;
     public static final boolean USE_MTS = true;
@@ -129,7 +127,7 @@ public class ServerConstants {
     public static final boolean USE_MAKER_FEE_HEURISTICS = true;            // Apply compiled values for stimulants and reagents into the Maker fee calculations (max error revolves around 50k mesos). Set false to use basic constant values instead (results are never higher than requested by the client-side).
 
     // Custom Configuration
-    //public static final boolean USE_ENABLE_CUSTOM_NPC_SCRIPT = false;       // Enables usage of custom NPC scripts (Agent E, Coco, etc). Will not disable Abdula (it's actually useful for the gameplay), quests or NPC shops.
+    public static final boolean USE_ENABLE_CUSTOM_NPC_SCRIPT = false;       // Enables usage of custom NPC scripts (Agent E, Coco, etc). Will not disable Abdula (it's actually useful for the gameplay), quests or NPC shops.
     public static final boolean USE_STARTER_MERGE = false;                  // Allows any players to use the Equipment Merge custom mechanic (as opposed to the high-level, Maker lv3 requisites).
 
     // Commands Configuration
@@ -144,17 +142,10 @@ public class ServerConstants {
     public static final int QUEST_RATE = 1;                                 // Multiplier for Exp & Meso gains when completing a quest. Only available when USE_QUEST_RATE is true. Stacks with server Exp & Meso rates.
     public static final int FISHING_RATE = 10;                              // Multiplier for success likelihood on meso thrown during fishing.
     public static final int TRAVEL_RATE = 1;                                // Means of transportation rides/departs using 1/N of the default time.
-
     public static final double EQUIP_EXP_RATE = 1.0;                        // Rate for equipment exp gain, grows linearly. Set 1.0 for default (about 100~200 same-level range mobs killed to pass equip from level 1 to 2).
     public static final float PARTY_BONUS_EXP_RATE = 1.0f;                  // Rate for the party exp bonus reward.
     public static final double PQ_BONUS_EXP_RATE = 0.5;                     // Rate for the PQ exp reward.
-
     public static final int PARTY_EXPERIENCE_MOD = 1;                       // Change for event stuff.
-
-    // Miscellaneous Configuration
-    public static String TIMEZONE = "GMT-5";
-    public static boolean USE_DISPLAY_NUMBERS_WITH_COMMA = true;            // Enforce comma on displayed strings (use this when USE_UNITPRICE_WITH_COMMA is active and you still want to display comma-separated values).
-    public static boolean USE_UNITPRICE_WITH_COMMA = true;                  // Set this accordingly with the layout of the unitPrices on Item.wz XML's, whether it's using commas or dots to represent fractions.
     public static final byte MIN_UNDERLEVEL_TO_EXP_GAIN = 20;               // Characters are unable to get EXP from a mob if their level are under this threshold, only if "USE_ENFORCE_MOB_LEVEL_RANGE" is enabled. For bosses, this attribute is doubled.
     public static final byte MIN_RANGELEVEL_TO_EXP_LEECH = 40;              // Characters are unable to leech EXP from party member kills whose level difference are past this limit.
     public static final byte MAX_MONITORED_BUFFSTATS = 5;                   // Limits accounting for "dormant" buff effects, that should take place when stronger stat buffs expires.
@@ -292,12 +283,38 @@ public class ServerConstants {
     // Event End Timestamp
     public static final long EVENT_END_TIMESTAMP = 1428897600000L;
 
-    // Debug Variables
-    public static int DEBUG_VALUES[] = new int[10];                         // Field designed for packet testing purposes
-
     // Cut-scenes for beginners
     public static final boolean SHOW_CUT_SCENES = false;                    // Whether to show cut-scnes when creating a character and taking the ship to Lith Harbor (Need to implement Lith Harbor cut-scene)
-    public static final boolean USE_CUSTOM_CLIENT = false;                  // Whether to use a custom client or not
+    public static final boolean USE_CUSTOM_CLIENT = true;                   // Whether to use a custom client or not
+
+    // Database Configuration
+    public static String DB_URL = "";                                       // Initilization only, pulls from configuration.ini
+    public static String DB_USER = "";                                      // Initilization only, pulls from configuration.ini
+    public static String DB_PASS = "";                                      // Initilization only, pulls from configuration.ini
+
+    // Server Version
+    public static short VERSION = 83;
+
+    // Server name
+    public static String NAME;                                              // Name to be used when referencing the game (Initilization only, pulls from configuration.ini)
+
+    // IP Configuration
+    public static String HOST;                                              // Initilization only, pulls from configuration.ini
+
+    // Other Configuration
+    public static boolean JAVA_8;                                           // Every static function in AbstractPlayerInteraction are to be made non-static, and code comment sections uncommented after enabling this functionality. (Initilization only, pulls from configuration.ini)
+    public static boolean SHUTDOWNHOOK;                                     // Initilization only, pulls from configuration.ini
+    public static boolean USE_DEBUG_SHOW_RCVD_PACKET = true;                // Prints on the cmd all received packet ids.
+    public static boolean USE_DEBUG_SHOW_RCVD_MVLIFE = false;               // Prints on the cmd all received move life content.
+    public static boolean USE_SUPPLY_RATE_COUPONS = true;                   // Allows rate coupons to be sold through the Cash Shop.
+
+    // Miscellaneous Configuration
+    public static String TIMEZONE = "GMT-5";
+    public static boolean USE_DISPLAY_NUMBERS_WITH_COMMA = true;            // Enforce comma on displayed strings (use this when USE_UNITPRICE_WITH_COMMA is active and you still want to display comma-separated values).
+    public static boolean USE_UNITPRICE_WITH_COMMA = true;                  // Set this accordingly with the layout of the unitPrices on Item.wz XML's, whether it's using commas or dots to represent fractions.
+
+    // Debug Variables
+    public static int DEBUG_VALUES[] = new int[10];                         // Field designed for packet testing purposes
 
     // Properties
     static {
