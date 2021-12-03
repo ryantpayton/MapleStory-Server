@@ -627,6 +627,114 @@ public class MapleClient {
                         return loginok;
                 }
 	}
+        
+        public int loginWithEmail(String email, String pwd, String nibbleHwid) {
+		int loginok = 5;
+                
+		loginattempt++;
+                if (loginattempt > 4) {
+                        loggedIn = false;
+			MapleSessionCoordinator.getInstance().closeSession(session, false);
+                        return loginok;
+		}
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			con = DatabaseConnection.getConnection();
+			ps = con.prepareStatement("SELECT id, name, password, gender, banned, pin, pic, characterslots, tos FROM accounts WHERE email = ?");
+			ps.setString(1, email);
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				accId = rs.getInt("id");
+                                if (accId == 0) {
+                                        // odd case where accId is actually attributed as 0 (further on this leads to getLoginState ACCID = 0, an absurd), thanks Thora for finding this issue
+                                        return 15;
+                                } else if (accId < 0) {
+                                        FilePrinter.printError(FilePrinter.LOGIN_EXCEPTION, "Tried to login with accid " + accId);
+                                }
+                                
+                                String name = rs.getString("name");
+                                accountName = name;
+                                
+                                boolean banned = (rs.getByte("banned") == 1);
+				gmlevel = 0;
+				pin = rs.getString("pin");
+				pic = rs.getString("pic");
+				gender = rs.getByte("gender");
+				characterSlots = rs.getByte("characterslots");
+				String passhash = rs.getString("password");
+				byte tos = rs.getByte("tos");
+
+				ps.close();
+				rs.close();
+
+				if (banned) {
+					return 3;
+				}
+
+				if (getLoginState() > LOGIN_NOTLOGGEDIN) { // already loggedin
+					loggedIn = false;
+					loginok = 7;
+				} else if (passhash.charAt(0) == '$' && passhash.charAt(1) == '2' && BCrypt.checkpw(pwd, passhash)) {
+					loginok = (tos == 0) ? 23 : 0;
+				} else if (pwd.equals(passhash) || checkHash(passhash, "SHA-1", pwd) || checkHash(passhash, "SHA-512", pwd)) {
+                                        // thanks GabrielSin for detecting some no-bcrypt inconsistencies here
+					loginok = (tos == 0) ? (!ServerConstants.BCRYPT_MIGRATION ? 23 : -23) : (!ServerConstants.BCRYPT_MIGRATION ? 0 : -10); // migrate to bcrypt
+				} else {
+					loggedIn = false;
+					loginok = 4;
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null && !ps.isClosed()) {
+					ps.close();
+				}
+				if (rs != null && !rs.isClosed()) {
+					rs.close();
+				}
+				if (con != null && !con.isClosed()) {
+					con.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+                
+		if (loginok == 0 || loginok == 4) {
+                        AntiMulticlientResult res = MapleSessionCoordinator.getInstance().attemptLoginSession(session, nibbleHwid, accId, loginok == 4);
+                        
+                        switch (res) {
+                                case SUCCESS:
+                                        if (loginok == 0) {
+                                                loginattempt = 0;
+                                        }
+                                        
+                                        return loginok;
+
+                                case REMOTE_LOGGEDIN:
+                                        return 17;
+
+                                case REMOTE_REACHED_LIMIT:
+                                        return 13;
+
+                                case REMOTE_PROCESSING:
+                                        return 10;
+                                    
+                                case MANY_ACCOUNT_ATTEMPTS:
+                                        return 16;
+
+                                default:
+                                        return 8;
+                        }
+		} else {
+                        return loginok;
+                }
+	}
 
 	public Calendar getTempBanCalendar() {
 		Connection con = null;

@@ -39,6 +39,7 @@ import net.server.handlers.login.CreateCharHandler;
 import net.server.handlers.login.DeleteCharHandler;
 import net.server.handlers.login.GuestLoginHandler;
 import net.server.handlers.login.LoginPasswordHandler;
+import net.server.handlers.login.LoginEmailHandler;
 import net.server.handlers.login.RegisterPicHandler;
 import net.server.handlers.login.RegisterPinHandler;
 import net.server.handlers.login.RelogRequestHandler;
@@ -109,6 +110,7 @@ public final class PacketProcessor {
             registerHandler(RecvOpcode.CHARLIST_REQUEST, new CharlistRequestHandler());
             registerHandler(RecvOpcode.CHAR_SELECT, new CharSelectedHandler());
             registerHandler(RecvOpcode.LOGIN_PASSWORD, new LoginPasswordHandler());
+            registerHandler(RecvOpcode.LOGIN_EMAIL, new LoginEmailHandler());
             registerHandler(RecvOpcode.RELOG, new RelogRequestHandler());
             registerHandler(RecvOpcode.SERVERLIST_REQUEST, new ServerlistRequestHandler());
             registerHandler(RecvOpcode.SERVERSTATUS_REQUEST, new ServerStatusRequestHandler());
