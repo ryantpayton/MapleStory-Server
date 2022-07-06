@@ -1,22 +1,22 @@
 /*
-    This file is part of the HeavenMS MapleStory Server
-    Copyleft (L) 2016 - 2018 RonanLana
+ This file is part of the HeavenMS MapleStory Server
+ Copyleft (L) 2016 - 2018 RonanLana
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as
-    published by the Free Software Foundation version 3 as published by
-    the Free Software Foundation. You may not use, modify or distribute
-    this program under any other version of the GNU Affero General Public
-    License.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation version 3 as published by
+ the Free Software Foundation. You may not use, modify or distribute
+ this program under any other version of the GNU Affero General Public
+ License.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Affero General Public License for more details.
 
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ You should have received a copy of the GNU Affero General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package server.life;
 
 import java.io.File;
@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.LinkedList;
+
 import net.server.Server;
 import provider.MapleData;
 import provider.MapleDataProvider;
@@ -31,41 +32,45 @@ import provider.MapleDataProviderFactory;
 import provider.MapleDataTool;
 
 /**
- *
  * @author RonanLana
  */
 public class MaplePlayerNPCFactory {
-    
+
     private static final Map<Integer, List<MaplePlayerNPC>> dnpcMaps = new HashMap<>();
-    private static Integer runningDeveloperOid = 2147483000;  // 647 slots, long enough
-    
+    private static Integer runningDeveloperOid = 2147483000; // 647 slots, long enough
+
     public static void loadDeveloperRoomMetadata(MapleDataProvider npc) {
         MapleData thisData = npc.getData("9977777.img");
-        if(thisData != null) {
-            MapleDataProvider map = MapleDataProviderFactory.getDataProvider(new File("wz/Map.wz"));
-            
+
+        if (thisData != null) {
+            MapleDataProvider map = MapleDataProviderFactory.getDataProvider(new File("wz/Map002.wz"));
+
             thisData = map.getData("Map/Map7/777777777.img");
-            if(thisData != null) {
+
+            if (thisData != null) {
                 MapleDataProvider sound = MapleDataProviderFactory.getDataProvider(new File("wz/Sound.wz"));
-                
+
                 thisData = sound.getData("Field.img");
-                if(thisData != null) {
+
+                if (thisData != null) {
                     MapleData md = thisData.getChildByPath("anthem/brazil");
-                    if(md != null) {
+
+                    if (md != null) {
                         Server.getInstance().setAvailableDeveloperRoom();
                     }
                 }
             }
         }
     }
-    
+
     public static void loadFactoryMetadata() {
         MapleDataProvider npc = MapleDataProviderFactory.getDataProvider(new File("wz/Npc.wz"));
         loadDeveloperRoomMetadata(npc);
 
         MapleDataProvider etc = MapleDataProviderFactory.getDataProvider(new File("wz/Etc.wz"));
         MapleData dnpcData = etc.getData("DeveloperNpc.img");
-        if(dnpcData != null) {
+
+        if (dnpcData != null) {
             for (MapleData data : dnpcData.getChildren()) {
                 int scriptId = Integer.parseInt(data.getName());
 
@@ -83,6 +88,7 @@ public class MaplePlayerNPCFactory {
                 int CY = MapleDataTool.getIntConvert("cy", data, 0);
 
                 Map<Short, Integer> equips = new HashMap<>();
+
                 for (MapleData edata : data.getChildByPath("equips").getChildren()) {
                     short equippos = (short) MapleDataTool.getIntConvert("pos", edata);
                     int equipid = MapleDataTool.getIntConvert("itemid", edata);
@@ -91,7 +97,8 @@ public class MaplePlayerNPCFactory {
                 }
 
                 List<MaplePlayerNPC> dnpcSet = dnpcMaps.get(mapid);
-                if(dnpcSet == null) {
+
+                if (dnpcSet == null) {
                     dnpcSet = new LinkedList<>();
                     dnpcMaps.put(mapid, dnpcSet);
                 }
@@ -101,9 +108,9 @@ public class MaplePlayerNPCFactory {
             }
         } else {
             MapleData thisData = npc.getData("9977777.img");
-            
-            if(thisData != null) {
-                byte[] encData = {0x52,0x6F,0x6E,0x61,0x6E};
+
+            if (thisData != null) {
+                byte[] encData = {0x52, 0x6F, 0x6E, 0x61, 0x6E};
                 String name = new String(encData);
                 int face = 20104, hair = 30215, gender = 0, skin = 0, dir = 0, mapid = 777777777;
                 int FH = 4, RX0 = -143, RX1 = -243, CX = -193, CY = 117, scriptId = 9977777;
@@ -117,7 +124,8 @@ public class MaplePlayerNPCFactory {
                 equips.put((short) -5, 1040103);
 
                 List<MaplePlayerNPC> dnpcSet = dnpcMaps.get(mapid);
-                if(dnpcSet == null) {
+
+                if (dnpcSet == null) {
                     dnpcSet = new LinkedList<>();
                     dnpcMaps.put(mapid, dnpcSet);
                 }
@@ -127,7 +135,7 @@ public class MaplePlayerNPCFactory {
             }
         }
     }
-    
+
     public static List<MaplePlayerNPC> getDeveloperNpcsFromMapid(int mapid) {
         return dnpcMaps.get(mapid);
     }

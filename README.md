@@ -13,7 +13,7 @@
      * I will refer to this location, for the client, later as **{client}**
    * netbeans-8.0.2-javase-windows.exe
  * Download the latest [localhost](https://hostr.co/tsYsQzzV6xT0)
- * Download the latest [mariadb-*-win32.msi](https://downloads.mariadb.org/mariadb/)
+ * Download the latest [mariadb](https://downloads.mariadb.org/mariadb/) that is available for **Windows**
  * Download [STREDIT](http://www.craftnet.nl/Downloads/)
    * I will refer to this location, for the extracted STREDIT, later as **{edit}**
 

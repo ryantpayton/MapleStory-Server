@@ -1,23 +1,23 @@
 /*
-This file is part of the OdinMS Maple Story Server
-Copyright (C) 2008 Patrick Huy <patrick.huy@frz.cc>
-Matthias Butz <matze@odinms.de>
-Jan Christian Meyer <vimes@odinms.de>
+ This file is part of the OdinMS Maple Story Server
+ Copyright (C) 2008 Patrick Huy <patrick.huy@frz.cc>
+ Matthias Butz <matze@odinms.de>
+ Jan Christian Meyer <vimes@odinms.de>
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation version 3 as published by
-the Free Software Foundation. You may not use, modify or distribute
-this program under any other version of the GNU Affero General Public
-License.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation version 3 as published by
+ the Free Software Foundation. You may not use, modify or distribute
+ this program under any other version of the GNU Affero General Public
+ License.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Affero General Public License for more details.
 
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ You should have received a copy of the GNU Affero General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package server.life;
 
@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import provider.MapleData;
 import provider.MapleDataProvider;
 import provider.MapleDataProviderFactory;
@@ -38,6 +39,9 @@ import tools.StringUtil;
 public class MapleLifeFactory {
 
     private static MapleDataProvider data = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Mob.wz"));
+    private static MapleDataProvider data001 = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Mob001.wz"));
+    private static MapleDataProvider data002 = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Mob002.wz"));
+    private static MapleDataProvider data2 = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Mob2.wz"));
     private final static MapleDataProvider stringDataWZ = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/String.wz"));
     private static MapleData mobStringData = stringDataWZ.getData("Mob.img");
     private static MapleData npcStringData = stringDataWZ.getData("Npc.img");
@@ -55,11 +59,12 @@ public class MapleLifeFactory {
     }
 
     private static class MobAttackInfoHolder {
+
         protected int attackPos;
         protected int mpCon;
         protected int coolTime;
         protected int animationTime;
-        
+
         protected MobAttackInfoHolder(int attackPos, int mpCon, int coolTime, int animationTime) {
             this.attackPos = attackPos;
             this.mpCon = mpCon;
@@ -67,7 +72,7 @@ public class MapleLifeFactory {
             this.animationTime = animationTime;
         }
     }
-    
+
     private static void setMonsterAttackInfo(int mid, List<MobAttackInfoHolder> attackInfos) {
         if (!attackInfos.isEmpty()) {
             MapleMonsterInformationProvider mi = MapleMonsterInformationProvider.getInstance();
@@ -78,26 +83,50 @@ public class MapleLifeFactory {
             }
         }
     }
-    
+
+    private static MapleData getMonsterData(int mid) {
+        MapleData monsterData;
+        String monsterStr = StringUtil.getLeftPaddedStr(Integer.toString(mid) + ".img", '0', 11);
+
+        monsterData = data.getData(monsterStr);
+
+        if (monsterData == null) {
+            monsterData = data001.getData(monsterStr);
+        }
+
+        if (monsterData == null) {
+            monsterData = data002.getData(monsterStr);
+        }
+
+        if (monsterData == null) {
+            monsterData = data2.getData(monsterStr);
+        }
+
+        return monsterData;
+    }
+
     private static Pair<MapleMonsterStats, List<MobAttackInfoHolder>> getMonsterStats(int mid) {
-        MapleData monsterData = data.getData(StringUtil.getLeftPaddedStr(Integer.toString(mid) + ".img", '0', 11));
+        MapleData monsterData = getMonsterData(mid);
+
         if (monsterData == null) {
             return null;
         }
+
         MapleData monsterInfoData = monsterData.getChildByPath("info");
-        
         List<MobAttackInfoHolder> attackInfos = new LinkedList<>();
         MapleMonsterStats stats;
-        
+
         int linkMid = MapleDataTool.getIntConvert("link", monsterInfoData, 0);
+
         if (linkMid == 0) {
             stats = new MapleMonsterStats();
         } else {
             Pair<MapleMonsterStats, List<MobAttackInfoHolder>> linkStats = getMonsterStats(linkMid);
+
             if (linkStats == null) {
                 return null;
             }
-            
+
             stats = linkStats.getLeft();
             attackInfos.addAll(linkStats.getRight());
         }
@@ -122,23 +151,31 @@ public class MapleLifeFactory {
         stats.setRemoveOnMiss(MapleDataTool.getIntConvert("removeOnMiss", monsterInfoData, stats.removeOnMiss() ? 1 : 0) > 0);
 
         MapleData special = monsterInfoData.getChildByPath("coolDamage");
+
         if (special != null) {
             int coolDmg = MapleDataTool.getIntConvert("coolDamage", monsterInfoData);
             int coolProb = MapleDataTool.getIntConvert("coolDamageProb", monsterInfoData, 0);
+
             stats.setCool(new Pair<>(coolDmg, coolProb));
         }
+
         special = monsterInfoData.getChildByPath("loseItem");
+
         if (special != null) {
             for (MapleData liData : special.getChildren()) {
                 stats.addLoseItem(new loseItem(MapleDataTool.getInt(liData.getChildByPath("id")), (byte) MapleDataTool.getInt(liData.getChildByPath("prop")), (byte) MapleDataTool.getInt(liData.getChildByPath("x"))));
             }
         }
+
         special = monsterInfoData.getChildByPath("selfDestruction");
+
         if (special != null) {
             stats.setSelfDestruction(new selfDestruction((byte) MapleDataTool.getInt(special.getChildByPath("action")), MapleDataTool.getIntConvert("removeAfter", special, -1), MapleDataTool.getIntConvert("hp", special, -1)));
         }
+
         MapleData firstAttackData = monsterInfoData.getChildByPath("firstAttack");
         int firstAttack = 0;
+
         if (firstAttackData != null) {
             if (firstAttackData.getType() == MapleDataType.FLOAT) {
                 firstAttack = Math.round(MapleDataTool.getFloat(firstAttackData));
@@ -146,6 +183,7 @@ public class MapleLifeFactory {
                 firstAttack = MapleDataTool.getInt(firstAttackData);
             }
         }
+
         stats.setFirstAttack(firstAttack > 0);
         stats.setDropPeriod(MapleDataTool.getIntConvert("dropItemPeriod", monsterInfoData, stats.getDropPeriod() / 10000) * 10000);
 
@@ -155,35 +193,47 @@ public class MapleLifeFactory {
         for (MapleData idata : monsterData) {
             if (!idata.getName().equals("info")) {
                 int delay = 0;
+
                 for (MapleData pic : idata.getChildren()) {
                     delay += MapleDataTool.getIntConvert("delay", pic, 0);
                 }
+
                 stats.setAnimationTime(idata.getName(), delay);
             }
         }
+
         MapleData reviveInfo = monsterInfoData.getChildByPath("revive");
+
         if (reviveInfo != null) {
             List<Integer> revives = new LinkedList<>();
+
             for (MapleData data_ : reviveInfo) {
                 revives.add(MapleDataTool.getInt(data_));
             }
+
             stats.setRevives(revives);
         }
+
         decodeElementalString(stats, MapleDataTool.getString("elemAttr", monsterInfoData, ""));
 
         MapleMonsterInformationProvider mi = MapleMonsterInformationProvider.getInstance();
         MapleData monsterSkillInfoData = monsterInfoData.getChildByPath("skill");
+
         if (monsterSkillInfoData != null) {
             int i = 0;
             List<Pair<Integer, Integer>> skills = new ArrayList<>();
+
             while (monsterSkillInfoData.getChildByPath(Integer.toString(i)) != null) {
                 int skillId = MapleDataTool.getInt(i + "/skill", monsterSkillInfoData, 0);
                 int skillLv = MapleDataTool.getInt(i + "/level", monsterSkillInfoData, 0);
+
                 skills.add(new Pair<>(skillId, skillLv));
 
                 MapleData monsterSkillData = monsterData.getChildByPath("skill" + (i + 1));
+
                 if (monsterSkillData != null) {
                     int animationTime = 0;
+
                     for (MapleData effectEntry : monsterSkillData.getChildren()) {
                         animationTime += MapleDataTool.getIntConvert("delay", effectEntry, 0);
                     }
@@ -194,69 +244,82 @@ public class MapleLifeFactory {
 
                 i++;
             }
+
             stats.setSkills(skills);
         }
 
         int i = 0;
         MapleData monsterAttackData;
+
         while ((monsterAttackData = monsterData.getChildByPath("attack" + (i + 1))) != null) {
             int animationTime = 0;
+
             for (MapleData effectEntry : monsterAttackData.getChildren()) {
                 animationTime += MapleDataTool.getIntConvert("delay", effectEntry, 0);
             }
 
             int mpCon = MapleDataTool.getIntConvert("info/conMP", monsterAttackData, 0);
             int coolTime = MapleDataTool.getIntConvert("info/attackAfter", monsterAttackData, 0);
+
             attackInfos.add(new MobAttackInfoHolder(i, mpCon, coolTime, animationTime));
+
             i++;
         }
 
         MapleData banishData = monsterInfoData.getChildByPath("ban");
+
         if (banishData != null) {
             stats.setBanishInfo(new BanishInfo(MapleDataTool.getString("banMsg", banishData), MapleDataTool.getInt("banMap/0/field", banishData, -1), MapleDataTool.getString("banMap/0/portal", banishData, "sp")));
         }
-        
+
         return new Pair<>(stats, attackInfos);
     }
-    
+
     public static MapleMonster getMonster(int mid) {
         try {
             MapleMonsterStats stats = monsterStats.get(Integer.valueOf(mid));
+
             if (stats == null) {
                 Pair<MapleMonsterStats, List<MobAttackInfoHolder>> mobStats = getMonsterStats(mid);
                 stats = mobStats.getLeft();
+
                 setMonsterAttackInfo(mid, mobStats.getRight());
-                
                 monsterStats.put(Integer.valueOf(mid), stats);
             }
+
             MapleMonster ret = new MapleMonster(mid, stats);
+
             return ret;
-        } catch(NullPointerException npe) {
+        } catch (NullPointerException npe) {
             System.out.println("[SEVERE] MOB " + mid + " failed to load. Issue: " + npe.getMessage() + "\n\n");
             npe.printStackTrace();
-            
+
             return null;
         }
     }
-    
+
     public static int getMonsterLevel(int mid) {
         try {
             MapleMonsterStats stats = monsterStats.get(Integer.valueOf(mid));
+
             if (stats == null) {
-                MapleData monsterData = data.getData(StringUtil.getLeftPaddedStr(Integer.toString(mid) + ".img", '0', 11));
+                MapleData monsterData = getMonsterData(mid);
+
                 if (monsterData == null) {
                     return -1;
                 }
+
                 MapleData monsterInfoData = monsterData.getChildByPath("info");
+
                 return MapleDataTool.getIntConvert("level", monsterInfoData);
             } else {
                 return stats.getLevel();
             }
-        } catch(NullPointerException npe) {
-            System.out.println("[SEVERE] MOB " + mid + " failed to load. Issue: " + npe.getMessage() + "\n\n");
+        } catch (NullPointerException npe) {
+            System.out.println("[SEVERE] MOB " + mid + " failed to load level. Issue: " + npe.getMessage() + "\n\n");
             npe.printStackTrace();
         }
-        
+
         return -1;
     }
 
@@ -333,7 +396,7 @@ public class MapleLifeFactory {
         public int getHp() {
             return hp;
         }
-        
+
         public byte getAction() {
             return action;
         }

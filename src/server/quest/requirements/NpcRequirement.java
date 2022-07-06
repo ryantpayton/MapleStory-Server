@@ -28,29 +28,28 @@ import server.quest.MapleQuest;
 import server.quest.MapleQuestRequirementType;
 
 /**
- *
  * @author Tyler (Twdtwd)
  */
 public class NpcRequirement extends MapleQuestRequirement {
-	private int reqNPC;
-	
-	public NpcRequirement(MapleQuest quest, MapleData data) {
-		super(MapleQuestRequirementType.NPC);
-		processData(data);
-	}
-	
-	@Override
-	public void processData(MapleData data) {
-		reqNPC = MapleDataTool.getInt(data);
-	}
-	
-	
-	@Override
-	public boolean check(MapleCharacter chr, Integer npcid) {
-		return npcid != null && npcid == reqNPC;
-	}
-        
-        public int get() {
-                return reqNPC;
-        }
+
+    private int reqNPC;
+
+    public NpcRequirement(MapleQuest quest, MapleData data) {
+        super(MapleQuestRequirementType.NPC);
+        processData(data);
+    }
+
+    @Override
+    public void processData(MapleData data) {
+        reqNPC = MapleDataTool.getIntConvert(data);
+    }
+
+    @Override
+    public boolean check(MapleCharacter chr, Integer npcid) {
+        return npcid != null && npcid == reqNPC;
+    }
+
+    public int get() {
+        return reqNPC;
+    }
 }

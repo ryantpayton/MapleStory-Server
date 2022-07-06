@@ -27,15 +27,17 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class MapleDataTool {
+
     public static String getString(MapleData data) {
         return ((String) data.getData());
     }
 
     public static String getString(MapleData data, String def) {
-        if (data == null || data.getData() == null)
+        if (data == null || data.getData() == null) {
             return def;
-        else
+        } else {
             return ((String) data.getData());
+        }
     }
 
     public static String getString(String path, MapleData data) {
@@ -43,10 +45,11 @@ public class MapleDataTool {
     }
 
     public static String getString(String path, MapleData data, String def) {
-        if (data != null)
+        if (data != null) {
             return getString(data.getChildByPath(path), def);
-        else
+        } else {
             return def;
+        }
     }
 
     public static double getDouble(MapleData data) {
@@ -58,8 +61,9 @@ public class MapleDataTool {
     }
 
     public static int getInt(MapleData data) {
-        if (data == null || data.getData() == null)
+        if (data == null || data.getData() == null) {
             return 0; // DEF?
+        }
 
         return ((Integer) data.getData()).intValue();
     }
@@ -69,28 +73,35 @@ public class MapleDataTool {
     }
 
     public static int getIntConvert(MapleData data) {
-        if (data.getType() == MapleDataType.STRING)
+        if (data.getType() == MapleDataType.STRING) {
             return Integer.parseInt(getString(data));
-        else
+        } else {
             return getInt(data);
+        }
     }
 
     public static int getIntConvert(String path, MapleData data) {
-        MapleData d = data.getChildByPath(path);
+        try {
+            MapleData d = data.getChildByPath(path);
 
-        if (d.getType() == MapleDataType.STRING)
-            return Integer.parseInt(getString(d));
-        else
-            return getInt(d);
+            if (d.getType() == MapleDataType.STRING) {
+                return Integer.parseInt(getString(d));
+            } else {
+                return getInt(d);
+            }
+        } catch (NullPointerException npe) {
+            return 0;
+        }
     }
 
     public static int getInt(MapleData data, int def) {
-        if (data == null || data.getData() == null)
+        if (data == null || data.getData() == null) {
             return def;
-        else if (data.getType() == MapleDataType.STRING)
+        } else if (data.getType() == MapleDataType.STRING) {
             return Integer.parseInt(getString(data));
-        else
+        } else {
             return ((Integer) data.getData()).intValue();
+        }
     }
 
     public static int getInt(String path, MapleData data, int def) {
@@ -100,8 +111,9 @@ public class MapleDataTool {
     public static int getIntConvert(String path, MapleData data, int def) {
         MapleData d = data.getChildByPath(path);
 
-        if (d == null)
+        if (d == null) {
             return def;
+        }
 
         if (d.getType() == MapleDataType.STRING) {
             try {
@@ -130,8 +142,9 @@ public class MapleDataTool {
     public static Point getPoint(String path, MapleData data, Point def) {
         final MapleData pointData = data.getChildByPath(path);
 
-        if (pointData == null)
+        if (pointData == null) {
             return def;
+        }
 
         return getPoint(pointData);
     }

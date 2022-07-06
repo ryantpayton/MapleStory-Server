@@ -84,3 +84,4 @@ nbdist/
 # Custom
 logs/
 wz*/
+scripts*/
