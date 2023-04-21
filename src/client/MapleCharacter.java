@@ -292,12 +292,12 @@ public class MapleCharacter extends AbstractMapleCharacterObject {
         savedLocations = new SavedLocation[SavedLocationType.values().length];
 
         for (MapleInventoryType type : MapleInventoryType.values()) {
-            byte b = 24;
+            short b = 24;
 
             if (type == MapleInventoryType.CASH)
-                b = 96;
+                b = 128;
 
-            inventory[type.ordinal()] = new MapleInventory(this, type, (byte) b);
+            inventory[type.ordinal()] = new MapleInventory(this, type, (short) b);
         }
 
         inventory[MapleInventoryType.CANHOLD.ordinal()] = new MapleInventoryProof(this);
@@ -9083,8 +9083,8 @@ public class MapleCharacter extends AbstractMapleCharacterObject {
         }
     }
 
-    public byte getSlots(int type) {
-        return type == MapleInventoryType.CASH.getType() ? 96 : inventory[type].getSlotLimit();
+    public short getSlots(int type) {
+        return type == MapleInventoryType.CASH.getType() ? (short)128 : inventory[type].getSlotLimit();
     }
 
     public boolean gainSlots(int type, int slots) {
@@ -9094,7 +9094,7 @@ public class MapleCharacter extends AbstractMapleCharacterObject {
     public boolean gainSlots(int type, int slots, boolean update) {
         slots += inventory[type].getSlotLimit();
 
-        if (slots <= 96) {
+        if (slots <= 128) {
             inventory[type].setSlotLimit(slots);
 
             this.saveCharToDB();

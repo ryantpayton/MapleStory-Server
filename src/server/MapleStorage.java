@@ -56,7 +56,7 @@ public class MapleStorage {
     private int id;
     private int currentNpcid;
     private int meso;
-    private byte slots;
+    private short slots;
     private Map<MapleInventoryType, List<Item>> typeItems = new HashMap<>();
     private List<Item> items;
     private Lock lock = MonitoredReentrantLockFactory.createLock(MonitoredLockType.STORAGE, true);
@@ -115,7 +115,7 @@ public class MapleStorage {
         return ret;
     }
 
-    public byte getSlots() {
+    public short getSlots() {
         return slots;
     }
 

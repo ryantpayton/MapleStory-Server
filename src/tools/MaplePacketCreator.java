@@ -3925,12 +3925,12 @@ public class MaplePacketCreator {
         return mplew.getPacket();
     }
 
-    public static byte[] getStorage(int npcId, byte slots, Collection<Item> items, int meso) {
+    public static byte[] getStorage(int npcId, short slots, Collection<Item> items, int meso) {
         final MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
         mplew.writeShort(SendOpcode.STORAGE.getValue());
         mplew.write(0x16);
         mplew.writeInt(npcId);
-        mplew.write(slots);
+        mplew.writeShort(slots);
         mplew.writeShort(0x7E);
         mplew.writeShort(0);
         mplew.writeInt(0);
@@ -3963,11 +3963,11 @@ public class MaplePacketCreator {
         return mplew.getPacket();
     }
 
-    public static byte[] mesoStorage(byte slots, int meso) {
+    public static byte[] mesoStorage(short slots, int meso) {
         final MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
         mplew.writeShort(SendOpcode.STORAGE.getValue());
         mplew.write(0x13);
-        mplew.write(slots);
+        mplew.writeShort(slots);
         mplew.writeShort(2);
         mplew.writeShort(0);
         mplew.writeInt(0);
@@ -3976,11 +3976,11 @@ public class MaplePacketCreator {
         return mplew.getPacket();
     }
 
-    public static byte[] storeStorage(byte slots, MapleInventoryType type, Collection<Item> items) {
+    public static byte[] storeStorage(short slots, MapleInventoryType type, Collection<Item> items) {
         final MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
         mplew.writeShort(SendOpcode.STORAGE.getValue());
         mplew.write(0xD);
-        mplew.write(slots);
+        mplew.writeShort(slots);
         mplew.writeShort(type.getBitfieldEncoding());
         mplew.writeShort(0);
         mplew.writeInt(0);
@@ -3992,11 +3992,11 @@ public class MaplePacketCreator {
         return mplew.getPacket();
     }
 
-    public static byte[] takeOutStorage(byte slots, MapleInventoryType type, Collection<Item> items) {
+    public static byte[] takeOutStorage(short slots, MapleInventoryType type, Collection<Item> items) {
         final MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
         mplew.writeShort(SendOpcode.STORAGE.getValue());
         mplew.write(0x9);
-        mplew.write(slots);
+        mplew.writeShort(slots);
         mplew.writeShort(type.getBitfieldEncoding());
         mplew.writeShort(0);
         mplew.writeInt(0);
@@ -4008,11 +4008,11 @@ public class MaplePacketCreator {
         return mplew.getPacket();
     }
 
-    public static byte[] arrangeStorage(byte slots, Collection<Item> items) {
+    public static byte[] arrangeStorage(short slots, Collection<Item> items) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
         mplew.writeShort(SendOpcode.STORAGE.getValue());
         mplew.write(0xF);
-        mplew.write(slots);
+        mplew.writeShort(slots);
         mplew.write(124);
 
         for (byte i = 0; i < 10; i++)

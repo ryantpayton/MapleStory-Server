@@ -51,12 +51,12 @@ import server.ThreadManager;
 public class MapleInventory implements Iterable<Item> {
     protected MapleCharacter owner;
     protected Map<Short, Item> inventory = new LinkedHashMap<>();
-    protected byte slotLimit;
+    protected short slotLimit;
     protected MapleInventoryType type;
     protected boolean checked = false;
     protected Lock lock = MonitoredReentrantLockFactory.createLock(MonitoredLockType.INVENTORY, true);
     
-    public MapleInventory(MapleCharacter mc, MapleInventoryType type, byte slotLimit) {
+    public MapleInventory(MapleCharacter mc, MapleInventoryType type, short slotLimit) {
         this.owner = mc;
         this.inventory = new LinkedHashMap<>();
         this.type = type;
@@ -71,7 +71,7 @@ public class MapleInventory implements Iterable<Item> {
         return type.equals(MapleInventoryType.EQUIP) || type.equals(MapleInventoryType.EQUIPPED);
     }
 
-    public byte getSlotLimit() {
+    public short getSlotLimit() {
         lock.lock();
         try {
             return slotLimit;
