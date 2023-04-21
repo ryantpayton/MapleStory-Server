@@ -404,6 +404,7 @@ public class CommandsExecutor {
         addCommand(6, DCAllCommand.class);
         addCommand(6, MapPlayersCommand.class);
         addCommand(6, GetAccCommand.class);
+        addCommand(6, GetCharIdCommand.class);
         addCommand(6, ShutdownCommand.class);
         addCommand(6, ClearQuestCacheCommand.class);
         addCommand(6, ClearQuestCommand.class);
