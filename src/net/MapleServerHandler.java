@@ -38,6 +38,7 @@ import client.MapleClient;
 import constants.ServerConstants;
 import server.TimerManager;
 
+import net.opcodes.RecvOpcode;
 import net.server.Server;
 import net.server.audit.LockCollector;
 import net.server.audit.locks.MonitoredLockType;
@@ -176,7 +177,20 @@ public class MapleServerHandler extends IoHandlerAdapter {
             if (packetId == (short) 24) {
                 System.out.println("Received Packet: PONG");
             } else {
-                System.out.println("Received Packet: " + packetId);
+                RecvOpcode op = null;
+
+                for (RecvOpcode opcode : RecvOpcode.values()) {
+                    if (opcode.getValue() == packetId) {
+                        op = opcode;
+                        break;
+                    }
+                }
+
+                if (op != null) {
+                    System.out.println("Received Packet: " + op.name());
+                } else {
+                    System.out.println("Received Packet: " + packetId);
+                }
             }
         }
 
