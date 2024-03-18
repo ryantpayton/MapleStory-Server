@@ -1,21 +1,21 @@
 > All credits go to Ronan C. P. Lana, Nexon, Wizet, and the contributors of HeavenMS and subsequent parties.
 > I do not take credit for any files located herein unless specifically specified otherwise.
-> Forked from [HeavenMS](https://github.com/ronancpl/HeavenMS) in order to have a history of changes made herein.
+> Forked from [HeavenMS] in order to have a history of changes made herein.
 
 ### Required Files
  * Use Git or checkout with SVN using [this](https://github.com/ryantpayton/MapleStory.git) web URL
    * I will refer to this location, for the source, later as **{source}**
  * Download and install the following from [here](https://drive.google.com/drive/folders/0BzDsHSr-0V4MYVJ0TWIxd05hYUk):
-   * current_wz
-   * HaSuite-211.7z
+   * Download the latest [HaRepacker]
    * jdk-7u79-windows-x64.exe
    * ManagerMsv83.exe
      * I will refer to this location, for the client, later as **{client}**
    * netbeans-8.0.2-javase-windows.exe
- * Download the latest [localhost](https://hostr.co/tsYsQzzV6xT0)
- * Download the latest [mariadb](https://downloads.mariadb.org/mariadb/) that is available for **Windows**
+ * Download the latest [localhost]
+ * Download the latest [mariadb] that is available for **Windows**
  * Download [STREDIT](http://www.craftnet.nl/Downloads/)
    * I will refer to this location, for the extracted STREDIT, later as **{edit}**
+ * Download the latest XML files to be used by the server: [HeavenServer v228.3.zip][HeavenServer]
 
 ### Creating a New Database
  1. Open **HeidiSQL**
@@ -170,5 +170,8 @@ I am going to go over how to WZ Edit with using Heena as an example. I want to c
  22. Click **Yes**
  23. Close **HaRepacker.exe**
 
-### MobBookUpdate
-```TODO: Coming soon```
+ [HeavenMS]:      https://github.com/ronancpl/HeavenMS
+ [HaRepacker]:    https://github.com/lastbattle/Harepacker-resurrected/releases
+ [localhost]:     https://hostr.co/tsYsQzzV6xT0
+ [mariadb]:       https://downloads.mariadb.org/mariadb/
+ [HeavenServer]:  https://1drv.ms/u/s!Al6eadQnem68on4hmryFen34AZIV?e=nNJPMG
