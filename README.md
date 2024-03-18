@@ -6,11 +6,11 @@
  * Use Git or checkout with SVN using [this](https://github.com/ryantpayton/MapleStory.git) web URL
    * I will refer to this location, for the source, later as **{source}**
  * Download and install the following from [here](https://drive.google.com/drive/folders/0BzDsHSr-0V4MYVJ0TWIxd05hYUk):
-   * Download the latest [HaRepacker]
    * jdk-7u79-windows-x64.exe
    * ManagerMsv83.exe
      * I will refer to this location, for the client, later as **{client}**
    * netbeans-8.0.2-javase-windows.exe
+ * Download the latest [HaRepacker]
  * Download the latest [localhost]
  * Download the latest [mariadb] that is available for **Windows**
  * Download [STREDIT](http://www.craftnet.nl/Downloads/)
