@@ -106,7 +106,7 @@ public final class PacketProcessor {
             //LOGIN HANDLERS
             registerHandler(RecvOpcode.ACCEPT_TOS, new AcceptToSHandler());
             registerHandler(RecvOpcode.AFTER_LOGIN, new AfterLoginHandler());
-            registerHandler(RecvOpcode.SERVERLIST_REREQUEST, new ServerlistRequestHandler());
+            registerHandler(RecvOpcode.SERVERINFO_REQUEST, new ServerlistRequestHandler());
             registerHandler(RecvOpcode.CHARLIST_REQUEST, new CharlistRequestHandler());
             registerHandler(RecvOpcode.CHAR_SELECT, new CharSelectedHandler());
             registerHandler(RecvOpcode.LOGIN_PASSWORD, new LoginPasswordHandler());
@@ -140,7 +140,7 @@ public final class PacketProcessor {
             registerHandler(RecvOpcode.QUEST_ACTION, new QuestActionHandler());
             registerHandler(RecvOpcode.GRENADE_EFFECT, new GrenadeEffectHandler());
             registerHandler(RecvOpcode.NPC_SHOP, new NPCShopHandler());
-            registerHandler(RecvOpcode.ITEM_SORT, new InventoryMergeHandler());
+            registerHandler(RecvOpcode.ITEM_GATHER, new InventoryMergeHandler());
             registerHandler(RecvOpcode.ITEM_MOVE, new ItemMoveHandler());
             registerHandler(RecvOpcode.MESO_DROP, new MesoDropHandler());
             registerHandler(RecvOpcode.PLAYER_LOGGEDIN, new PlayerLoggedinHandler());
@@ -250,7 +250,7 @@ public final class PacketProcessor {
             registerHandler(RecvOpcode.MOB_DAMAGE_MOB_FRIENDLY, new MobDamageMobFriendlyHandler());
             registerHandler(RecvOpcode.PARTY_SEARCH_REGISTER, new PartySearchRegisterHandler());
             registerHandler(RecvOpcode.PARTY_SEARCH_START, new PartySearchStartHandler());
-            registerHandler(RecvOpcode.ITEM_SORT2, new InventorySortHandler());
+            registerHandler(RecvOpcode.ITEM_SORT, new InventorySortHandler());
             registerHandler(RecvOpcode.LEFT_KNOCKBACK, new LeftKnockbackHandler());
             registerHandler(RecvOpcode.SNOWBALL, new SnowballHandler());
             registerHandler(RecvOpcode.COCONUT, new CoconutHandler());
