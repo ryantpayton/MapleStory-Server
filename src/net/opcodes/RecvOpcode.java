@@ -209,7 +209,8 @@ public enum RecvOpcode {
     FOLLOW_OTHER_USER_REQUEST(0x9204), //TODO: this is for "follow" function
     CANCEL_FOLLOW_REQUEST(0x9207), //TODO
     SET_FOLLOW_RESULT(0x9208), //TODO
-    QUICKSLOT_CHANGE(0x9209), //TODO: not even sure what this is
+    QUICKSLOT_CHANGE(0x9209), //TODO: not even sure what this is,
+    EXPEDITION_REQUEST(0x920A), //TODO: this is critical for expeditions (how we are gonna structure most raids)
     //other missing stuff: friend finder, a few special ops for handling escort missions like hoblin
     CUSTOM_PACKET(0x3713) ; //13 37 lol
     private int code = -2;

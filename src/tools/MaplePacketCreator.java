@@ -7920,7 +7920,7 @@ public class MaplePacketCreator {
      */
     public static byte[] blockedMessage2(int type) {
         final MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(SendOpcode.BLOCKED_SERVER.getValue());
+        mplew.writeShort(SendOpcode.BLOCKED_CHANNEL.getValue());
         mplew.write(type);
 
         return mplew.getPacket();
