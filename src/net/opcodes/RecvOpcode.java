@@ -25,20 +25,20 @@ public enum RecvOpcode {
     
     LOGIN_PASSWORD(0x01),
     GUEST_LOGIN(0x02), //basically unused
-    LOGIN_EMAIL(0x03), //TODO: should remove this, we don't support email login
+    LOGIN_EMAIL(0x03), //supported but unused
     SERVERINFO_REQUEST(0x04),
-    CHARLIST_REQUEST(0x05), //TODO
-    SERVERSTATUS_REQUEST(0x06), //TODO
-    ACCEPT_TOS(0x07), //TODO: we really shouldn't need this either
+    CHARLIST_REQUEST(0x05),
+    SERVERSTATUS_REQUEST(0x06),
+    ACCEPT_TOS(0x07), //don't need
     SET_GENDER(0x08), //don't need
-    AFTER_LOGIN(0x09), //TODO: do we need this still? are we doing account pins? isn't for resetting info on the site?
-    REGISTER_PIN(0x0A), //TODO see above
+    AFTER_LOGIN(0x09), //don't need
+    REGISTER_PIN(0x0A), //don't need
     SERVERLIST_REQUEST(0x0B), //same thing as serverinfo
     PLAYER_DC(0x0C),
     VIEW_ALL_CHAR(0x0D),
     PICK_ALL_CHAR(0x0E),
-    NAME_TRANSFER(0x10), //TODO pretty sure this is unused in the v92 codebase
-    WORLD_TRANSFER(0x12), //TODO pretty sure this is unused in the v92 codebase
+    NAME_TRANSFER(0x10), //should not use this
+    WORLD_TRANSFER(0x12), //no world transfers
     CHAR_SELECT(0x13),
     PLAYER_LOGGEDIN(0x14), //TODO
     CHECK_CHAR_NAME(0x15), //TODO
