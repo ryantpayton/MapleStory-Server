@@ -146,28 +146,7 @@ public class DueyProcessor {
         try {
             DueyPackages dueypack;
             if (rs.getInt("type") == 1) {
-                Equip eq = new Equip(rs.getInt("itemid"), (byte) 0, -1);
-                eq.setUpgradeSlots((byte) rs.getInt("upgradeslots"));
-                eq.setLevel((byte) rs.getInt("level"));
-                eq.setItemLevel((byte) rs.getInt("itemlevel"));
-                eq.setItemExp(rs.getInt("itemexp"));
-                eq.setStr((short) rs.getInt("str"));
-                eq.setDex((short) rs.getInt("dex"));
-                eq.setInt((short) rs.getInt("int"));
-                eq.setLuk((short) rs.getInt("luk"));
-                eq.setHp((short) rs.getInt("hp"));
-                eq.setMp((short) rs.getInt("mp"));
-                eq.setWatk((short) rs.getInt("watk"));
-                eq.setMatk((short) rs.getInt("matk"));
-                eq.setWdef((short) rs.getInt("wdef"));
-                eq.setMdef((short) rs.getInt("mdef"));
-                eq.setAcc((short) rs.getInt("acc"));
-                eq.setAvoid((short) rs.getInt("avoid"));
-                eq.setHands((short) rs.getInt("hands"));
-                eq.setSpeed((short) rs.getInt("speed"));
-                eq.setJump((short) rs.getInt("jump"));
-                eq.setFlag((byte) rs.getInt("flag"));
-                eq.setOwner(rs.getString("owner"));
+                Equip eq = new Equip(rs);
                 dueypack = new DueyPackages(rs.getInt("PackageId"), eq);
             } else if (rs.getInt("type") == 2) {
                 Item newItem = new Item(rs.getInt("itemid"), (short) 0, (short) rs.getInt("quantity"));

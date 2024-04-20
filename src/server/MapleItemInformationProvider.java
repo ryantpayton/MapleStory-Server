@@ -99,6 +99,8 @@ public class MapleItemInformationProvider {
     protected Map<Integer, Map<String, Integer>> skillUpgradeCache = new HashMap<>();
     protected Map<Integer, MapleData> skillUpgradeInfoCache = new HashMap<>();
     protected Map<Integer, Pair<Integer, Set<Integer>>> cashPetFoodCache = new HashMap<>();
+    //mapping: ID -> potentials with that ID (1 per level range)
+    public Map<Short, Potential> potentials = new HashMap<>();
 
     private MapleItemInformationProvider() {
         loadCardIdData();
@@ -112,6 +114,16 @@ public class MapleItemInformationProvider {
         etcStringData = stringData.getData("Etc.img");
         insStringData = stringData.getData("Ins.img");
         petStringData = stringData.getData("Pet.img");
+
+        for (MapleData potentialID : itemData.getData("Potentials.img")) {
+            try {
+                short id = Short.parseShort(potentialID.getName());
+                Potential pot = new Potential();
+                pot.load(potentialID);
+                potentials.put(id, pot);
+            } catch (NumberFormatException ignored) {
+            }
+        }
 
         isQuestItemCache.put(0, false);
         isPartyQuestItemCache.put(0, false);
@@ -1280,6 +1292,7 @@ public class MapleItemInformationProvider {
         return nEquip.copy();
     }
 
+    //TODO: this needs to be range based on equip level
     public Equip randomizeStats(Equip equip) {
         equip.setStr(getRandStat(equip.getStr(), 5));
         equip.setDex(getRandStat(equip.getDex(), 5));

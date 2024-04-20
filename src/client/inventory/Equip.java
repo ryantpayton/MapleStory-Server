@@ -22,12 +22,15 @@
 package client.inventory;
 
 import client.MapleClient;
+import client.autoban.AutobanFactory;
+import constants.EquipUpgradeConstants;
 import constants.ServerConstants;
 import constants.ExpTable;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+
 import server.MapleItemInformationProvider;
 import tools.MaplePacketCreator;
 import tools.Pair;
@@ -70,6 +73,18 @@ public class Equip extends Item {
     private boolean wear = false;
     private boolean isUpgradeable, isElemental = false;    // timeless or reverse, or any equip that could levelup on GMS for all effects
 
+    private byte potentialGrade;
+    // 0: no potential
+    // rare: 1 (unrevealed) | 5 (revealed)
+    // epic: 2 (unrevealed) | 6 (revealed)
+    // unique: 3 (unrevealed) | 7 (revealed)
+
+    private byte stars;
+    private short potentialLine1, potentialLine2, potentialLine3;
+    private List<Potential> validPotentialsRare = null;
+    private List<Potential> validPotentialsEpic = null;
+    private List<Potential> validPotentialsUnique = null;
+
     public Equip(int id, short position) {
         this(id, position, 0);
     }
@@ -79,8 +94,48 @@ public class Equip extends Item {
         this.upgradeSlots = (byte) slots;
         this.itemExp = 0;
         this.itemLevel = 1;
-        
+
         this.isElemental = (MapleItemInformationProvider.getInstance().getEquipLevel(id, false) > 1);
+    }
+
+    /**
+     * USE THIS CONSTRUCTOR WHEN DOING ANY DATABASE WORK UNLESS YOU HAVE A GOOD REASON OTHERWISE
+     * @param rs DB result
+     * @throws SQLException on db failure
+     */
+    public Equip(ResultSet rs) throws SQLException {
+        super(rs.getInt("itemid"), (short) rs.getInt("position"), (short) 1);
+        setOwner(rs.getString("owner"));
+        setQuantity((short) rs.getInt("quantity"));
+        setAcc((short) rs.getInt("acc"));
+        setAvoid((short) rs.getInt("avoid"));
+        setDex((short) rs.getInt("dex"));
+        setHands((short) rs.getInt("hands"));
+        setHp((short) rs.getInt("hp"));
+        setInt((short) rs.getInt("int"));
+        setJump((short) rs.getInt("jump"));
+        setVicious((short) rs.getInt("vicious"));
+        setFlag((byte) rs.getInt("flag"));
+        setLuk((short) rs.getInt("luk"));
+        setMatk((short) rs.getInt("matk"));
+        setMdef((short) rs.getInt("mdef"));
+        setMp((short) rs.getInt("mp"));
+        setSpeed((short) rs.getInt("speed"));
+        setStr((short) rs.getInt("str"));
+        setWatk((short) rs.getInt("watk"));
+        setWdef((short) rs.getInt("wdef"));
+        setUpgradeSlots((byte) rs.getInt("upgradeslots"));
+        setLevel((byte) rs.getByte("level"));
+        setItemExp(rs.getInt("itemexp"));
+        setItemLevel(rs.getByte("itemlevel"));
+        setExpiration(rs.getLong("expiration"));
+        setGiftFrom(rs.getString("giftFrom"));
+        setRingId(rs.getInt("ringid"));
+        setPotentialGrade(rs.getByte("potentialGrade"));
+        setStars(rs.getByte("stars"));
+        setPotentialLine1(rs.getShort("potentialLine1"));
+        setPotentialLine2(rs.getShort("potentialLine2"));
+        setPotentialLine3(rs.getShort("potentialLine3"));
     }
 
     @Override
@@ -107,6 +162,11 @@ public class Equip extends Item {
         ret.itemLevel = itemLevel;
         ret.itemExp = itemExp;
         ret.level = level;
+        ret.potentialGrade = potentialGrade;
+        ret.stars = stars;
+        ret.potentialLine1 = potentialLine1;
+        ret.potentialLine2 = potentialLine2;
+        ret.potentialLine3 = potentialLine3;
         ret.log = new LinkedList<>(log);
         ret.setOwner(getOwner());
         ret.setQuantity(getQuantity());
@@ -272,6 +332,46 @@ public class Equip extends Item {
 
     public void setLevel(byte level) {
         this.level = level;
+    }
+
+    public byte getPotentialGrade() {
+        return potentialGrade;
+    }
+
+    public void setPotentialGrade(byte potentialGrade) {
+        this.potentialGrade = potentialGrade;
+    }
+
+    public byte getStars() {
+        return stars;
+    }
+
+    public void setStars(byte stars) {
+        this.stars = stars;
+    }
+
+    public short getPotentialLine1() {
+        return potentialLine1;
+    }
+
+    public void setPotentialLine1(short potentialLine1) {
+        this.potentialLine1 = potentialLine1;
+    }
+
+    public short getPotentialLine2() {
+        return potentialLine2;
+    }
+
+    public void setPotentialLine2(short potentialLine2) {
+        this.potentialLine2 = potentialLine2;
+    }
+
+    public short getPotentialLine3() {
+        return potentialLine3;
+    }
+
+    public void setPotentialLine3(short potentialLine3) {
+        this.potentialLine3 = potentialLine1;
     }
 
     private static int getStatModifier(boolean isAttribute) {
@@ -639,5 +739,61 @@ public class Equip extends Item {
 
     public byte getItemLevel() {
         return itemLevel;
+    }
+
+    private List<Potential> getValidPotentials(int rarity) {
+        if (this.validPotentialsRare == null || this.validPotentialsEpic == null || this.validPotentialsUnique == null) {
+            MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+            int reqLevel = ii.getEquipLevelReq(this.getItemId());
+            validPotentialsRare = Potential.allowed(this.getItemId(), reqLevel, (byte) 1);
+            validPotentialsEpic = Potential.allowed(this.getItemId(), reqLevel, (byte) 2);
+            validPotentialsUnique = Potential.allowed(this.getItemId(), reqLevel, (byte) 3);
+        }
+        return switch (rarity) {
+            case 1, 5 -> this.validPotentialsRare;
+            case 2, 6 -> this.validPotentialsEpic;
+            case 3, 8 -> this.validPotentialsUnique;
+            default -> new ArrayList<>();
+        };
+    }
+
+    private short generatePotential(int rarity) {
+        List<Potential> possible = getValidPotentials(rarity);
+        return possible.get(Randomizer.nextInt(possible.size())).getId();
+    }
+
+    // potentials are reset on reveal
+    // assumes autoban checks were already completed, including existing potential checks
+    public void onPotentialReveal() {
+        if (potentialLine1 == 0) {
+            potentialLine1 = generatePotential(1);
+            potentialGrade = 5;
+        } else {
+            short basePotentialGrade = potentialGrade;
+            if (basePotentialGrade > 4) {
+                basePotentialGrade -= 4;
+            }
+            if (basePotentialGrade < 3) {
+                if (Randomizer.nextDouble() <= EquipUpgradeConstants.POTENTIAL_UPGRADE_GRADE_RATE) {
+                    basePotentialGrade += 1;
+                }
+            }
+            potentialLine1 = generatePotential(basePotentialGrade);
+            short line2Grade = Randomizer.nextDouble() <= EquipUpgradeConstants.POTENTIAL_ADDITIONAL_LINE_PRIME_RATE ? basePotentialGrade : (short) (basePotentialGrade - 1);
+            short line3Grade = Randomizer.nextDouble() <= EquipUpgradeConstants.POTENTIAL_ADDITIONAL_LINE_PRIME_RATE ? basePotentialGrade : (short) (basePotentialGrade - 1);
+            boolean newLine = Randomizer.nextDouble() <= EquipUpgradeConstants.POTENTIAL_UPGRADE_NEW_LINE_RATE;
+            if (potentialLine2 != 0) {
+                potentialLine2 = generatePotential(line2Grade);
+                if (potentialLine3 != 0) {
+                    potentialLine3 = generatePotential(line3Grade);
+                }
+                else if (newLine) {
+                    potentialLine3 = generatePotential(line3Grade);
+                }
+            }
+            else if (newLine) {
+                potentialLine2 = generatePotential(line2Grade);
+            }
+        }
     }
 }

@@ -80,35 +80,7 @@ public enum ItemFactory {
     }
     
     private static Equip loadEquipFromResultSet(ResultSet rs) throws SQLException {
-        Equip equip = new Equip(rs.getInt("itemid"), (short) rs.getInt("position"));
-        equip.setOwner(rs.getString("owner"));
-        equip.setQuantity((short) rs.getInt("quantity"));
-        equip.setAcc((short) rs.getInt("acc"));
-        equip.setAvoid((short) rs.getInt("avoid"));
-        equip.setDex((short) rs.getInt("dex"));
-        equip.setHands((short) rs.getInt("hands"));
-        equip.setHp((short) rs.getInt("hp"));
-        equip.setInt((short) rs.getInt("int"));
-        equip.setJump((short) rs.getInt("jump"));
-        equip.setVicious((short) rs.getInt("vicious"));
-        equip.setFlag((byte) rs.getInt("flag"));
-        equip.setLuk((short) rs.getInt("luk"));
-        equip.setMatk((short) rs.getInt("matk"));
-        equip.setMdef((short) rs.getInt("mdef"));
-        equip.setMp((short) rs.getInt("mp"));
-        equip.setSpeed((short) rs.getInt("speed"));
-        equip.setStr((short) rs.getInt("str"));
-        equip.setWatk((short) rs.getInt("watk"));
-        equip.setWdef((short) rs.getInt("wdef"));
-        equip.setUpgradeSlots((byte) rs.getInt("upgradeslots"));
-        equip.setLevel((byte) rs.getByte("level"));
-        equip.setItemExp(rs.getInt("itemexp"));
-        equip.setItemLevel(rs.getByte("itemlevel"));
-        equip.setExpiration(rs.getLong("expiration"));
-        equip.setGiftFrom(rs.getString("giftFrom"));
-        equip.setRingId(rs.getInt("ringid"));
-        
-        return equip;
+        return new Equip(rs);
     }
     
     public static List<Pair<Item, Integer>> loadEquippedItems(int id, boolean isAccount, boolean login) throws SQLException {
