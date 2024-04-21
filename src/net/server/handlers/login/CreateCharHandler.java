@@ -34,13 +34,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 public final class CreateCharHandler extends AbstractMaplePacketHandler {
+
     private final static Set<Integer> IDs = new HashSet<>(Arrays.asList(new Integer[]{
-            1302000, 1312004, 1322005, 1442079,                                         // Weapons
-            1040002, 1040006, 1040010, 1041002, 1041006, 1041010, 1041011, 1042167,     // Bottom
-            1060002, 1060006, 1061002, 1061008, 1062115,                                // Top
-            1072001, 1072005, 1072037, 1072038, 1072383,                                // Shoes
-            30000, 30010, 30020, 30030, 31000, 31040, 31050,                            // Hair
-            20000, 20001, 20002, 21000, 21001, 21002, 21201, 20401, 20402, 21700, 20100 // Face
+        1302000, 1312004, 1322005, 1442079,                                         // Weapons
+        1040002, 1040006, 1040010, 1041002, 1041006, 1041010, 1041011, 1042167,     // Bottom
+        1060002, 1060006, 1061002, 1061008, 1062115,                                // Top
+        1072001, 1072005, 1072037, 1072038, 1072383,                                // Shoes
+        30000, 30010, 30020, 30030, 31000, 31040, 31050,                            // Hair
+        20000, 20001, 20002, 21000, 21001, 21002, 21201, 20401, 20402, 21700, 20100 // Face
     }));
 
     private static boolean isLegal(Integer toCompare) {
@@ -76,7 +77,7 @@ public final class CreateCharHandler extends AbstractMaplePacketHandler {
         if (ServerConstants.USE_CUSTOM_CLIENT) {
             // TODO: Add check for invalid items
         } else {
-            int[] items = new int[]{weapon, top, bottom, shoes, hairstyle, face};
+            int[] items = new int[]{weapon, top, bottom, shoes, hair, face};
 
             for (int i = 0; i < items.length; i++) {
                 if (!isLegal(items[i])) {
