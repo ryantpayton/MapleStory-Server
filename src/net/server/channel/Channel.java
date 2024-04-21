@@ -142,7 +142,7 @@ public final class Channel {
         this.channel = channel;
 
         this.ongoingStartTime = startTime + 10000; // rude approach to a world's last channel boot time, placeholder for the 1st wedding reservation ever
-        this.mapFactory = new MapleMapFactory(null, MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Map002.wz")), MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/String.wz")), world, channel);
+        this.mapFactory = new MapleMapFactory(null, MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Map.wz")), MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/String.wz")), world, channel);
 
         try {
             eventSM = new EventScriptManager(this, getEvents());

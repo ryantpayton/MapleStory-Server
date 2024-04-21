@@ -39,7 +39,7 @@ import org.apache.commons.io.FileUtils;
  */
 public class MapleMapInfoRetriever {
 
-    static String mapWzPath = "../../wz/Map002.wz/Map";
+    static String mapWzPath = "../../wz/Map.wz/Map";
     static String newFile = "lib/MapReport.txt";
 
     static List<Integer> missingInfo = new ArrayList<>();

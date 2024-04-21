@@ -39,9 +39,6 @@ import tools.StringUtil;
 public class MapleLifeFactory {
 
     private static MapleDataProvider data = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Mob.wz"));
-    private static MapleDataProvider data001 = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Mob001.wz"));
-    private static MapleDataProvider data002 = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Mob002.wz"));
-    private static MapleDataProvider data2 = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Mob2.wz"));
     private final static MapleDataProvider stringDataWZ = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/String.wz"));
     private static MapleData mobStringData = stringDataWZ.getData("Mob.img");
     private static MapleData npcStringData = stringDataWZ.getData("Npc.img");
@@ -85,24 +82,8 @@ public class MapleLifeFactory {
     }
 
     private static MapleData getMonsterData(int mid) {
-        MapleData monsterData;
         String monsterStr = StringUtil.getLeftPaddedStr(Integer.toString(mid) + ".img", '0', 11);
-
-        monsterData = data.getData(monsterStr);
-
-        if (monsterData == null) {
-            monsterData = data001.getData(monsterStr);
-        }
-
-        if (monsterData == null) {
-            monsterData = data002.getData(monsterStr);
-        }
-
-        if (monsterData == null) {
-            monsterData = data2.getData(monsterStr);
-        }
-
-        return monsterData;
+        return data.getData(monsterStr);
     }
 
     private static Pair<MapleMonsterStats, List<MobAttackInfoHolder>> getMonsterStats(int mid) {
