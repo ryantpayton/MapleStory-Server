@@ -46,7 +46,7 @@ import provider.MapleDataTool;
 public class MobSkillFactory {
 
     private static Map<String, MobSkill> mobSkills = new HashMap<String, MobSkill>();
-    private final static MapleDataProvider dataSource = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Skill001.wz"));
+    private final static MapleDataProvider dataSource = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Skill.wz"));
     private final static ReentrantReadWriteLock dataLock = new MonitoredReentrantReadWriteLock(MonitoredLockType.MOBSKILL_FACTORY);
     private final static ReadLock rL = dataLock.readLock();
     private final static WriteLock wL = dataLock.writeLock();

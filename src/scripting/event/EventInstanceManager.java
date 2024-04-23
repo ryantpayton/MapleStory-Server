@@ -129,7 +129,7 @@ public class EventInstanceManager {
         this.em = em;
         this.name = name;
         this.ess = new EventScriptScheduler();
-        mapFactory = new MapleMapFactory(this, MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Map002.wz")), MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/String.wz")), (byte) 0, (byte) 1); // Fk this
+        mapFactory = new MapleMapFactory(this, MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Map.wz")), MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/String.wz")), (byte) 0, (byte) 1); // Fk this
 
         mapFactory.setChannel(em.getChannelServer().getId());
     }

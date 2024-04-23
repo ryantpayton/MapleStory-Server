@@ -43,7 +43,7 @@ public class MaplePlayerNPCFactory {
         MapleData thisData = npc.getData("9977777.img");
 
         if (thisData != null) {
-            MapleDataProvider map = MapleDataProviderFactory.getDataProvider(new File("wz/Map002.wz"));
+            MapleDataProvider map = MapleDataProviderFactory.getDataProvider(new File("wz/Map.wz"));
 
             thisData = map.getData("Map/Map7/777777777.img");
 
