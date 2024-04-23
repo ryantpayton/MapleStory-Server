@@ -25,10 +25,7 @@ import java.io.*;
 import java.net.InetAddress;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -749,8 +746,8 @@ public class MapleClient {
 			if (!rs.next()) {
 				return null;
 			}
-			long blubb = rs.getLong("tempban");
-			if (blubb == 0) { // basically if timestamp in db is 0000-00-00
+			Timestamp t = rs.getTimestamp("tempban");
+			if (t == null) {
 				return null;
 			}
 			lTempban.setTimeInMillis(rs.getTimestamp("tempban").getTime());

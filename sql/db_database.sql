@@ -203,7 +203,7 @@ CREATE TABLE IF NOT EXISTS `cooldowns` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `temp_data` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL DEFAULT '0',
   `dropperid` int(11) NOT NULL,
   `itemid` int(11) NOT NULL DEFAULT '0',
   `minimum_quantity` int(11) NOT NULL DEFAULT '1',

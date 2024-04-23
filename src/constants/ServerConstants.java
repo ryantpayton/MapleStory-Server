@@ -135,9 +135,9 @@ public class ServerConstants {
     public static final boolean USE_WHOLE_SERVER_RANKING = false;           // Enables a ranking pool made from every character registered on the server for the "ranks" command, instead of separated by worlds.
 
     // Server Rates And Experience
-    public static final int EXP_RATE = 1;                                   // NOTE: World-specific rates within "world.ini" OVERRIDES the default rates from here.
-    public static final int MESO_RATE = 1;
-    public static final int DROP_RATE = 1;
+    public static int EXP_RATE = 1;                                   // NOTE: World-specific rates within "world.ini" OVERRIDES the default rates from here.
+    public static int MESO_RATE = 1;
+    public static int DROP_RATE = 1;
     public static final int BOSS_DROP_RATE = 1;                             // NOTE: Boss drop rate OVERRIDES common drop rate, for bosses-only.
     public static final int QUEST_RATE = 1;                                 // Multiplier for Exp & Meso gains when completing a quest. Only available when USE_QUEST_RATE is true. Stacks with server Exp & Meso rates.
     public static final int FISHING_RATE = 10;                              // Multiplier for success likelihood on meso thrown during fishing.
@@ -333,6 +333,9 @@ public class ServerConstants {
             ServerConstants.DB_URL = p.getProperty("URL");
             ServerConstants.DB_USER = p.getProperty("DB_USER");
             ServerConstants.DB_PASS = p.getProperty("DB_PASS");
+            ServerConstants.EXP_RATE = Integer.parseInt(p.getProperty("EXP_RATE", "1"));
+            ServerConstants.MESO_RATE = Integer.parseInt(p.getProperty("MESO_RATE", "1"));
+            ServerConstants.DROP_RATE = Integer.parseInt(p.getProperty("DROP_RATE", "1"));
 
             // java8 And Shutdownhook
             ServerConstants.JAVA_8 = p.getProperty("JAVA8").equalsIgnoreCase("TRUE");

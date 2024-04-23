@@ -190,6 +190,11 @@ public class MapleServerHandler extends IoHandlerAdapter {
                     System.out.println("Received Packet: " + op.name());
                 } else {
                     System.out.println("Received Packet: " + packetId);
+                    StringBuilder sb = new StringBuilder();
+                    for (byte b : content) {
+                        sb.append(String.format("%02X ", b));
+                    }
+                    System.out.println(sb.toString());
                 }
             }
         }

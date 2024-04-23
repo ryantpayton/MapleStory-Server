@@ -1234,6 +1234,9 @@ public class Server {
     }
 
     public MapleGuild getGuild(int id, int world, MapleCharacter mc) {
+        if (id == 0) {
+            return null;
+        }
         synchronized (guilds) {
             if (guilds.get(id) != null)
                 return guilds.get(id);
