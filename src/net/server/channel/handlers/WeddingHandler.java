@@ -12,12 +12,14 @@ import client.MapleCharacter;
 import client.MapleClient;
 import constants.ItemConstants;
 import tools.DatabaseConnection;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import net.AbstractMaplePacketHandler;
 import client.inventory.manipulator.MapleInventoryManipulator;
 import tools.MaplePacketCreator;
@@ -25,7 +27,6 @@ import tools.data.input.SeekableLittleEndianAccessor;
 import tools.packets.Wedding;
 
 /**
- *
  * @author Eric
  */
 public final class WeddingHandler extends AbstractMaplePacketHandler {
@@ -85,7 +86,7 @@ public final class WeddingHandler extends AbstractMaplePacketHandler {
         }
     }
     */
-    
+
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         c.announce(MaplePacketCreator.enableActions());

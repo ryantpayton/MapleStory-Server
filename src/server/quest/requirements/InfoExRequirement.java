@@ -23,49 +23,50 @@ package server.quest.requirements;
 
 import client.MapleCharacter;
 import client.MapleQuestStatus;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import provider.MapleData;
 import provider.MapleDataTool;
 import server.quest.MapleQuest;
 import server.quest.MapleQuestRequirementType;
 
 /**
- *
  * @author Tyler (Twdtwd)
  */
 public class InfoExRequirement extends MapleQuestRequirement {
-	private List<String> infoExpected = new ArrayList<>();
-	private int questID;
-	
-	
-	public InfoExRequirement(MapleQuest quest, MapleData data) {
-		super(MapleQuestRequirementType.INFO_EX);
-		processData(data);
-		questID = quest.getId();
-	}
-	
-	@Override
-	public void processData(MapleData data) {
-		// Because we have to...
-		for(MapleData infoEx : data.getChildren()) {
-			MapleData value = infoEx.getChildByPath("value");
-			infoExpected.add(MapleDataTool.getString(value, ""));
-		}
-	}
-	
-	
-	@Override
-	public boolean check(MapleCharacter chr, Integer npcid) {
-		MapleQuestStatus status = chr.getQuest(MapleQuest.getInstance(questID));
-		return infoExpected.contains(status.getInfo());
-	}
-	
-	public List<String> getInfo() {
-		return infoExpected;
-	}
-	
-	public String getFirstInfo() {
-		return !infoExpected.isEmpty() ? infoExpected.get(0) : "";
-	}
+    private List<String> infoExpected = new ArrayList<>();
+    private int questID;
+
+
+    public InfoExRequirement(MapleQuest quest, MapleData data) {
+        super(MapleQuestRequirementType.INFO_EX);
+        processData(data);
+        questID = quest.getId();
+    }
+
+    @Override
+    public void processData(MapleData data) {
+        // Because we have to...
+        for (MapleData infoEx : data.getChildren()) {
+            MapleData value = infoEx.getChildByPath("value");
+            infoExpected.add(MapleDataTool.getString(value, ""));
+        }
+    }
+
+
+    @Override
+    public boolean check(MapleCharacter chr, Integer npcid) {
+        MapleQuestStatus status = chr.getQuest(MapleQuest.getInstance(questID));
+        return infoExpected.contains(status.getInfo());
+    }
+
+    public List<String> getInfo() {
+        return infoExpected;
+    }
+
+    public String getFirstInfo() {
+        return !infoExpected.isEmpty() ? infoExpected.get(0) : "";
+    }
 }

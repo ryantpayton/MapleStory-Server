@@ -7,13 +7,14 @@ package client.autoban;
 
 import client.MapleCharacter;
 import constants.ServerConstants;
+
 import java.util.HashMap;
 import java.util.Map;
+
 import net.server.Server;
 import tools.FilePrinter;
 
 /**
- *
  * @author kevintjuh93
  */
 public class AutobanManager {
@@ -33,10 +34,10 @@ public class AutobanManager {
     }
 
     public void addPoint(AutobanFactory fac, String reason) {
-    	if (chr.isGM() || chr.isBanned()){
-    		return;
-    	}
-    	if (ServerConstants.USE_AUTOBAN) {
+        if (chr.isGM() || chr.isBanned()) {
+            return;
+        }
+        if (ServerConstants.USE_AUTOBAN) {
             if (lastTime.containsKey(fac)) {
                 if (lastTime.get(fac) < (Server.getInstance().getCurrentTime() - fac.getExpire())) {
                     points.put(fac, points.get(fac) / 2); //So the points are not completely gone.
@@ -71,19 +72,19 @@ public class AutobanManager {
             samemisscount++;
         }
         if (samemisscount > 4)
-        	chr.sendPolice("You will be disconnected for miss godmode.");
+            chr.sendPolice("You will be disconnected for miss godmode.");
             //chr.autoban("Autobanned for : " + misses + " Miss godmode", 1);
         else if (samemisscount > 0)
 
-        this.lastmisses = misses;
+            this.lastmisses = misses;
         this.misses = 0;
     }
-    
+
     //Don't use the same type for more than 1 thing
     public void spam(int type) {
         this.spam[type] = Server.getInstance().getCurrentTime();
     }
-    
+
     public void spam(int type, int timestamp) {
         this.spam[type] = timestamp;
     }
@@ -95,7 +96,7 @@ public class AutobanManager {
     /**
      * Timestamp checker
      *
-     *  <code>type</code>:<br>
+     * <code>type</code>:<br>
      * 1: Pet Food<br>
      * 2: InventoryMerge<br>
      * 3: InventorySort<br>
@@ -110,13 +111,13 @@ public class AutobanManager {
      * @return Timestamp checker
      */
     public void setTimestamp(int type, int time, int times) {
-        if (this.timestamp[type] == time) {  
+        if (this.timestamp[type] == time) {
             this.timestampcounter[type]++;
             if (this.timestampcounter[type] >= times) {
                 if (ServerConstants.USE_AUTOBAN) {
                     chr.getClient().disconnect(false, false);
                 }
-                
+
                 FilePrinter.print(FilePrinter.EXPLOITS, "Player " + chr + " was caught spamming TYPE " + type + " and has been disconnected.");
             }
             return;

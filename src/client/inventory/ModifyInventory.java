@@ -1,7 +1,6 @@
 package client.inventory;
 
 /**
- *
  * @author kevin
  */
 public class ModifyInventory {
@@ -20,7 +19,7 @@ public class ModifyInventory {
         this.item = item.copy();
         this.oldPos = oldPos;
     }
-    
+
     public final int getMode() {
         return mode;
     }
@@ -36,7 +35,7 @@ public class ModifyInventory {
     public final short getOldPosition() {
         return oldPos;
     }
-    
+
     public final short getQuantity() {
         return item.getQuantity();
     }

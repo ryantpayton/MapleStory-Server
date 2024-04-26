@@ -30,35 +30,34 @@ import server.quest.MapleQuest;
 import server.quest.MapleQuestActionType;
 
 /**
- *
  * @author Tyler (Twdtwd)
  */
 public class PetSkillAction extends MapleQuestAction {
-	int flag;
-	
-	public PetSkillAction(MapleQuest quest, MapleData data) {
-		super(MapleQuestActionType.PETSKILL, quest);
-		questID = quest.getId();
-		processData(data);
-	}
-	
-	
-	@Override
-	public void processData(MapleData data) {
-		flag = MapleDataTool.getInt("petskill", data);
-	}
-	
-	@Override
-	public boolean check(MapleCharacter chr, Integer extSelection) {
-		MapleQuestStatus status = chr.getQuest(MapleQuest.getInstance(questID));
-		if(!(status.getStatus() == MapleQuestStatus.Status.NOT_STARTED && status.getForfeited() > 0))
-			return false;
-		
-		return chr.getPet(0) != null; 
-	}
-	
-	@Override
-	public void run(MapleCharacter chr, Integer extSelection) {
-		chr.getPet(0).setFlag((byte) ItemConstants.getFlagByInt(flag));
-	}
+    int flag;
+
+    public PetSkillAction(MapleQuest quest, MapleData data) {
+        super(MapleQuestActionType.PETSKILL, quest);
+        questID = quest.getId();
+        processData(data);
+    }
+
+
+    @Override
+    public void processData(MapleData data) {
+        flag = MapleDataTool.getInt("petskill", data);
+    }
+
+    @Override
+    public boolean check(MapleCharacter chr, Integer extSelection) {
+        MapleQuestStatus status = chr.getQuest(MapleQuest.getInstance(questID));
+        if (!(status.getStatus() == MapleQuestStatus.Status.NOT_STARTED && status.getForfeited() > 0))
+            return false;
+
+        return chr.getPet(0) != null;
+    }
+
+    @Override
+    public void run(MapleCharacter chr, Integer extSelection) {
+        chr.getPet(0).setFlag((byte) ItemConstants.getFlagByInt(flag));
+    }
 } 

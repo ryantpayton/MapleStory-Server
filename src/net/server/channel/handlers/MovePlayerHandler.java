@@ -22,7 +22,9 @@
 package net.server.channel.handlers;
 
 import client.MapleClient;
+
 import java.util.List;
+
 import server.movement.LifeMovementFragment;
 import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;

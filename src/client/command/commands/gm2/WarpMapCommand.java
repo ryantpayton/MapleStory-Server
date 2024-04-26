@@ -4,6 +4,7 @@ import client.MapleCharacter;
 import client.MapleClient;
 import client.command.Command;
 import server.maps.MapleMap;
+
 import java.util.Collection;
 
 public class WarpMapCommand extends Command {

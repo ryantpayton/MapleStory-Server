@@ -30,26 +30,25 @@ import server.quest.MapleQuestActionType;
 import tools.MaplePacketCreator;
 
 /**
- *
  * @author Tyler (Twdtwd)
  */
 public class NextQuestAction extends MapleQuestAction {
-	int nextQuest;
-	
-	public NextQuestAction(MapleQuest quest, MapleData data) {
-		super(MapleQuestActionType.NEXTQUEST, quest);
-		processData(data);
-	}
-	
-	
-	@Override
-	public void processData(MapleData data) {
-		nextQuest = MapleDataTool.getInt(data);
-	}
-	
-	@Override
-	public void run(MapleCharacter chr, Integer extSelection) {
-		MapleQuestStatus status = chr.getQuest(MapleQuest.getInstance(questID));
-		chr.announce(MaplePacketCreator.updateQuestFinish((short) questID, status.getNpc(), (short) nextQuest));
-	}
+    int nextQuest;
+
+    public NextQuestAction(MapleQuest quest, MapleData data) {
+        super(MapleQuestActionType.NEXTQUEST, quest);
+        processData(data);
+    }
+
+
+    @Override
+    public void processData(MapleData data) {
+        nextQuest = MapleDataTool.getInt(data);
+    }
+
+    @Override
+    public void run(MapleCharacter chr, Integer extSelection) {
+        MapleQuestStatus status = chr.getQuest(MapleQuest.getInstance(questID));
+        chr.announce(MaplePacketCreator.updateQuestFinish((short) questID, status.getNpc(), (short) nextQuest));
+    }
 } 

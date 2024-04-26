@@ -22,8 +22,10 @@
 package server.life;
 
 import client.MapleCharacter;
+
 import java.awt.Point;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import net.server.Server;
 
 public class SpawnPoint {
@@ -45,34 +47,34 @@ public class SpawnPoint {
         this.mobInterval = mobInterval;
         this.nextPossibleSpawn = Server.getInstance().getCurrentTime();
     }
-    
+
     public int getSpawned() {
         return spawnedMonsters.intValue();
     }
-    
+
     public void setDenySpawn(boolean val) {
         denySpawn = val;
     }
-    
+
     public boolean getDenySpawn() {
         return denySpawn;
     }
 
     public boolean shouldSpawn() {
-    	if (denySpawn || mobTime < 0 || spawnedMonsters.get() > 0) {
+        if (denySpawn || mobTime < 0 || spawnedMonsters.get() > 0) {
             return false;
         }
         return nextPossibleSpawn <= Server.getInstance().getCurrentTime();
     }
 
     public boolean shouldForceSpawn() {
-    	if (mobTime < 0 || spawnedMonsters.get() > 0) {
+        if (mobTime < 0 || spawnedMonsters.get() > 0) {
             return false;
         }
-       
+
         return true;
     }
-    
+
     public MapleMonster getMonster() {
         MapleMonster mob = new MapleMonster(MapleLifeFactory.getMonster(monster));
         mob.setPosition(new Point(pos));
@@ -91,19 +93,21 @@ public class SpawnPoint {
                 }
                 spawnedMonsters.decrementAndGet();
             }
-            
+
             @Override
-            public void monsterDamaged(MapleCharacter from, int trueDmg) {}
-            
+            public void monsterDamaged(MapleCharacter from, int trueDmg) {
+            }
+
             @Override
-            public void monsterHealed(int trueHeal) {}
+            public void monsterHealed(int trueHeal) {
+            }
         });
         if (mobTime == 0) {
             nextPossibleSpawn = Server.getInstance().getCurrentTime() + mobInterval;
         }
         return mob;
     }
-    
+
     public int getMonsterId() {
         return monster;
     }
@@ -119,11 +123,11 @@ public class SpawnPoint {
     public final int getFh() {
         return fh;
     }
-    
+
     public int getMobTime() {
         return mobTime;
     }
-    
+
     public int getTeam() {
         return team;
     }

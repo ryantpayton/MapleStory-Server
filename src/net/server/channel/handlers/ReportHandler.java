@@ -36,70 +36,70 @@ import client.MapleCharacter;
 import client.MapleClient;
 
 /*
- * 
+ *
  * @author BubblesDev
  */
 public final class ReportHandler extends AbstractMaplePacketHandler {
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
-		int type = slea.readByte(); //01 = Conversation claim 00 = illegal program
-		String victim = slea.readMapleAsciiString();
-		int reason = slea.readByte();
-		String description = slea.readMapleAsciiString();
-		if (type == 0) {
-			if (c.getPlayer().getPossibleReports() > 0) {
-				if (c.getPlayer().getMeso() > 299) {
-					c.getPlayer().decreaseReports();
-					c.getPlayer().gainMeso(-300, true);
-				} else {
-					c.announce(MaplePacketCreator.reportResponse((byte) 4));
-					return;
-				}
-			} else {
-				c.announce(MaplePacketCreator.reportResponse((byte) 2));
-				return;
-			}
-			Server.getInstance().broadcastGMMessage(c.getWorld(), MaplePacketCreator.serverNotice(6, victim + " was reported for: " + description));
-			addReport(c.getPlayer().getId(), MapleCharacter.getIdByName(victim), 0, description, null);
-		} else if (type == 1) {
-			String chatlog = slea.readMapleAsciiString();
-			if (chatlog == null) {
-				return;
-			}
-			if (c.getPlayer().getPossibleReports() > 0) {
-				if (c.getPlayer().getMeso() > 299) {
-					c.getPlayer().decreaseReports();
-					c.getPlayer().gainMeso(-300, true);
-				} else {
-					c.announce(MaplePacketCreator.reportResponse((byte) 4));
-					return;
-				}
-			}
-			Server.getInstance().broadcastGMMessage(c.getWorld(), MaplePacketCreator.serverNotice(6, victim + " was reported for: " + description));
-			addReport(c.getPlayer().getId(), MapleCharacter.getIdByName(victim), reason, description, chatlog);
-		} else {
-			Server.getInstance().broadcastGMMessage(c.getWorld(), MaplePacketCreator.serverNotice(6, c.getPlayer().getName() + " is probably packet editing. Got unknown report type, which is impossible."));
-		}
-	}
+    public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+        int type = slea.readByte(); //01 = Conversation claim 00 = illegal program
+        String victim = slea.readMapleAsciiString();
+        int reason = slea.readByte();
+        String description = slea.readMapleAsciiString();
+        if (type == 0) {
+            if (c.getPlayer().getPossibleReports() > 0) {
+                if (c.getPlayer().getMeso() > 299) {
+                    c.getPlayer().decreaseReports();
+                    c.getPlayer().gainMeso(-300, true);
+                } else {
+                    c.announce(MaplePacketCreator.reportResponse((byte) 4));
+                    return;
+                }
+            } else {
+                c.announce(MaplePacketCreator.reportResponse((byte) 2));
+                return;
+            }
+            Server.getInstance().broadcastGMMessage(c.getWorld(), MaplePacketCreator.serverNotice(6, victim + " was reported for: " + description));
+            addReport(c.getPlayer().getId(), MapleCharacter.getIdByName(victim), 0, description, null);
+        } else if (type == 1) {
+            String chatlog = slea.readMapleAsciiString();
+            if (chatlog == null) {
+                return;
+            }
+            if (c.getPlayer().getPossibleReports() > 0) {
+                if (c.getPlayer().getMeso() > 299) {
+                    c.getPlayer().decreaseReports();
+                    c.getPlayer().gainMeso(-300, true);
+                } else {
+                    c.announce(MaplePacketCreator.reportResponse((byte) 4));
+                    return;
+                }
+            }
+            Server.getInstance().broadcastGMMessage(c.getWorld(), MaplePacketCreator.serverNotice(6, victim + " was reported for: " + description));
+            addReport(c.getPlayer().getId(), MapleCharacter.getIdByName(victim), reason, description, chatlog);
+        } else {
+            Server.getInstance().broadcastGMMessage(c.getWorld(), MaplePacketCreator.serverNotice(6, c.getPlayer().getName() + " is probably packet editing. Got unknown report type, which is impossible."));
+        }
+    }
 
-	public void addReport(int reporterid, int victimid, int reason, String description, String chatlog) {
-		Calendar calendar = Calendar.getInstance();
-		Timestamp currentTimestamp = new java.sql.Timestamp(calendar.getTime().getTime());
-		Connection con;
-		try {
-                        con = DatabaseConnection.getConnection();
-			PreparedStatement ps = con.prepareStatement("INSERT INTO reports (`reporttime`, `reporterid`, `victimid`, `reason`, `chatlog`, `description`) VALUES (?, ?, ?, ?, ?, ?)");
-			ps.setString(1, currentTimestamp.toGMTString().toString());
-			ps.setInt(2, reporterid);
-			ps.setInt(3, victimid);
-			ps.setInt(4, reason);
-			ps.setString(5, chatlog);
-			ps.setString(6, description);
-			ps.addBatch();
-			ps.executeBatch();
-			ps.close();
-                        con.close();
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-		}
-	}
+    public void addReport(int reporterid, int victimid, int reason, String description, String chatlog) {
+        Calendar calendar = Calendar.getInstance();
+        Timestamp currentTimestamp = new java.sql.Timestamp(calendar.getTime().getTime());
+        Connection con;
+        try {
+            con = DatabaseConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement("INSERT INTO reports (`reporttime`, `reporterid`, `victimid`, `reason`, `chatlog`, `description`) VALUES (?, ?, ?, ?, ?, ?)");
+            ps.setString(1, currentTimestamp.toGMTString().toString());
+            ps.setInt(2, reporterid);
+            ps.setInt(3, victimid);
+            ps.setInt(4, reason);
+            ps.setString(5, chatlog);
+            ps.setString(6, description);
+            ps.addBatch();
+            ps.executeBatch();
+            ps.close();
+            con.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
 }

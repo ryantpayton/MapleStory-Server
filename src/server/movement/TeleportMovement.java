@@ -21,6 +21,7 @@
 package server.movement;
 
 import java.awt.Point;
+
 import tools.data.output.LittleEndianWriter;
 
 public class TeleportMovement extends AbsoluteLifeMovement {

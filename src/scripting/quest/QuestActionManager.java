@@ -29,7 +29,6 @@ import server.quest.actions.ExpAction;
 import server.quest.actions.MesoAction;
 
 /**
- *
  * @author RMZero213
  */
 public class QuestActionManager extends NPCConversationManager {
@@ -62,27 +61,27 @@ public class QuestActionManager extends NPCConversationManager {
     public boolean forceCompleteQuest() {
         return forceCompleteQuest(quest);
     }
-    
+
     // For compatibility with some older scripts...
     public void startQuest() {
         forceStartQuest();
     }
-    
+
     // For compatibility with some older scripts...
     public void completeQuest() {
         forceCompleteQuest();
     }
-    
+
     @Override
     public void gainExp(int gain) {
         ExpAction.runAction(getPlayer(), gain);
     }
-    
+
     @Override
     public void gainMeso(int gain) {
         MesoAction.runAction(getPlayer(), gain);
     }
-    
+
     public String getMedalName() {  // usable only for medal quests (id 299XX)
         MapleQuest q = MapleQuest.getInstance(quest);
         return MapleItemInformationProvider.getInstance().getName(q.getMedalRequirement());

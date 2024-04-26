@@ -4,6 +4,7 @@ import client.command.Command;
 import client.MapleClient;
 import client.MapleCharacter;
 import tools.DatabaseConnection;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 

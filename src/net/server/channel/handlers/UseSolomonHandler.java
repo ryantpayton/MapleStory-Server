@@ -31,7 +31,6 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
- *
  * @author XoticStory; modified by kevintjuh93
  */
 public final class UseSolomonHandler extends AbstractMaplePacketHandler {

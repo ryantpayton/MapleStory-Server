@@ -1720,10 +1720,10 @@ public class MapleItemInformationProvider {
             return consumeOnPickupCache.get(itemId);
 
         MapleData data = getItemData(itemId);
-        
+
         if (data == null)
             return false;
-        
+
         boolean consume = MapleDataTool.getIntConvert("spec/consumeOnPickup", data, 0) == 1 || MapleDataTool.getIntConvert("specEx/consumeOnPickup", data, 0) == 1;
         consumeOnPickupCache.put(itemId, consume);
 
@@ -1882,7 +1882,7 @@ public class MapleItemInformationProvider {
         }
 
         String islot = getEquipmentSlot(id);
-        
+
         if (islot == null) {
             equip.wear(false);
 

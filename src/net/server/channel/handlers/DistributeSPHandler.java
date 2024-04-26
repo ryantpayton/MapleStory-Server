@@ -31,7 +31,7 @@ public final class DistributeSPHandler extends AbstractMaplePacketHandler {
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         slea.readInt();
         int skillid = slea.readInt();
-        
+
         AssignSPProcessor.SPAssignAction(c, skillid);
     }
 }

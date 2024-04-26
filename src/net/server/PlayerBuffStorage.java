@@ -22,23 +22,24 @@
 package net.server;
 
 import client.MapleDisease;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
+
 import server.life.MobSkill;
 import tools.Pair;
 import net.server.audit.locks.MonitoredLockType;
 import net.server.audit.locks.factory.MonitoredReentrantLockFactory;
 
 /**
- *
  * @author Danny//changed to map :3
  * @author Ronan//debuffs to storage as well
  */
 public class PlayerBuffStorage {
     private int id = (int) (Math.random() * 100);
-    private final Lock lock = MonitoredReentrantLockFactory.createLock(MonitoredLockType.BUFF_STORAGE, true);    
+    private final Lock lock = MonitoredReentrantLockFactory.createLock(MonitoredLockType.BUFF_STORAGE, true);
     private Map<Integer, List<PlayerBuffValueHolder>> buffs = new HashMap<>();
     private Map<Integer, Map<MapleDisease, Pair<Long, MobSkill>>> diseases = new HashMap<>();
 
@@ -59,7 +60,7 @@ public class PlayerBuffStorage {
             lock.unlock();
         }
     }
-    
+
     public void addDiseasesToStorage(int chrid, Map<MapleDisease, Pair<Long, MobSkill>> toStore) {
         lock.lock();
         try {

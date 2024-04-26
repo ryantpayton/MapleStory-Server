@@ -35,7 +35,6 @@ import tools.FilePrinter;
 import tools.MaplePacketCreator;
 
 /**
- *
  * @author RonanLana - synchronization of SP transaction modules
  */
 public class AssignSPProcessor {

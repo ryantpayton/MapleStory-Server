@@ -28,10 +28,10 @@ import server.quest.MapleQuest;
 import tools.MaplePacketCreator;
 
 public class MapScriptMethods extends AbstractPlayerInteraction {
-   
-	private String rewardstring = " title has been rewarded. Please see NPC Dalair to receive your Medal.";
-    
-	public MapScriptMethods(MapleClient c) {
+
+    private String rewardstring = " title has been rewarded. Please see NPC Dalair to receive your Medal.";
+
+    public MapScriptMethods(MapleClient c) {
         super(c);
     }
 

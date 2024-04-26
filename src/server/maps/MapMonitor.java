@@ -22,6 +22,7 @@
 package server.maps;
 
 import java.util.concurrent.ScheduledFuture;
+
 import server.MaplePortal;
 import server.TimerManager;
 
@@ -48,14 +49,14 @@ public class MapMonitor {
             monitorSchedule.cancel(false);
             monitorSchedule = null;
         }
-        
+
         map.killAllMonsters();
         map.clearDrops();
         if (portal != null) {
             portal.setPortalStatus(MaplePortal.OPEN);
         }
         map.resetReactors();
-        
+
         map = null;
         portal = null;
     }

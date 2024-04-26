@@ -49,6 +49,6 @@ public class ChangeableStats extends OverrideMonsterStats {
     }
 
     public ChangeableStats(MapleMonsterStats stats, float statModifier, boolean pqMob) {
-        this(stats, (int)(statModifier * stats.getLevel()), pqMob);
+        this(stats, (int) (statModifier * stats.getLevel()), pqMob);
     }
 }

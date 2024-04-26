@@ -25,6 +25,7 @@ import java.awt.Point;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import tools.Pair;
 
 /**
@@ -55,14 +56,14 @@ public class MapleReactorStats {
 
     public void addState(byte state, List<StateData> data, int timeOut) {
         stateInfo.put(state, data);
-        if(timeOut > -1) timeoutInfo.put(state, timeOut);
+        if (timeOut > -1) timeoutInfo.put(state, timeOut);
     }
-    
+
     public int getTimeout(byte state) {
         Integer i = timeoutInfo.get(state);
         return (i == null) ? -1 : i;
     }
-    
+
     public byte getTimeoutState(byte state) {
         return stateInfo.get(state).get(stateInfo.get(state).size() - 1).getNextState();
     }

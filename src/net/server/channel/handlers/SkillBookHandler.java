@@ -27,7 +27,9 @@ import client.Skill;
 import client.SkillFactory;
 import client.inventory.Item;
 import client.inventory.MapleInventoryType;
+
 import java.util.Map;
+
 import net.AbstractMaplePacketHandler;
 import client.inventory.manipulator.MapleInventoryManipulator;
 import server.MapleItemInformationProvider;
@@ -74,7 +76,7 @@ public final class SkillBookHandler extends AbstractMaplePacketHandler {
             } else {
                 canuse = false;
             }
-            
+
             // thanks Vcoc for noting skill book result not showing for all in area
             player.getMap().broadcastMessage(MaplePacketCreator.skillBookResult(player, skill, maxlevel, canuse, success));
         }

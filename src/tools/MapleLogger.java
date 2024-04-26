@@ -36,43 +36,43 @@ public class MapleLogger {
 
     public static List<String> monitored = new ArrayList<>();
     public static List<String> ignored = new ArrayList<>();
-    
-	public static void logRecv(MapleClient c, short packetId, Object message) {
-		if (c.getPlayer() == null){
-			return;
-		}
-		if (!monitored.contains(c.getPlayer().getName())){
-			return;
-		}
-		RecvOpcode op = getOpcodeFromValue(packetId);
-		if (isRecvBlocked(op)){
-			return;
-		}
-		String packet = op.toString() + "\r\n" + HexTool.toString((byte[]) message);
-		FilePrinter.printError(FilePrinter.PACKET_LOGS + c.getAccountName() + "-" + c.getPlayer().getName() + ".txt", packet);
-	}
-	
-	private static final boolean isRecvBlocked(RecvOpcode op){
-		switch(op){
-		case MOVE_PLAYER:
-		case GENERAL_CHAT:
-		case TAKE_DAMAGE:
-		case MOVE_PET:
-		case MOVE_LIFE:
-		case NPC_ACTION:
-		case FACE_EXPRESSION:
-			return true;
-		default:
-			return false;
-		}
-	}
-	
-	private static final RecvOpcode getOpcodeFromValue(int value){
-		for (RecvOpcode op : RecvOpcode.values()){
-			if (op.getValue() == value){
-				return op;
-			}
-		}
-		return null;
-	}
+
+    public static void logRecv(MapleClient c, short packetId, Object message) {
+        if (c.getPlayer() == null) {
+            return;
+        }
+        if (!monitored.contains(c.getPlayer().getName())) {
+            return;
+        }
+        RecvOpcode op = getOpcodeFromValue(packetId);
+        if (isRecvBlocked(op)) {
+            return;
+        }
+        String packet = op.toString() + "\r\n" + HexTool.toString((byte[]) message);
+        FilePrinter.printError(FilePrinter.PACKET_LOGS + c.getAccountName() + "-" + c.getPlayer().getName() + ".txt", packet);
+    }
+
+    private static final boolean isRecvBlocked(RecvOpcode op) {
+        switch (op) {
+            case MOVE_PLAYER:
+            case GENERAL_CHAT:
+            case TAKE_DAMAGE:
+            case MOVE_PET:
+            case MOVE_LIFE:
+            case NPC_ACTION:
+            case FACE_EXPRESSION:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private static final RecvOpcode getOpcodeFromValue(int value) {
+        for (RecvOpcode op : RecvOpcode.values()) {
+            if (op.getValue() == value) {
+                return op;
+            }
+        }
+        return null;
+    }
 }

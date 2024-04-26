@@ -29,15 +29,14 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
- *
  * @author Jay Estrella
  */
 public final class FamilyAddHandler extends AbstractMaplePacketHandler {
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
-    	if (!ServerConstants.USE_FAMILY_SYSTEM){
-    		return;
-    	}
+        if (!ServerConstants.USE_FAMILY_SYSTEM) {
+            return;
+        }
         System.out.println(slea.toString());
         String toAdd = slea.readMapleAsciiString();
         MapleCharacter addChr = c.getChannelServer().getPlayerStorage().getCharacterByName(toAdd);

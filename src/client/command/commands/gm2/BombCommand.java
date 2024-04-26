@@ -3,9 +3,11 @@ package client.command.commands.gm2;
 import client.command.Command;
 import client.MapleClient;
 import client.MapleCharacter;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import net.server.Server;
 import org.javatuples.Quartet;
 import server.life.MapleLifeFactory;

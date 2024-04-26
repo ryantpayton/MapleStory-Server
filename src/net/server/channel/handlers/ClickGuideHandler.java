@@ -29,7 +29,6 @@ import scripting.npc.NPCScriptManager;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
- *
  * @author kevintjuh93
  */
 public class ClickGuideHandler extends AbstractMaplePacketHandler {

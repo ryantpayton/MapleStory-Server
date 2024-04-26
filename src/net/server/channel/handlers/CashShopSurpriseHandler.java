@@ -27,18 +27,17 @@ import tools.data.input.SeekableLittleEndianAccessor;
 import tools.MaplePacketCreator;
 
 /**
- *
  * @author RonanLana
  */
 public class CashShopSurpriseHandler extends AbstractMaplePacketHandler {
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         CashShop cs = c.getPlayer().getCashShop();
-        
-        if(cs.isOpened()) {
+
+        if (cs.isOpened()) {
             Item cssItem = cs.openCashShopSurprise();
-            
-            if(cssItem != null) {
+
+            if (cssItem != null) {
                 c.announce(MaplePacketCreator.showCashShopMessage((byte) 0xA4));
             } else {
                 c.announce(MaplePacketCreator.showCashShopMessage((byte) 0x00));

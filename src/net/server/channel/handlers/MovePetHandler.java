@@ -22,6 +22,7 @@
 package net.server.channel.handlers;
 
 import java.util.List;
+
 import client.MapleCharacter;
 import client.MapleClient;
 import server.movement.LifeMovementFragment;

@@ -29,33 +29,32 @@ import server.quest.MapleQuest;
 import server.quest.MapleQuestRequirementType;
 
 /**
- *
  * @author Tyler (Twdtwd)
  */
 public class IntervalRequirement extends MapleQuestRequirement {
-	private int interval = -1;
-	private int questID;
-	
-	public IntervalRequirement(MapleQuest quest, MapleData data) {
-		super(MapleQuestRequirementType.INTERVAL);
-		processData(data);
-		questID = quest.getId();
-	}
-	
-        public int getInterval() {
-                return interval;
-        }
-	
-	@Override
-	public void processData(MapleData data) {
-		interval = MapleDataTool.getInt(data) * 60 * 1000;
-	}
-	
-	
-	@Override
-	public boolean check(MapleCharacter chr, Integer npcid) {
-		boolean check = !chr.getQuest(MapleQuest.getInstance(questID)).getStatus().equals(MapleQuestStatus.Status.COMPLETED);
-		boolean check2 = chr.getQuest(MapleQuest.getInstance(questID)).getCompletionTime() <= System.currentTimeMillis() - interval;
-		return check || check2;
-	}
+    private int interval = -1;
+    private int questID;
+
+    public IntervalRequirement(MapleQuest quest, MapleData data) {
+        super(MapleQuestRequirementType.INTERVAL);
+        processData(data);
+        questID = quest.getId();
+    }
+
+    public int getInterval() {
+        return interval;
+    }
+
+    @Override
+    public void processData(MapleData data) {
+        interval = MapleDataTool.getInt(data) * 60 * 1000;
+    }
+
+
+    @Override
+    public boolean check(MapleCharacter chr, Integer npcid) {
+        boolean check = !chr.getQuest(MapleQuest.getInstance(questID)).getStatus().equals(MapleQuestStatus.Status.COMPLETED);
+        boolean check2 = chr.getQuest(MapleQuest.getInstance(questID)).getCompletionTime() <= System.currentTimeMillis() - interval;
+        return check || check2;
+    }
 }

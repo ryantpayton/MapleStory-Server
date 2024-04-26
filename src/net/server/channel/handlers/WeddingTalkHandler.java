@@ -28,18 +28,17 @@ import tools.data.input.SeekableLittleEndianAccessor;
 import tools.packets.Wedding;
 
 /**
- *
  * @author Ronan
  */
 public final class WeddingTalkHandler extends AbstractMaplePacketHandler {
-    
+
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         byte action = slea.readByte();
-        if(action == 1) {
+        if (action == 1) {
             EventInstanceManager eim = c.getPlayer().getEventInstance();
-            
-            if(eim != null && !(c.getPlayer().getId() == eim.getIntProperty("groomId") || c.getPlayer().getId() == eim.getIntProperty("brideId"))) {
+
+            if (eim != null && !(c.getPlayer().getId() == eim.getIntProperty("groomId") || c.getPlayer().getId() == eim.getIntProperty("brideId"))) {
                 c.announce(Wedding.OnWeddingProgress(false, 0, 0, (byte) 2));
             } else {
                 c.announce(Wedding.OnWeddingProgress(true, 0, 0, (byte) 3));
@@ -47,7 +46,7 @@ public final class WeddingTalkHandler extends AbstractMaplePacketHandler {
         } else {
             c.announce(Wedding.OnWeddingProgress(true, 0, 0, (byte) 3));
         }
-        
+
         c.announce(MaplePacketCreator.enableActions());
     }
 }

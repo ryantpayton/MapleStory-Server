@@ -29,16 +29,15 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
- *
  * @author Jay Estrella
  */
 public final class AcceptFamilyHandler extends AbstractMaplePacketHandler {
 
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
-    	if (!ServerConstants.USE_FAMILY_SYSTEM){
-    		return;
-    	}
+        if (!ServerConstants.USE_FAMILY_SYSTEM) {
+            return;
+        }
         //System.out.println(slea.toString());
         int inviterId = slea.readInt();
         //String inviterName = slea.readMapleAsciiString();

@@ -21,44 +21,44 @@ package net.server.coordinator;
 
 import constants.ServerConstants;
 import scripting.event.EventInstanceManager;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- *
  * @author Ronan
  */
 public class MapleEventRecallCoordinator {
-    
+
     private final static MapleEventRecallCoordinator instance = new MapleEventRecallCoordinator();
-    
+
     public static MapleEventRecallCoordinator getInstance() {
         return instance;
     }
-    
+
     private ConcurrentHashMap<Integer, EventInstanceManager> eventHistory = new ConcurrentHashMap<>();
-    
+
     private static boolean isRecallableEvent(EventInstanceManager eim) {
         return eim != null && !eim.isEventDisposed() && !eim.isEventCleared();
     }
-    
+
     public EventInstanceManager recallEventInstance(int characterId) {
         EventInstanceManager eim = eventHistory.remove(characterId);
         return isRecallableEvent(eim) ? eim : null;
     }
-    
+
     public void storeEventInstance(int characterId, EventInstanceManager eim) {
         if (ServerConstants.USE_ENABLE_RECALL_EVENT && isRecallableEvent(eim)) {
             eventHistory.put(characterId, eim);
         }
     }
-    
+
     public void manageEventInstances() {
         if (!eventHistory.isEmpty()) {
             List<Integer> toRemove = new LinkedList<>();
-            
+
             for (Entry<Integer, EventInstanceManager> eh : eventHistory.entrySet()) {
                 if (!isRecallableEvent(eh.getValue())) {
                     toRemove.add(eh.getKey());

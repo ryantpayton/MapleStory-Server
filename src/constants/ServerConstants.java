@@ -77,7 +77,7 @@ public class ServerConstants {
     public static final boolean USE_ITEM_SORT_BY_NAME = false;              // Item sorting based on name rather than id.
     public static final boolean USE_PARTY_SEARCH = false;
     public static final boolean USE_PARTY_FOR_STARTERS = false;             // Players level 10 or below can create/invite other players on the given level range.
-    public static final boolean USE_AUTOASSIGN_STARTERS_AP = false;         // Beginners level 10 or below have their AP autoassigned (they can't choose to levelup a stat). Set true ONLY if the localhost doesn't support AP assigning for beginners level 10 or below.
+    public static final boolean USE_AUTOASSIGN_STARTERS_AP = true;         // Beginners level 10 or below have their AP autoassigned (they can't choose to levelup a stat). Set true ONLY if the localhost doesn't support AP assigning for beginners level 10 or below.
     public static final boolean USE_AUTOASSIGN_SECONDARY_CAP = true;        // Prevents AP autoassign from spending on secondary stats after the player class' cap (defined on the autoassign handler) has been reached.
     public static final boolean USE_AUTOBAN = true;                         // Commands the server to detect infractors automatically.
     public static final boolean USE_AUTOBAN_LOG = true;                     // Log autoban related messages. Still logs even with USE_AUTOBAN disabled.

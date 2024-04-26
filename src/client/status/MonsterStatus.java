@@ -63,14 +63,14 @@ public enum MonsterStatus {
     }
 
     private MonsterStatus(int i, boolean first) {
-		this.i = i;
-		this.first = first;
+        this.i = i;
+        this.first = first;
     }
 
     public boolean isFirst() {
-    	return first;
+        return first;
     }
-    
+
     public int getValue() {
         return i;
     }

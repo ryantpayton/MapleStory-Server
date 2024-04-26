@@ -48,8 +48,8 @@ public final class EnterMTSHandler extends AbstractMaplePacketHandler {
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         MapleCharacter chr = c.getPlayer();
-        
-        if(!chr.isAlive() && ServerConstants.USE_BUYBACK_SYSTEM) {
+
+        if (!chr.isAlive() && ServerConstants.USE_BUYBACK_SYSTEM) {
             BuybackProcessor.processBuyback(c);
             c.announce(MaplePacketCreator.enableActions());
         } else {
@@ -58,18 +58,18 @@ public final class EnterMTSHandler extends AbstractMaplePacketHandler {
                 return;
             }
 
-            if(chr.getEventInstance() != null) {
+            if (chr.getEventInstance() != null) {
                 c.announce(MaplePacketCreator.serverNotice(5, "Entering Cash Shop or MTS are disabled when registered on an event."));
                 c.announce(MaplePacketCreator.enableActions());
                 return;
             }
-            
-            if(MapleMiniDungeonInfo.isDungeonMap(chr.getMapId())) {
+
+            if (MapleMiniDungeonInfo.isDungeonMap(chr.getMapId())) {
                 c.announce(MaplePacketCreator.serverNotice(5, "Changing channels or entering Cash Shop or MTS are disabled when inside a Mini-Dungeon."));
                 c.announce(MaplePacketCreator.enableActions());
                 return;
             }
-            
+
             if (FieldLimit.CANNOTMIGRATE.check(chr.getMap().getFieldLimit())) {
                 chr.dropMessage(1, "You can't do it here in this map.");
                 c.announce(MaplePacketCreator.enableActions());
@@ -87,7 +87,7 @@ public final class EnterMTSHandler extends AbstractMaplePacketHandler {
             }
 
             chr.closePlayerInteractions();
-            
+
             chr.unregisterChairBuff();
             Server.getInstance().getPlayerBuffStorage().addBuffsToStorage(chr.getId(), chr.getAllBuffs());
             Server.getInstance().getPlayerBuffStorage().addDiseasesToStorage(chr.getId(), chr.getAllDiseases());
@@ -105,7 +105,7 @@ public final class EnterMTSHandler extends AbstractMaplePacketHandler {
             chr.cancelQuestExpirationTask();
 
             chr.saveCharToDB();
-            
+
             c.getChannelServer().removePlayer(chr);
             chr.getMap().removePlayer(c.getPlayer());
             try {

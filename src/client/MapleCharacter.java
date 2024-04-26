@@ -9084,7 +9084,7 @@ public class MapleCharacter extends AbstractMapleCharacterObject {
     }
 
     public short getSlots(int type) {
-        return type == MapleInventoryType.CASH.getType() ? (short)128 : inventory[type].getSlotLimit();
+        return type == MapleInventoryType.CASH.getType() ? (short) 128 : inventory[type].getSlotLimit();
     }
 
     public boolean gainSlots(int type, int slots) {

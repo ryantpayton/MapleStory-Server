@@ -32,7 +32,7 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class GiveFameHandler extends AbstractMaplePacketHandler {
-    
+
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         MapleCharacter target = (MapleCharacter) c.getPlayer().getMap().getMapObject(slea.readInt());
@@ -47,7 +47,7 @@ public final class GiveFameHandler extends AbstractMaplePacketHandler {
             c.disconnect(true, false);
             return;
         }
-        
+
         FameStatus status = player.canGiveFame(target);
         if (status == FameStatus.OK) {
             if (target.gainFame(famechange, player, mode)) {

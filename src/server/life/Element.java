@@ -37,7 +37,7 @@ public enum Element {
             case 'H':
                 return HOLY;
             case 'D':
-            	return DARK;
+                return DARK;
             case 'P':
                 return NEUTRAL;
         }

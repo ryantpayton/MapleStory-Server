@@ -22,11 +22,10 @@ package net.server.worker;
 import net.server.Server;
 
 /**
- *
  * @author Ronan
  */
 public class RankingCommandWorker implements Runnable {
-    
+
     @Override
     public void run() {
         Server.getInstance().updateWorldPlayerRanking();

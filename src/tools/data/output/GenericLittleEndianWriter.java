@@ -23,11 +23,12 @@ package tools.data.output;
 
 import java.awt.Point;
 import java.nio.charset.Charset;
+
 import constants.CharsetConstants.MapleLanguageType;
 
 /**
  * Provides a generic writer of a little-endian sequence of bytes.
- * 
+ *
  * @author Frz
  * @version 1.0
  * @since Revision 323
@@ -99,7 +100,7 @@ public class GenericLittleEndianWriter implements LittleEndianWriter {
         bos.writeByte((byte) (i & 0xFF));
         bos.writeByte((byte) ((i >>> 8) & 0xFF));
     }
-    
+
     /**
      * Writes an integer to the stream.
      *
@@ -147,6 +148,7 @@ public class GenericLittleEndianWriter implements LittleEndianWriter {
 
     /**
      * Write a long integer to the stream.
+     *
      * @param l The long integer to write.
      */
     @Override

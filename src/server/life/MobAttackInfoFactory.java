@@ -24,6 +24,7 @@ package server.life;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+
 import provider.MapleData;
 import provider.MapleDataProvider;
 import provider.MapleDataProviderFactory;
@@ -31,7 +32,6 @@ import provider.MapleDataTool;
 import tools.StringUtil;
 
 /**
- *
  * @author Danny (Leifde)
  */
 public class MobAttackInfoFactory {
@@ -54,11 +54,11 @@ public class MobAttackInfoFactory {
                         mobData = dataSource.getData(StringUtil.getLeftPaddedStr(linkedmob + ".img", '0', 11));
                     }
                     MapleData attackData = mobData.getChildByPath("attack" + (attack + 1) + "/info");
-                   
+
                     if (attackData == null) {
-                    	return null;
+                        return null;
                     }
-                    
+
                     MapleData deadlyAttack = attackData.getChildByPath("deadlyAttack");
                     int mpBurn = MapleDataTool.getInt("mpBurn", attackData, 0);
                     int disease = MapleDataTool.getInt("disease", attackData, 0);
@@ -69,7 +69,7 @@ public class MobAttackInfoFactory {
                     ret.setMpBurn(mpBurn);
                     ret.setDiseaseSkill(disease);
                     ret.setDiseaseLevel(level);
-                    ret.setMpCon(mpCon);          
+                    ret.setMpCon(mpCon);
                 }
                 mobAttacks.put(mob.getId() + "" + attack, ret);
             }

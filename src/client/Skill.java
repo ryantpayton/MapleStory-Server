@@ -23,6 +23,7 @@ package client;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import server.MapleStatEffect;
 import server.life.Element;
 
@@ -53,18 +54,18 @@ public class Skill {
 
     public boolean isFourthJob() {
         if (job == 2212) {
-        	return false;
+            return false;
         }
         if (id == 22170001 || id == 22171003 || id == 22171004 || id == 22181002 || id == 22181003) {
-        	return true;
+            return true;
         }
-    	return job % 10 == 2;
+        return job % 10 == 2;
     }
 
     public void setElement(Element elem) {
         element = elem;
     }
-    
+
     public Element getElement() {
         return element;
     }
@@ -72,11 +73,11 @@ public class Skill {
     public int getAnimationTime() {
         return animationTime;
     }
-    
+
     public void setAnimationTime(int time) {
         animationTime = time;
     }
-    
+
     public void incAnimationTime(int time) {
         animationTime += time;
     }
@@ -84,7 +85,7 @@ public class Skill {
     public boolean isBeginnerSkill() {
         return id % 10000000 < 10000;
     }
-    
+
     public void setAction(boolean act) {
         action = act;
     }
@@ -92,7 +93,7 @@ public class Skill {
     public boolean getAction() {
         return action;
     }
-    
+
     public void addLevelEffect(MapleStatEffect effect) {
         effects.add(effect);
     }

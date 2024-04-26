@@ -22,7 +22,9 @@
 package server.maps;
 
 import client.MapleCharacter;
+
 import java.util.List;
+
 import net.server.Server;
 import server.TimerManager;
 import tools.MaplePacketCreator;
@@ -33,39 +35,39 @@ import tools.MaplePacketCreator;
  * @author Ronan - made MapleTV mechanics synchronous
  */
 public class MapleTVEffect {
-	
-	private final static boolean ACTIVE[] = new boolean[Server.getInstance().getWorldsSize()];
-	
-	public static synchronized boolean broadcastMapleTVIfNotActive(MapleCharacter player, MapleCharacter victim, List<String> messages, int tvType){
-                int w = player.getWorld();
-                if(!ACTIVE[w]) {
-                        broadcastTV(true, w, messages, player, tvType, victim);
-                        return true;
-                }
-            
-		return false;
-	}
 
-	private static synchronized void broadcastTV(boolean activity, final int userWorld, List<String> message, MapleCharacter user, int type, MapleCharacter partner) {
-		Server server = Server.getInstance();
-		ACTIVE[userWorld] = activity;
-		if (activity) {
-			server.broadcastMessage(userWorld, MaplePacketCreator.enableTV());
-			server.broadcastMessage(userWorld, MaplePacketCreator.sendTV(user, message, type <= 2 ? type : type - 3, partner));
-			int delay = 15000;
-			if (type == 4) {
-				delay = 30000;
-			} else if (type == 5) {
-				delay = 60000;
-			}
-			TimerManager.getInstance().schedule(new Runnable() {
-				@Override
-				public void run() {
-					broadcastTV(false, userWorld, null, null, -1, null);
-				}
-			}, delay);
-		} else {
-			server.broadcastMessage(userWorld, MaplePacketCreator.removeTV());
-		}
-	}
+    private final static boolean ACTIVE[] = new boolean[Server.getInstance().getWorldsSize()];
+
+    public static synchronized boolean broadcastMapleTVIfNotActive(MapleCharacter player, MapleCharacter victim, List<String> messages, int tvType) {
+        int w = player.getWorld();
+        if (!ACTIVE[w]) {
+            broadcastTV(true, w, messages, player, tvType, victim);
+            return true;
+        }
+
+        return false;
+    }
+
+    private static synchronized void broadcastTV(boolean activity, final int userWorld, List<String> message, MapleCharacter user, int type, MapleCharacter partner) {
+        Server server = Server.getInstance();
+        ACTIVE[userWorld] = activity;
+        if (activity) {
+            server.broadcastMessage(userWorld, MaplePacketCreator.enableTV());
+            server.broadcastMessage(userWorld, MaplePacketCreator.sendTV(user, message, type <= 2 ? type : type - 3, partner));
+            int delay = 15000;
+            if (type == 4) {
+                delay = 30000;
+            } else if (type == 5) {
+                delay = 60000;
+            }
+            TimerManager.getInstance().schedule(new Runnable() {
+                @Override
+                public void run() {
+                    broadcastTV(false, userWorld, null, null, -1, null);
+                }
+            }, delay);
+        } else {
+            server.broadcastMessage(userWorld, MaplePacketCreator.removeTV());
+        }
+    }
 }

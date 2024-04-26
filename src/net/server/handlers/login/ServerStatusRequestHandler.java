@@ -34,7 +34,7 @@ public final class ServerStatusRequestHandler extends AbstractMaplePacketHandler
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         byte world = (byte) slea.readShort();
         World wserv = Server.getInstance().getWorld(world);
-        if(wserv != null) {
+        if (wserv != null) {
             int status = wserv.getWorldCapacityStatus();
             c.announce(MaplePacketCreator.getServerStatus(status));
         } else {

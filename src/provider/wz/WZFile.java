@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+
 import provider.MapleData;
 import provider.MapleDataDirectoryEntry;
 import provider.MapleDataFileEntry;
@@ -41,6 +42,7 @@ public class WZFile implements MapleDataProvider {
     static {
         ListWZFile.init();
     }
+
     private File wzfile;
     private LittleEndianAccessor lea;
     private SeekableLittleEndianAccessor slea;

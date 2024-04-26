@@ -3,6 +3,7 @@ package client.command.commands.gm3;
 import client.command.Command;
 import client.MapleClient;
 import client.MapleCharacter;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;

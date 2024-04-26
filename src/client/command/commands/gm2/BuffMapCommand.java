@@ -12,11 +12,11 @@ public class BuffMapCommand extends Command {
 
         setDescription(
                 "Gives the following buffs to all players on the map:\r\n"
-                + "#L0#Super Haste#l\r\n"
-                + "#L1#Super Holy Symbol#l\r\n"
-                + "#L2#Super Bless#l\r\n"
-                + "#L3#Super Hyper Body#l\r\n"
-                + "#L4#Super Echo of Hero#l\r\n"
+                        + "#L0#Super Haste#l\r\n"
+                        + "#L1#Super Holy Symbol#l\r\n"
+                        + "#L2#Super Bless#l\r\n"
+                        + "#L3#Super Hyper Body#l\r\n"
+                        + "#L4#Super Echo of Hero#l\r\n"
         );
     }
 

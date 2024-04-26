@@ -50,9 +50,9 @@ public abstract class AbstractMapleMapObject implements MapleMapObject {
     public void setObjectId(int id) {
         this.objectId = id;
     }
-    
+
     @Override
     public void nullifyPosition() {
         this.position = null;
-    }    
+    }
 }

@@ -31,10 +31,10 @@ public final class MobBanishPlayerHandler extends AbstractMaplePacketHandler {
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         int mobid = slea.readInt();     // mob banish handling detected thanks to MedicOP
-        
+
         MapleCharacter chr = c.getPlayer();
         MapleMonster mob = chr.getMap().getMonsterById(mobid);
-        
+
         if (mob != null) {
             BanishInfo banishInfo = mob.getBanish();
             if (banishInfo != null) {

@@ -69,20 +69,20 @@ public final class GuildOperationHandler extends AbstractMaplePacketHandler {
                     c.getPlayer().dropMessage(1, "The Guild name you have chosen is not accepted.");
                     return;
                 }
-                
+
                 int gid = Server.getInstance().createGuild(mc.getId(), guildName);
                 if (gid == 0) {
                     c.announce(MaplePacketCreator.genericGuildMessage((byte) 0x1c));
                     return;
                 }
                 mc.gainMeso(-ServerConstants.CREATE_GUILD_COST, true, false, true);
-                
+
                 mc.getMGC().setGuildId(gid);
                 Server.getInstance().getGuild(mc.getGuildId(), mc.getWorld(), mc);  // initialize guild structure
                 Server.getInstance().changeRank(gid, mc.getId(), 1);
-                
+
                 c.announce(MaplePacketCreator.showGuildInfo(mc));
-                
+
                 c.getPlayer().dropMessage(1, "You have successfully created a Guild.");
                 mc.getGuild().broadcastNameChanged();
                 mc.getGuild().broadcastEmblemChanged();
@@ -91,13 +91,14 @@ public final class GuildOperationHandler extends AbstractMaplePacketHandler {
                 if (mc.getGuildId() <= 0 || mc.getGuildRank() > 2) {
                     return;
                 }
-                
+
                 String targetName = slea.readMapleAsciiString();
                 MapleGuildResponse mgr = MapleGuild.sendInvitation(c, targetName);
                 if (mgr != null) {
                     c.announce(mgr.getPacket(targetName));
-                } else {} // already sent invitation, do nothing
-                
+                } else {
+                } // already sent invitation, do nothing
+
                 break;
             case 0x06:
                 if (mc.getGuildId() > 0) {
@@ -110,27 +111,27 @@ public final class GuildOperationHandler extends AbstractMaplePacketHandler {
                     System.out.println("[hax] " + mc.getName() + " attempted to join a guild with a different character id.");
                     return;
                 }
-                
+
                 if (!MapleGuild.answerInvitation(cid, mc.getName(), gid, true)) {
                     return;
                 }
-                
+
                 mc.getMGC().setGuildId(gid); // joins the guild
                 mc.getMGC().setGuildRank(5); // start at lowest rank
                 mc.getMGC().setAllianceRank(5);
-                
+
                 int s = Server.getInstance().addGuildMember(mc.getMGC(), mc);
                 if (s == 0) {
                     c.getPlayer().dropMessage(1, "The guild you are trying to join is already full.");
                     mc.getMGC().setGuildId(0);
                     return;
                 }
-                
+
                 c.announce(MaplePacketCreator.showGuildInfo(mc));
-                
+
                 allianceId = mc.getGuild().getAllianceId();
-                if(allianceId > 0) Server.getInstance().getAlliance(allianceId).updateAlliancePackets(mc);
-                
+                if (allianceId > 0) Server.getInstance().getAlliance(allianceId).updateAlliancePackets(mc);
+
                 mc.saveGuildStatus(); // update database
                 mc.getMap().broadcastMessage(mc, MaplePacketCreator.guildNameChanged(mc.getId(), mc.getGuild().getName())); // thanks Vcoc for pointing out an issue with updating guild tooltip to players in the map
                 mc.getMap().broadcastMessage(mc, MaplePacketCreator.guildMarkChanged(mc.getId(), mc.getGuild()));
@@ -142,15 +143,15 @@ public final class GuildOperationHandler extends AbstractMaplePacketHandler {
                     System.out.println("[hax] " + mc.getName() + " tried to quit guild under the name \"" + name + "\" and current guild id of " + mc.getGuildId() + ".");
                     return;
                 }
-                
+
                 allianceId = mc.getGuild().getAllianceId();
-                
+
                 c.announce(MaplePacketCreator.updateGP(mc.getGuildId(), 0));
                 Server.getInstance().leaveGuild(mc.getMGC());
-                
+
                 c.announce(MaplePacketCreator.showGuildInfo(null));
-                if(allianceId > 0) Server.getInstance().getAlliance(allianceId).updateAlliancePackets(mc);
-                
+                if (allianceId > 0) Server.getInstance().getAlliance(allianceId).updateAlliancePackets(mc);
+
                 mc.getMGC().setGuildId(0);
                 mc.getMGC().setGuildRank(5);
                 mc.saveGuildStatus();
@@ -158,16 +159,16 @@ public final class GuildOperationHandler extends AbstractMaplePacketHandler {
                 break;
             case 0x08:
                 allianceId = mc.getGuild().getAllianceId();
-                
+
                 cid = slea.readInt();
                 name = slea.readMapleAsciiString();
                 if (mc.getGuildRank() > 2 || mc.getGuildId() <= 0) {
                     System.out.println("[hax] " + mc.getName() + " is trying to expel without rank 1 or 2.");
                     return;
                 }
-                
+
                 Server.getInstance().expelMember(mc.getMGC(), name, cid);
-                if(allianceId > 0) Server.getInstance().getAlliance(allianceId).updateAlliancePackets(mc);
+                if (allianceId > 0) Server.getInstance().getAlliance(allianceId).updateAlliancePackets(mc);
                 break;
             case 0x0d:
                 if (mc.getGuildId() <= 0 || mc.getGuildRank() != 1) {
@@ -178,7 +179,7 @@ public final class GuildOperationHandler extends AbstractMaplePacketHandler {
                 for (int i = 0; i < 5; i++) {
                     ranks[i] = slea.readMapleAsciiString();
                 }
-                
+
                 Server.getInstance().changeRankTitle(mc.getGuildId(), ranks);
                 break;
             case 0x0e:
@@ -207,19 +208,20 @@ public final class GuildOperationHandler extends AbstractMaplePacketHandler {
                 short logo = slea.readShort();
                 byte logocolor = slea.readByte();
                 Server.getInstance().setGuildEmblem(mc.getGuildId(), bg, bgcolor, logo, logocolor);
-                
+
                 if (mc.getGuild() != null && mc.getGuild().getAllianceId() > 0) {
                     MapleAlliance alliance = mc.getAlliance();
                     Server.getInstance().allianceMessage(alliance.getId(), MaplePacketCreator.getGuildAlliances(alliance, c.getWorld()), -1, -1);
                 }
-                
+
                 mc.gainMeso(-ServerConstants.CHANGE_EMBLEM_COST, true, false, true);
                 mc.getGuild().broadcastNameChanged();
                 mc.getGuild().broadcastEmblemChanged();
                 break;
             case 0x10:
                 if (mc.getGuildId() <= 0 || mc.getGuildRank() > 2) {
-                    if(mc.getGuildId() <= 0) System.out.println("[hax] " + mc.getName() + " tried to change guild notice while not in a guild.");
+                    if (mc.getGuildId() <= 0)
+                        System.out.println("[hax] " + mc.getName() + " tried to change guild notice while not in a guild.");
                     return;
                 }
                 String notice = slea.readMapleAsciiString();

@@ -40,7 +40,7 @@ public class HexTool {
         }
         return hexed.substring(0, hexed.length() - 1);
     }
-    
+
     public static String toCompressedString(byte[] bytes) {
         StringBuilder hexed = new StringBuilder();
         for (int i = 0; i < bytes.length; i++) {
@@ -55,7 +55,7 @@ public class HexTool {
         int nextb = 0;
         boolean highoc = true;
         outer:
-        for (;;) {
+        for (; ; ) {
             int number = -1;
             while (number == -1) {
                 if (nexti == hex.length()) {

@@ -1,6 +1,7 @@
 package client.command.commands.gm5;
 
 import java.util.Collection;
+
 import client.MapleClient;
 import client.MapleCharacter;
 import client.command.Command;

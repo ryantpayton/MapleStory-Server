@@ -1,7 +1,6 @@
 package constants;
 
 /**
- *
  * @author The Spookster
  */
 public enum EquipSlot {

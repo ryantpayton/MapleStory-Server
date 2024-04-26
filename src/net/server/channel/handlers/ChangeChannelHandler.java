@@ -28,7 +28,6 @@ import client.autoban.AutobanFactory;
 import net.server.Server;
 
 /**
- *
  * @author Matze
  */
 public final class ChangeChannelHandler extends AbstractMaplePacketHandler {
@@ -38,14 +37,14 @@ public final class ChangeChannelHandler extends AbstractMaplePacketHandler {
         int channel = slea.readByte() + 1;
         slea.readInt();
         c.getPlayer().getAutobanManager().setTimestamp(6, Server.getInstance().getCurrentTimestamp(), 3);
-        if(c.getChannel() == channel) {
-                AutobanFactory.GENERAL.alert(c.getPlayer(), "CCing to same channel.");
-                c.disconnect(false, false);
-                return;
+        if (c.getChannel() == channel) {
+            AutobanFactory.GENERAL.alert(c.getPlayer(), "CCing to same channel.");
+            c.disconnect(false, false);
+            return;
         } else if (c.getPlayer().getCashShop().isOpened() || c.getPlayer().getMiniGame() != null || c.getPlayer().getPlayerShop() != null) {
-    		return;
-    	}
-        
+            return;
+        }
+
         c.changeChannel(channel);
     }
 }

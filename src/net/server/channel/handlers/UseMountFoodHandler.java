@@ -43,11 +43,11 @@ public final class UseMountFoodHandler extends AbstractMaplePacketHandler {
         slea.skip(4);
         short pos = slea.readShort();
         int itemid = slea.readInt();
-        
+
         MapleCharacter chr = c.getPlayer();
         MapleMount mount = chr.getMount();
         MapleInventory useInv = chr.getInventory(MapleInventoryType.USE);
-        
+
         if (c.tryacquireClient()) {
             try {
                 useInv.lockInventory();

@@ -24,6 +24,7 @@ package server.maps;
 import java.awt.Point;
 import java.util.Collections;
 import java.util.List;
+
 import server.movement.AbsoluteLifeMovement;
 import server.movement.LifeMovementFragment;
 
@@ -44,11 +45,11 @@ public abstract class AbstractAnimatedMapleMapObject extends AbstractMapleMapObj
     public boolean isFacingLeft() {
         return Math.abs(stance) % 2 == 1;
     }
-    
+
     public List<LifeMovementFragment> getIdleMovement() {
         AbsoluteLifeMovement alm = new AbsoluteLifeMovement(0, getPosition(), 0, getStance());
         alm.setPixelsPerSecond(new Point(0, 0));
-        
+
         List<LifeMovementFragment> moveUpdate = Collections.singletonList((LifeMovementFragment) alm);
         return moveUpdate;
     }

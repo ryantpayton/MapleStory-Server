@@ -29,7 +29,6 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
- *
  * @author Jay Estrella
  */
 public final class MobDamageMobHandler extends AbstractMaplePacketHandler {
@@ -41,7 +40,7 @@ public final class MobDamageMobHandler extends AbstractMaplePacketHandler {
         slea.readByte();
         int dmg = slea.readInt();
         MapleCharacter chr = c.getPlayer();
-        
+
         MapleMap map = chr.getMap();
         if (map.getMonsterByOid(from) != null && map.getMonsterByOid(to) != null) {
             map.damageMonster(chr, map.getMonsterByOid(to), dmg);

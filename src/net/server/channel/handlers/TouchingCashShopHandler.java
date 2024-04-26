@@ -27,7 +27,6 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
- *
  * @author Terry Han (Acrylic)
  */
 public final class TouchingCashShopHandler extends AbstractMaplePacketHandler {

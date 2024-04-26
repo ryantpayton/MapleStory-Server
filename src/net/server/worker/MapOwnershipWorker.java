@@ -26,14 +26,14 @@ import net.server.channel.Channel;
  * @author Ronan
  */
 public class MapOwnershipWorker extends BaseWorker implements Runnable {
-    
+
     @Override
     public void run() {
         for (Channel ch : wserv.getChannels()) {
             ch.runCheckOwnedMapsSchedule();
         }
     }
-    
+
     public MapOwnershipWorker(World world) {
         super(world);
     }

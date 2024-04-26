@@ -24,13 +24,14 @@ package server.maps;
 import client.MapleCharacter;
 import client.MapleClient;
 import net.server.Server;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import tools.MaplePacketCreator;
 
 /**
- *
  * @author Matze
  * @author Ronan (HeavenMS)
  */
@@ -60,16 +61,16 @@ public class MapleMiniGame extends AbstractMapleMapObject {
         private MiniGameType(int value) {
             this.value = value;
         }
-        
+
         public int getValue() {
             return value;
         }
     }
-    
+
     public static enum MiniGameResult {
         WIN, LOSS, TIE;
     }
-    
+
     public MapleMiniGame(MapleCharacter owner, String description, String password) {
         this.owner = owner;
         this.description = description;
@@ -79,11 +80,11 @@ public class MapleMiniGame extends AbstractMapleMapObject {
     public String getPassword() {
         return this.password;
     }
-    
+
     public boolean checkPassword(String sentPw) {
         return this.password.length() == 0 || sentPw.toLowerCase().contentEquals(this.password.toLowerCase());
     }
-    
+
     public boolean hasFreeSlot() {
         return visitor == null;
     }
@@ -91,18 +92,18 @@ public class MapleMiniGame extends AbstractMapleMapObject {
     public boolean isOwner(MapleCharacter c) {
         return owner.equals(c);
     }
-    
+
     public void addVisitor(MapleCharacter challenger) {
         visitor = challenger;
         if (lastvisitor != challenger.getId()) {
             ownerscore = 0;
             ownerforfeits = 0;
-            
+
             visitorscore = 0;
             visitorforfeits = 0;
             lastvisitor = challenger.getId();
         }
-        
+
         MapleCharacter owner = this.getOwner();
         if (GameType == MiniGameType.OMOK) {
             owner.announce(MaplePacketCreator.getMiniGameNewVisitor(this, challenger, 1));
@@ -135,7 +136,7 @@ public class MapleMiniGame extends AbstractMapleMapObject {
             c.announce(packet);
         }
     }
-    
+
     public void broadcastToVisitor(final byte[] packet) {
         if (visitor != null) {
             visitor.getClient().announce(packet);
@@ -153,20 +154,20 @@ public class MapleMiniGame extends AbstractMapleMapObject {
     private void updateMiniGameBox() {
         this.getOwner().getMap().broadcastMessage(MaplePacketCreator.addOmokBox(owner, visitor != null ? 2 : 1, inprogress));
     }
-    
+
     private void minigameMatchFinished() {
         inprogress = 0;
         updateMiniGameBox();
     }
-    
+
     public void minigameMatchStarted() {
         inprogress = 1;
     }
-    
+
     public boolean isMatchInProgress() {
         return inprogress != 0;
     }
-    
+
     public void denyTie(MapleCharacter chr) {
         if (this.isOwner(chr)) {
             inprogress |= (1 << 1);
@@ -174,7 +175,7 @@ public class MapleMiniGame extends AbstractMapleMapObject {
             inprogress |= (1 << 2);
         }
     }
-    
+
     public boolean isTieDenied(MapleCharacter chr) {
         if (this.isOwner(chr)) {
             return ((inprogress >> 1) % 2) == 1;
@@ -182,42 +183,42 @@ public class MapleMiniGame extends AbstractMapleMapObject {
             return ((inprogress >> 2) % 2) == 1;
         }
     }
-    
+
     public void minigameMatchOwnerWins(boolean forfeit) {
         owner.setMiniGamePoints(visitor, 1, this.isOmok());
         if (visitorforfeits < 4 || !forfeit) ownerscore += 50;
         visitorscore += (15 * (forfeit ? -1 : 1));
         if (forfeit) visitorforfeits++;
-        
+
         this.broadcast(MaplePacketCreator.getMiniGameOwnerWin(this, forfeit));
         minigameMatchFinished();
     }
-    
+
     public void minigameMatchVisitorWins(boolean forfeit) {
         owner.setMiniGamePoints(visitor, 2, this.isOmok());
         if (ownerforfeits < 4 || !forfeit) visitorscore += 50;
         ownerscore += (15 * (forfeit ? -1 : 1));
         if (forfeit) ownerforfeits++;
-        
+
         this.broadcast(MaplePacketCreator.getMiniGameVisitorWin(this, forfeit));
         minigameMatchFinished();
     }
-    
+
     public void minigameMatchDraw() {
         owner.setMiniGamePoints(visitor, 3, this.isOmok());
-        
+
         long timeNow = Server.getInstance().getCurrentTime();
         if (nextavailabletie <= timeNow) {
             visitorscore += 10;
             ownerscore += 10;
-            
+
             nextavailabletie = timeNow + 5 * 60 * 1000;
         }
-        
+
         this.broadcast(MaplePacketCreator.getMiniGameTie(this));
         minigameMatchFinished();
     }
-    
+
     public void setOwnerPoints() {
         ownerpoints++;
         if (ownerpoints + visitorpoints == matchestowin) {
@@ -285,7 +286,7 @@ public class MapleMiniGame extends AbstractMapleMapObject {
     public MiniGameType getGameType() {
         return GameType;
     }
-    
+
     public boolean isOmok() {
         return GameType.equals(MiniGameType.OMOK);
     }
@@ -439,20 +440,22 @@ public class MapleMiniGame extends AbstractMapleMapObject {
     public String getDescription() {
         return description;
     }
-    
+
     public int getOwnerScore() {
         return ownerscore;
     }
-    
+
     public int getVisitorScore() {
         return visitorscore;
     }
 
     @Override
-    public void sendDestroyData(MapleClient client) {}
+    public void sendDestroyData(MapleClient client) {
+    }
 
     @Override
-    public void sendSpawnData(MapleClient client) {}
+    public void sendSpawnData(MapleClient client) {
+    }
 
     @Override
     public MapleMapObjectType getType() {

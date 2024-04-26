@@ -28,7 +28,7 @@ class RegisteredCommand {
     private final Class<? extends Command> commandClass;
     private final int rank;
 
-    RegisteredCommand(Class<? extends Command> commandClass, int rank){
+    RegisteredCommand(Class<? extends Command> commandClass, int rank) {
         this.commandClass = commandClass;
         this.rank = rank;
     }

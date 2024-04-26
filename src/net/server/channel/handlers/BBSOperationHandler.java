@@ -23,10 +23,12 @@ package net.server.channel.handlers;
 
 import client.MapleCharacter;
 import client.MapleClient;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import net.AbstractMaplePacketHandler;
 import tools.DatabaseConnection;
 import tools.MaplePacketCreator;
@@ -104,7 +106,7 @@ public final class BBSOperationHandler extends AbstractMaplePacketHandler {
                     c.announce(MaplePacketCreator.BBSThreadList(rs, start));
                 }
             }
-            
+
             con.close();
         } catch (SQLException se) {
             se.printStackTrace();
@@ -323,7 +325,7 @@ public final class BBSOperationHandler extends AbstractMaplePacketHandler {
             if (ps2 != null) {
                 ps2.close();
             }
-            
+
             con.close();
         } catch (SQLException se) {
             se.printStackTrace();

@@ -32,6 +32,7 @@ import client.inventory.MapleInventoryType;
 import client.inventory.manipulator.MapleInventoryManipulator;
 import client.inventory.manipulator.MapleKarmaManipulator;
 import constants.ItemConstants;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -39,6 +40,7 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+
 import net.server.channel.Channel;
 import server.DueyPackages;
 import server.MapleItemInformationProvider;
@@ -47,11 +49,10 @@ import tools.FilePrinter;
 import tools.MaplePacketCreator;
 
 /**
- *
  * @author RonanLana - synchronization of Duey modules
  */
 public class DueyProcessor {
-    
+
     public enum Actions {
         TOSERVER_SEND_ITEM(0x02),
         TOSERVER_CLAIM_PACKAGE(0x04),
@@ -84,7 +85,7 @@ public class DueyProcessor {
             return code;
         }
     }
-    
+
     private static int getAccIdFromCNAME(String name, boolean accountid) {
         try {
             PreparedStatement ps;
@@ -109,7 +110,7 @@ public class DueyProcessor {
         }
         return -1;
     }
-    
+
     private static String getCurrentDate() {
         String date = "";
         Calendar cal = Calendar.getInstance();
@@ -119,7 +120,7 @@ public class DueyProcessor {
         date += day <= 9 ? "0" + day + "-" : "" + day + "-";
         date += month <= 9 ? "0" + month + "-" : "" + month + "-";
         date += year;
-        
+
         return date;
     }
 
@@ -127,7 +128,7 @@ public class DueyProcessor {
         Connection con = null;
         try {
             con = DatabaseConnection.getConnection();
-            
+
             PreparedStatement ps = con.prepareStatement("DELETE FROM dueypackages WHERE PackageId = ?");
             ps.setInt(1, packageid);
             ps.executeUpdate();
@@ -183,7 +184,7 @@ public class DueyProcessor {
             return null;
         }
     }
-    
+
     private static void showDueyNotification(MapleClient c, MapleCharacter player) {
         Connection con = null;
         PreparedStatement ps = null;
@@ -229,7 +230,7 @@ public class DueyProcessor {
             }
         }
     }
-    
+
     private static int getFee(long meso) {
         long fee = 0;
         if (meso >= 100000000) {
@@ -247,7 +248,7 @@ public class DueyProcessor {
         }
         return (int) fee;
     }
-    
+
     private static void addMesoToDB(int mesos, String sName, int recipientID) {
         addItemToDB(null, 1, mesos, sName, recipientID);
     }
@@ -267,7 +268,7 @@ public class DueyProcessor {
                     ps.executeUpdate();
                 } else {
                     ps.setInt(6, item.getItemType());
-                    
+
                     ps.executeUpdate();
                     try (ResultSet rs = ps.getGeneratedKeys()) {
                         rs.next();
@@ -311,7 +312,7 @@ public class DueyProcessor {
                     }
                 }
             }
-            
+
             con.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -335,7 +336,7 @@ public class DueyProcessor {
                     }
                 }
             }
-            
+
             con.close();
             return packages;
         } catch (SQLException e) {
@@ -343,7 +344,7 @@ public class DueyProcessor {
             return null;
         }
     }
-    
+
     public static void dueySendItem(MapleClient c, byte inventId, short itemPos, short amount, int mesos, String recipient) {
         if (c.tryacquireClient()) {
             try {
@@ -377,9 +378,9 @@ public class DueyProcessor {
                 int channel = c.getWorldServer().find(recipient);
                 if (channel > -1) {
                     Channel rcserv = c.getWorldServer().getChannel(channel);
-                    if(rcserv != null) {
+                    if (rcserv != null) {
                         MapleCharacter rChr = rcserv.getPlayerStorage().getCharacterByName(recipient);
-                        if(rChr != null) {
+                        if (rChr != null) {
                             rClient = rChr.getClient();
                         }
                     }
@@ -393,7 +394,7 @@ public class DueyProcessor {
                             c.announce(MaplePacketCreator.sendDueyMSG(DueyProcessor.Actions.TOCLIENT_SEND_INCORRECT_REQUEST.getCode()));
                             return;
                         }
-                        
+
                         c.getPlayer().gainMeso(-finalcost, false);
                         c.announce(MaplePacketCreator.sendDueyMSG(DueyProcessor.Actions.TOCLIENT_SEND_SUCCESSFULLY_SENT.getCode()));
 
@@ -413,7 +414,7 @@ public class DueyProcessor {
                     }
                 } else {
                     c.getPlayer().gainMeso(-finalcost, false);
-                    c.announce(MaplePacketCreator.sendDueyMSG(DueyProcessor.Actions.TOCLIENT_SEND_SUCCESSFULLY_SENT.getCode()));    
+                    c.announce(MaplePacketCreator.sendDueyMSG(DueyProcessor.Actions.TOCLIENT_SEND_SUCCESSFULLY_SENT.getCode()));
 
                     addMesoToDB(mesos - getFee(mesos), c.getPlayer().getName(), getAccIdFromCNAME(recipient, false));
                 }
@@ -426,7 +427,7 @@ public class DueyProcessor {
             }
         }
     }
-    
+
     public static void dueyRemovePackage(MapleClient c, int packageid) {
         if (c.tryacquireClient()) {
             try {
@@ -437,7 +438,7 @@ public class DueyProcessor {
             }
         }
     }
-    
+
     public static void dueyClaimPackage(MapleClient c, int packageid) {
         if (c.tryacquireClient()) {
             try {
@@ -462,7 +463,7 @@ public class DueyProcessor {
                         }
                     }
                     dp = dueypack;
-                    if(dp == null) {
+                    if (dp == null) {
                         c.announce(MaplePacketCreator.sendDueyMSG(Actions.TOCLIENT_RECV_UNKNOWN_ERROR.getCode()));
                         FilePrinter.printError(FilePrinter.EXPLOITS + c.getPlayer().getName() + ".txt", c.getPlayer().getName() + " tried to receive package from duey with id " + packageid);
                         return;
@@ -473,10 +474,10 @@ public class DueyProcessor {
                             c.announce(MaplePacketCreator.sendDueyMSG(Actions.TOCLIENT_RECV_UNKNOWN_ERROR.getCode()));
                             return;
                         }
-                        
+
                         if (!MapleInventoryManipulator.checkSpace(c, dp.getItem().getItemId(), dp.getItem().getQuantity(), dp.getItem().getOwner())) {
                             int itemid = dp.getItem().getItemId();
-                            if(MapleItemInformationProvider.getInstance().isPickupRestricted(itemid) && c.getPlayer().getInventory(ItemConstants.getInventoryType(itemid)).findById(itemid) != null) {
+                            if (MapleItemInformationProvider.getInstance().isPickupRestricted(itemid) && c.getPlayer().getInventory(ItemConstants.getInventoryType(itemid)).findById(itemid) != null) {
                                 c.announce(MaplePacketCreator.sendDueyMSG(Actions.TOCLIENT_RECV_RECEIVER_WITH_UNIQUE.getCode()));
                             } else {
                                 c.announce(MaplePacketCreator.sendDueyMSG(Actions.TOCLIENT_RECV_NO_FREE_SLOTS.getCode()));
@@ -502,7 +503,7 @@ public class DueyProcessor {
             }
         }
     }
-    
+
     public static void dueySendTalk(MapleClient c) {
         if (c.tryacquireClient()) {
             try {

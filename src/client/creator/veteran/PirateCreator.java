@@ -28,52 +28,51 @@ import client.inventory.MapleInventoryType;
 import server.MapleItemInformationProvider;
 
 /**
- *
  * @author RonanLana
  */
 public class PirateCreator extends CharacterFactory {
-        private static int[] equips = {0, 0, 0, 0, 1072294};
-        private static int[] weapons = {1482004, 1492004};
-        private static int[] startingHpMp = {846, 503};
-        
-        private static CharacterFactoryRecipe createRecipe(MapleJob job, int level, int map, int top, int bottom, int shoes, int weapon) {
-                CharacterFactoryRecipe recipe = new CharacterFactoryRecipe(job, level, map, top, bottom, shoes, weapon);
-                MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
-                
-                recipe.setDex(20);
-                recipe.setRemainingAp(138);
-                recipe.setRemainingSp(61);
+    private static int[] equips = {0, 0, 0, 0, 1072294};
+    private static int[] weapons = {1482004, 1492004};
+    private static int[] startingHpMp = {846, 503};
 
-                recipe.setMaxHp(startingHpMp[0]);
-                recipe.setMaxMp(startingHpMp[1]);
-                
-                recipe.setMeso(100000);
-                
-                giveEquipment(recipe, ii, 1052107);
+    private static CharacterFactoryRecipe createRecipe(MapleJob job, int level, int map, int top, int bottom, int shoes, int weapon) {
+        CharacterFactoryRecipe recipe = new CharacterFactoryRecipe(job, level, map, top, bottom, shoes, weapon);
+        MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
 
-                for(int i = 1; i < weapons.length; i++) {
-                        giveEquipment(recipe, ii, weapons[i]);
-                }
-                
-                giveItem(recipe, 2330000, 800, MapleInventoryType.USE);
+        recipe.setDex(20);
+        recipe.setRemainingAp(138);
+        recipe.setRemainingSp(61);
 
-                giveItem(recipe, 2000002, 100, MapleInventoryType.USE);
-                giveItem(recipe, 2000003, 100, MapleInventoryType.USE);
-                giveItem(recipe, 3010000, 1, MapleInventoryType.SETUP);
-                
-                return recipe;
+        recipe.setMaxHp(startingHpMp[0]);
+        recipe.setMaxMp(startingHpMp[1]);
+
+        recipe.setMeso(100000);
+
+        giveEquipment(recipe, ii, 1052107);
+
+        for (int i = 1; i < weapons.length; i++) {
+            giveEquipment(recipe, ii, weapons[i]);
         }
-        
-        private static void giveEquipment(CharacterFactoryRecipe recipe, MapleItemInformationProvider ii, int equipid) {
-                Item nEquip = ii.getEquipById(equipid);
-                recipe.addStartingEquipment(nEquip);
-        }
-        
-        private static void giveItem(CharacterFactoryRecipe recipe, int itemid, int quantity, MapleInventoryType itemType) {
-                recipe.addStartingItem(itemid, quantity, itemType);
-        }
-    
-        public static int createCharacter(MapleClient c, String name, int face, int hair, int skin, int gender, int improveSp) {
-                return createNewCharacter(c, name, face, hair, skin, gender, createRecipe(MapleJob.PIRATE, 30, 120000000, equips[gender], equips[2 + gender], equips[4], weapons[0]));
-        }
+
+        giveItem(recipe, 2330000, 800, MapleInventoryType.USE);
+
+        giveItem(recipe, 2000002, 100, MapleInventoryType.USE);
+        giveItem(recipe, 2000003, 100, MapleInventoryType.USE);
+        giveItem(recipe, 3010000, 1, MapleInventoryType.SETUP);
+
+        return recipe;
+    }
+
+    private static void giveEquipment(CharacterFactoryRecipe recipe, MapleItemInformationProvider ii, int equipid) {
+        Item nEquip = ii.getEquipById(equipid);
+        recipe.addStartingEquipment(nEquip);
+    }
+
+    private static void giveItem(CharacterFactoryRecipe recipe, int itemid, int quantity, MapleInventoryType itemType) {
+        recipe.addStartingItem(itemid, quantity, itemType);
+    }
+
+    public static int createCharacter(MapleClient c, String name, int face, int hair, int skin, int gender, int improveSp) {
+        return createNewCharacter(c, name, face, hair, skin, gender, createRecipe(MapleJob.PIRATE, 30, 120000000, equips[gender], equips[2 + gender], equips[4], weapons[0]));
+    }
 }

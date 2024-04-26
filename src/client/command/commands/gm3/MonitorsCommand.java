@@ -14,7 +14,7 @@ public class MonitorsCommand extends Command {
     @Override
     public void execute(MapleClient c, String[] params) {
         MapleCharacter player = c.getPlayer();
-        
+
         for (String ign : MapleLogger.monitored) {
             player.yellowMessage(ign + " is being monitored.");
         }

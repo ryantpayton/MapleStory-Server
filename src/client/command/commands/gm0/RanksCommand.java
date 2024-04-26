@@ -7,6 +7,7 @@ import net.server.Server;
 import tools.MaplePacketCreator;
 
 import java.util.List;
+
 import tools.Pair;
 
 public class RanksCommand extends Command {

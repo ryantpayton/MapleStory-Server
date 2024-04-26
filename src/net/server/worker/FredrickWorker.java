@@ -25,7 +25,7 @@ import client.processor.FredrickProcessor;
  * @author Ronan
  */
 public class FredrickWorker implements Runnable {
-    
+
     @Override
     public void run() {
         FredrickProcessor.runFredrickSchedule();

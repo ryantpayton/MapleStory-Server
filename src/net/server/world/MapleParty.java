@@ -22,6 +22,7 @@
 package net.server.world;
 
 import client.MapleClient;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -30,6 +31,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Map;
 import java.util.Comparator;
+
 import net.server.audit.LockCollector;
 import net.server.audit.locks.MonitoredReentrantLock;
 import net.server.audit.locks.MonitoredLockType;
@@ -38,18 +40,18 @@ import server.maps.MapleDoor;
 
 public class MapleParty {
     private int id;
-    
+
     private int leaderId;
     private List<MaplePartyCharacter> members = new LinkedList<>();
     private List<MaplePartyCharacter> pqMembers = null;
-    
+
     private Map<Integer, Integer> histMembers = new HashMap<>();
     private int nextEntry = 0;
-    
+
     private Map<Integer, MapleDoor> doors = new HashMap<>();
-    
+
     private MonitoredReentrantLock lock = MonitoredReentrantLockFactory.createLock(MonitoredLockType.PARTY, true);
-    
+
     public MapleParty(int id, MaplePartyCharacter chrfor) {
         this.leaderId = chrfor.getId();
         this.id = id;
@@ -103,7 +105,7 @@ public class MapleParty {
             lock.unlock();
         }
     }
-    
+
     public MaplePartyCharacter getMemberById(int id) {
         lock.lock();
         try {
@@ -126,7 +128,7 @@ public class MapleParty {
             lock.unlock();
         }
     }
-    
+
     public List<MaplePartyCharacter> getPartyMembers() {
         lock.lock();
         try {
@@ -135,16 +137,16 @@ public class MapleParty {
             lock.unlock();
         }
     }
-    
+
     // used whenever entering PQs: will draw every party member that can attempt a target PQ while ingnoring those unfit.
     public Collection<MaplePartyCharacter> getEligibleMembers() {
         return Collections.unmodifiableList(pqMembers);
     }
-    
+
     public void setEligibleMembers(List<MaplePartyCharacter> eliParty) {
         pqMembers = eliParty;
     }
-    
+
     public int getId() {
         return id;
     }
@@ -152,7 +154,7 @@ public class MapleParty {
     public void setId(int id) {
         this.id = id;
     }
-    
+
     public int getLeaderId() {
         return leaderId;
     }
@@ -160,8 +162,8 @@ public class MapleParty {
     public MaplePartyCharacter getLeader() {
         lock.lock();
         try {
-            for(MaplePartyCharacter mpc: members) {
-                if(mpc.getId() == leaderId) {
+            for (MaplePartyCharacter mpc : members) {
+                if (mpc.getId() == leaderId) {
                     return mpc;
                 }
             }
@@ -171,45 +173,43 @@ public class MapleParty {
             lock.unlock();
         }
     }
-    
+
     public List<Integer> getMembersSortedByHistory() {
         List<Entry<Integer, Integer>> histList;
-        
+
         lock.lock();
         try {
             histList = new LinkedList<>(histMembers.entrySet());
         } finally {
             lock.unlock();
         }
-        
-        Collections.sort(histList, new Comparator<Entry<Integer, Integer>>()
-            {
-                @Override
-                public int compare( Entry<Integer, Integer> o1, Entry<Integer, Integer> o2 )
-                {
-                    return ( o1.getValue() ).compareTo( o2.getValue() );
-                }
-            });
-        
+
+        Collections.sort(histList, new Comparator<Entry<Integer, Integer>>() {
+            @Override
+            public int compare(Entry<Integer, Integer> o1, Entry<Integer, Integer> o2) {
+                return (o1.getValue()).compareTo(o2.getValue());
+            }
+        });
+
         List<Integer> histSort = new LinkedList<>();
-        for(Entry<Integer, Integer> e : histList) {
+        for (Entry<Integer, Integer> e : histList) {
             histSort.add(e.getKey());
         }
-        
+
         return histSort;
     }
-    
+
     public byte getPartyDoor(int cid) {
         List<Integer> histList = getMembersSortedByHistory();
         byte slot = 0;
-        for(Integer e: histList) {
-            if(e == cid) break;
+        for (Integer e : histList) {
+            if (e == cid) break;
             slot++;
         }
 
         return slot;
     }
-    
+
     public void addDoor(Integer owner, MapleDoor door) {
         lock.lock();
         try {
@@ -218,33 +218,33 @@ public class MapleParty {
             lock.unlock();
         }
     }
-    
+
     public void removeDoor(Integer owner) {
-    	lock.lock();
+        lock.lock();
         try {
             this.doors.remove(owner);
         } finally {
             lock.unlock();
         }
     }
-    
+
     public Map<Integer, MapleDoor> getDoors() {
-    	lock.lock();
+        lock.lock();
         try {
             return Collections.unmodifiableMap(doors);
         } finally {
             lock.unlock();
         }
     }
-    
+
     public void assignNewLeader(MapleClient c) {
         World world = c.getWorldServer();
         MaplePartyCharacter newLeadr = null;
-        
+
         lock.lock();
         try {
-            for(MaplePartyCharacter mpc : members) {
-                if(mpc.getId() != leaderId && (newLeadr == null || newLeadr.getLevel() < mpc.getLevel())) {
+            for (MaplePartyCharacter mpc : members) {
+                if (mpc.getId() != leaderId && (newLeadr == null || newLeadr.getLevel() < mpc.getLevel())) {
                     newLeadr = mpc;
                 }
             }
@@ -252,9 +252,9 @@ public class MapleParty {
             lock.unlock();
         }
 
-        if(newLeadr != null) world.updateParty(this.getId(), PartyOperation.CHANGE_LEADER, newLeadr);
+        if (newLeadr != null) world.updateParty(this.getId(), PartyOperation.CHANGE_LEADER, newLeadr);
     }
-    
+
     public void disposeLocks() {
         LockCollector.getInstance().registerDisposeAction(new Runnable() {
             @Override
@@ -263,11 +263,11 @@ public class MapleParty {
             }
         });
     }
-    
+
     private void emptyLocks() {
         lock = lock.dispose();
     }
-    
+
     @Override
     public int hashCode() {
         final int prime = 31;

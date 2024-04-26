@@ -63,6 +63,7 @@ public class MapleMount {
      * 1902010 - Frog
      * 1902011 - Turtle
      * 1902012 - Yeti
+     *
      * @return the id
      */
     public int getId() {
@@ -90,7 +91,7 @@ public class MapleMount {
             tiredness = 0;
         }
     }
-    
+
     public int incrementAndGetTiredness() {
         this.tiredness++;
         return this.tiredness;
@@ -115,9 +116,9 @@ public class MapleMount {
     public boolean isActive() {
         return active;
     }
-    
+
     public void empty() {
-        if(owner != null) owner.getClient().getWorldServer().unregisterMountHunger(owner);
+        if (owner != null) owner.getClient().getWorldServer().unregisterMountHunger(owner);
         this.owner = null;
-    }    
+    }
 }

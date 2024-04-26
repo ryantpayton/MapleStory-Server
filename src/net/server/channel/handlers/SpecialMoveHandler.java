@@ -43,10 +43,10 @@ import constants.skills.SuperGM;
 import net.server.Server;
 
 public final class SpecialMoveHandler extends AbstractMaplePacketHandler {
-    
+
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
-    	MapleCharacter chr = c.getPlayer();
+        MapleCharacter chr = c.getPlayer();
         slea.readInt();
         chr.getAutobanManager().setTimestamp(4, Server.getInstance().getCurrentTimestamp(), 28);
         int skillid = slea.readInt();
@@ -59,7 +59,7 @@ public final class SpecialMoveHandler extends AbstractMaplePacketHandler {
             return;
         }
         */
-        
+
         Point pos = null;
         int __skillLevel = slea.readByte();
         Skill skill = SkillFactory.getSkill(skillid);
@@ -74,17 +74,17 @@ public final class SpecialMoveHandler extends AbstractMaplePacketHandler {
             c.announce(MaplePacketCreator.serverNotice(5, "As you used the secret skill, your energy bar has been reset."));
         }
         if (skillLevel == 0 || skillLevel != __skillLevel) return;
-        
+
         MapleStatEffect effect = skill.getEffect(skillLevel);
         if (effect.getCooldown() > 0) {
             if (chr.skillIsCooling(skillid)) {
                 return;
             } else if (skillid != Corsair.BATTLE_SHIP) {
                 int cooldownTime = effect.getCooldown();
-                if(MapleStatEffect.isHerosWill(skillid) && ServerConstants.USE_FAST_REUSE_HERO_WILL) {
+                if (MapleStatEffect.isHerosWill(skillid) && ServerConstants.USE_FAST_REUSE_HERO_WILL) {
                     cooldownTime /= 60;
                 }
-                
+
                 c.announce(MaplePacketCreator.skillCooldown(skillid, cooldownTime));
                 chr.addCooldown(skillid, currentServerTime(), cooldownTime * 1000);
             }
@@ -100,7 +100,7 @@ public final class SpecialMoveHandler extends AbstractMaplePacketHandler {
                     if (!monster.isBoss()) {
                         monster.aggroClearDamages();
                         monster.aggroMonsterDamage(chr, 1);
-                        
+
                         monster.aggroSwitchController(chr, true);
                     }
                 }
@@ -112,7 +112,7 @@ public final class SpecialMoveHandler extends AbstractMaplePacketHandler {
         } else if (skillid == Brawler.MP_RECOVERY) {// MP Recovery
             Skill s = SkillFactory.getSkill(skillid);
             MapleStatEffect ef = s.getEffect(chr.getSkillLevel(s));
-            
+
             int lose = chr.safeAddHP(-1 * (chr.getCurrentMaxHp() / ef.getX()));
             int gain = -lose * (ef.getY() / 100);
             chr.addMP(gain);
@@ -122,7 +122,7 @@ public final class SpecialMoveHandler extends AbstractMaplePacketHandler {
         } else if (skillid % 10000000 == 1004) {
             slea.readShort();
         }
-        
+
         if (slea.available() == 5) {
             pos = new Point(slea.readShort(), slea.readShort());
         }
@@ -133,7 +133,7 @@ public final class SpecialMoveHandler extends AbstractMaplePacketHandler {
                 } else {
                     skill.getEffect(skillLevel).applyEchoOfHero(chr);
                 }
-            } else if(chr.canDoor()) {
+            } else if (chr.canDoor()) {
                 //update door lists
                 chr.cancelMagicDoor();
                 skill.getEffect(skillLevel).applyTo(chr, pos);

@@ -24,7 +24,6 @@ package server.maps;
 import client.inventory.Item;
 
 /**
- *
  * @author Matze
  */
 public class MaplePlayerShopItem {

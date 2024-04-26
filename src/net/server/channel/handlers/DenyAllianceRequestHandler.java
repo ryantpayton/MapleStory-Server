@@ -35,7 +35,7 @@ public final class DenyAllianceRequestHandler extends AbstractMaplePacketHandler
         slea.readByte();
         String inviterName = slea.readMapleAsciiString();
         String guildName = slea.readMapleAsciiString();
-        
+
         MapleCharacter chr = c.getWorldServer().getPlayerStorage().getCharacterByName(inviterName);
         if (chr != null) {
             MapleAlliance alliance = chr.getAlliance();

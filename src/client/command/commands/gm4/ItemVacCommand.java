@@ -5,6 +5,7 @@ import client.MapleClient;
 import client.MapleCharacter;
 import server.maps.MapleMapObject;
 import server.maps.MapleMapObjectType;
+
 import java.util.Arrays;
 import java.util.List;
 

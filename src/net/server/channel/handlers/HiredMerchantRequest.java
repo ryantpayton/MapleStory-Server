@@ -23,8 +23,10 @@ package net.server.channel.handlers;
 
 import client.inventory.ItemFactory;
 import client.MapleCharacter;
+
 import java.sql.SQLException;
 import java.util.Arrays;
+
 import client.MapleClient;
 import constants.GameConstants;
 import net.AbstractMaplePacketHandler;
@@ -33,7 +35,6 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
- *
  * @author XoticStory
  */
 public final class HiredMerchantRequest extends AbstractMaplePacketHandler {

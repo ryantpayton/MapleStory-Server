@@ -36,16 +36,16 @@ public final class PetExcludeItemsHandler extends AbstractMaplePacketHandler {
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         final int petId = slea.readInt();
         slea.skip(4);
-        
+
         MapleCharacter chr = c.getPlayer();
-        byte petIndex = (byte)chr.getPetIndex(petId);
+        byte petIndex = (byte) chr.getPetIndex(petId);
         if (petIndex < 0) return;
-        
+
         final MaplePet pet = chr.getPet(petIndex);
         if (pet == null) {
             return;
         }
-        
+
         chr.resetExcluded(petId);
         byte amount = slea.readByte();
         for (int i = 0; i < amount; i++) {

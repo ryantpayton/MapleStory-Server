@@ -22,7 +22,6 @@
 package provider;
 
 /**
- *
  * @author Matze
  */
 public interface MapleDataFileEntry extends MapleDataEntry {

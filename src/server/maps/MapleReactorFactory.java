@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import provider.MapleData;
 import provider.MapleDataProvider;
 import provider.MapleDataProviderFactory;
@@ -65,7 +66,7 @@ public class MapleReactorFactory {
                         MapleData eventData = reactorInfoData.getChildByPath("event");
                         if (eventData != null) {
                             int timeOut = -1;
-                            
+
                             for (MapleData fknexon : eventData.getChildren()) {
                                 if (fknexon.getName().equals("timeOut")) {
                                     timeOut = MapleDataTool.getInt(fknexon);

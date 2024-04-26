@@ -23,14 +23,15 @@
 package server.partyquest;
 
 import client.MapleCharacter;
+
 import java.util.concurrent.ScheduledFuture;
+
 import net.server.world.MapleParty;
 import server.MapleItemInformationProvider;
 import server.TimerManager;
 import tools.MaplePacketCreator;
 
 /**
- *
  * @author kevintjuh93
  */
 public class Pyramid extends PartyQuest {
@@ -108,7 +109,7 @@ public class Pyramid extends PartyQuest {
         if (gauge >= 100) gauge = 100;
         broadcastInfo("cool", cool);
         checkBuffs();
-       
+
     }
 
     public void miss() {
@@ -126,12 +127,12 @@ public class Pyramid extends PartyQuest {
             value = 120;
 
         timer = TimerManager.getInstance().schedule(new Runnable() {
-                @Override
-                public void run() {
-                    stage++;
-                    warp(map + (stage * 100));//Should work :D
-                }
-            }, value * 1000);//, 4000
+            @Override
+            public void run() {
+                stage++;
+                warp(map + (stage * 100));//Should work :D
+            }
+        }, value * 1000);//, 4000
         broadcastInfo("party", getParticipants().size() > 1 ? 1 : 0);
         broadcastInfo("hit", kill);
         broadcastInfo("miss", miss);
@@ -220,7 +221,7 @@ public class Pyramid extends PartyQuest {
                 if (totalkills >= 3000) rank = 0;
                 else if (totalkills >= 2000) rank = 1;
                 else if (totalkills >= 1500) rank = 2;
-                else if(totalkills >= 500) rank = 3;
+                else if (totalkills >= 500) rank = 3;
                 else rank = 4;
             } else {
                 if (totalkills >= 2000) rank = 3;
@@ -228,7 +229,7 @@ public class Pyramid extends PartyQuest {
             }
 
             if (rank == 0) exp = (60500 + (5500 * mode.getMode()));
-            else if(rank == 1) exp = (55000 + (5000 * mode.getMode()));
+            else if (rank == 1) exp = (55000 + (5000 * mode.getMode()));
             else if (rank == 2) exp = (46750 + (4250 * mode.getMode()));
             else if (rank == 3) exp = (22000 + (2000 * mode.getMode()));
 

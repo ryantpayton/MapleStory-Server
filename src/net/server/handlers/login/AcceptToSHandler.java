@@ -6,7 +6,6 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
- *
  * @author kevintjuh93
  */
 public final class AcceptToSHandler extends AbstractMaplePacketHandler {

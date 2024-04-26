@@ -33,7 +33,7 @@ public final class UseChairHandler extends AbstractMaplePacketHandler {
         if (c.getPlayer().getInventory(MapleInventoryType.SETUP).findById(itemId) == null) {
             return;
         }
-        
+
         c.getPlayer().sitChair(itemId);
     }
 }

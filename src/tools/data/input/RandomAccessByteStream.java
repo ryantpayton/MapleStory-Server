@@ -27,7 +27,7 @@ import java.io.RandomAccessFile;
 /**
  * Provides an abstract layer to a byte stream. This layer can be accessed
  * randomly.
- * 
+ *
  * @author Frz
  * @version 1.0
  * @since Revision 323

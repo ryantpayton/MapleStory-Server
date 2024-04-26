@@ -39,37 +39,41 @@ import constants.skills.Brawler;
 import constants.skills.DawnWarrior;
 import constants.skills.Magician;
 import constants.skills.Warrior;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
 import server.ThreadManager;
 import tools.MaplePacketCreator;
 import tools.Randomizer;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
- *
  * @author RonanLana - synchronization of AP transaction modules
  */
 public class AssignAPProcessor {
-    
+
     public static void APAutoAssignAction(SeekableLittleEndianAccessor slea, MapleClient c) {
         MapleCharacter chr = c.getPlayer();
         if (chr.getRemainingAp() < 1) return;
-        
+
         Collection<Item> equippedC = chr.getInventory(MapleInventoryType.EQUIPPED).list();
-        
+
         c.lockClient();
         try {
             int[] statGain = new int[4];
             int[] statUpdate = new int[4];
-            statGain[0] = 0; statGain[1] = 0; statGain[2] = 0; statGain[3] = 0;
+            statGain[0] = 0;
+            statGain[1] = 0;
+            statGain[2] = 0;
+            statGain[3] = 0;
 
             int remainingAp = chr.getRemainingAp();
             slea.skip(8);
 
-            if(ServerConstants.USE_SERVER_AUTOASSIGNER) {
+            if (ServerConstants.USE_SERVER_AUTOASSIGNER) {
                 // --------- Ronan Lana's AUTOASSIGNER ---------
                 // This method excels for assigning APs in such a way to cover all equipments AP requirements.
                 byte opt = slea.readByte();     // useful for pirate autoassigning
@@ -82,20 +86,20 @@ public class AssignAPProcessor {
                 Equip nEquip;
 
                 for (Item item : equippedC) {   //selecting the biggest AP value of each stat from each equipped item.
-                    nEquip = (Equip)item;
-                    if(nEquip.getStr() > 0) eqpStrList.add(nEquip.getStr());
+                    nEquip = (Equip) item;
+                    if (nEquip.getStr() > 0) eqpStrList.add(nEquip.getStr());
                     str += nEquip.getStr();
 
-                    if(nEquip.getDex() > 0) eqpDexList.add(nEquip.getDex());
+                    if (nEquip.getDex() > 0) eqpDexList.add(nEquip.getDex());
                     dex += nEquip.getDex();
 
-                    if(nEquip.getLuk() > 0) eqpLukList.add(nEquip.getLuk());
+                    if (nEquip.getLuk() > 0) eqpLukList.add(nEquip.getLuk());
                     luk += nEquip.getLuk();
 
                     //if(nEquip.getInt() > 0) eqpIntList.add(nEquip.getInt()); //not needed...
                     int_ += nEquip.getInt();
                 }
-                
+
                 statUpdate[0] = chr.getStr();
                 statUpdate[1] = chr.getDex();
                 statUpdate[2] = chr.getLuk();
@@ -119,22 +123,23 @@ public class AssignAPProcessor {
                 if (tempAp < 1) return;
 
                 MapleStat primary, secondary, tertiary = MapleStat.LUK;
-                switch(stance) {
+                switch (stance) {
                     case MAGICIAN:
                         CAP = 165;
                         scStat = (chr.getLevel() + 3) - (chr.getLuk() + luk - eqpLuk);
-                        if(scStat < 0) scStat = 0;
+                        if (scStat < 0) scStat = 0;
                         scStat = Math.min(scStat, tempAp);
 
-                        if(tempAp > scStat) tempAp -= scStat;
+                        if (tempAp > scStat) tempAp -= scStat;
                         else tempAp = 0;
 
                         prStat = tempAp;
                         int_ = prStat;
                         luk = scStat;
-                        str = 0; dex = 0;
+                        str = 0;
+                        dex = 0;
 
-                        if(ServerConstants.USE_AUTOASSIGN_SECONDARY_CAP && luk + chr.getLuk() > CAP) {
+                        if (ServerConstants.USE_AUTOASSIGN_SECONDARY_CAP && luk + chr.getLuk() > CAP) {
                             temp = luk + chr.getLuk() - CAP;
                             scStat -= temp;
                             prStat += temp;
@@ -149,18 +154,19 @@ public class AssignAPProcessor {
                     case BOWMAN:
                         CAP = 125;
                         scStat = (chr.getLevel() + 5) - (chr.getStr() + str - eqpStr);
-                        if(scStat < 0) scStat = 0;
+                        if (scStat < 0) scStat = 0;
                         scStat = Math.min(scStat, tempAp);
 
-                        if(tempAp > scStat) tempAp -= scStat;
+                        if (tempAp > scStat) tempAp -= scStat;
                         else tempAp = 0;
 
                         prStat = tempAp;
                         dex = prStat;
                         str = scStat;
-                        int_ = 0; luk = 0;
+                        int_ = 0;
+                        luk = 0;
 
-                        if(ServerConstants.USE_AUTOASSIGN_SECONDARY_CAP && str + chr.getStr() > CAP) {
+                        if (ServerConstants.USE_AUTOASSIGN_SECONDARY_CAP && str + chr.getStr() > CAP) {
                             temp = str + chr.getStr() - CAP;
                             scStat -= temp;
                             prStat += temp;
@@ -175,18 +181,19 @@ public class AssignAPProcessor {
                     case CROSSBOWMAN:
                         CAP = 120;
                         scStat = chr.getLevel() - (chr.getStr() + str - eqpStr);
-                        if(scStat < 0) scStat = 0;
+                        if (scStat < 0) scStat = 0;
                         scStat = Math.min(scStat, tempAp);
 
-                        if(tempAp > scStat) tempAp -= scStat;
+                        if (tempAp > scStat) tempAp -= scStat;
                         else tempAp = 0;
 
                         prStat = tempAp;
                         dex = prStat;
                         str = scStat;
-                        int_ = 0; luk = 0;
+                        int_ = 0;
+                        luk = 0;
 
-                        if(ServerConstants.USE_AUTOASSIGN_SECONDARY_CAP && str + chr.getStr() > CAP) {
+                        if (ServerConstants.USE_AUTOASSIGN_SECONDARY_CAP && str + chr.getStr() > CAP) {
                             temp = str + chr.getStr() - CAP;
                             scStat -= temp;
                             prStat += temp;
@@ -201,9 +208,9 @@ public class AssignAPProcessor {
                         CAP = 160;
 
                         scStat = 0;
-                        if(chr.getDex() < 80) {
+                        if (chr.getDex() < 80) {
                             scStat = (2 * chr.getLevel()) - (chr.getDex() + dex - eqpDex);
-                            if(scStat < 0) scStat = 0;
+                            if (scStat < 0) scStat = 0;
 
                             scStat = Math.min(80 - chr.getDex(), scStat);
                             scStat = Math.min(tempAp, scStat);
@@ -211,16 +218,16 @@ public class AssignAPProcessor {
                         }
 
                         temp = (chr.getLevel() + 40) - Math.max(80, scStat + chr.getDex() + dex - eqpDex);
-                        if(temp < 0) temp = 0;
+                        if (temp < 0) temp = 0;
                         temp = Math.min(tempAp, temp);
                         scStat += temp;
                         tempAp -= temp;
 
                         // thieves will upgrade STR as well only if a level-based threshold is reached.
-                        if(chr.getStr() >= Math.max(13, (int)(0.4 * chr.getLevel()))) {
-                            if(chr.getStr() < 50) {
+                        if (chr.getStr() >= Math.max(13, (int) (0.4 * chr.getLevel()))) {
+                            if (chr.getStr() < 50) {
                                 trStat = (chr.getLevel() - 10) - (chr.getStr() + str - eqpStr);
-                                if(trStat < 0) trStat = 0;
+                                if (trStat < 0) trStat = 0;
 
                                 trStat = Math.min(50 - chr.getStr(), trStat);
                                 trStat = Math.min(tempAp, trStat);
@@ -228,7 +235,7 @@ public class AssignAPProcessor {
                             }
 
                             temp = (20 + (chr.getLevel() / 2)) - Math.max(50, trStat + chr.getStr() + str - eqpStr);
-                            if(temp < 0) temp = 0;
+                            if (temp < 0) temp = 0;
                             temp = Math.min(tempAp, temp);
                             trStat += temp;
                             tempAp -= temp;
@@ -240,12 +247,12 @@ public class AssignAPProcessor {
                         str = trStat;
                         int_ = 0;
 
-                        if(ServerConstants.USE_AUTOASSIGN_SECONDARY_CAP && dex + chr.getDex() > CAP) {
+                        if (ServerConstants.USE_AUTOASSIGN_SECONDARY_CAP && dex + chr.getDex() > CAP) {
                             temp = dex + chr.getDex() - CAP;
                             scStat -= temp;
                             prStat += temp;
                         }
-                        if(ServerConstants.USE_AUTOASSIGN_SECONDARY_CAP && str + chr.getStr() > CAP) {
+                        if (ServerConstants.USE_AUTOASSIGN_SECONDARY_CAP && str + chr.getStr() > CAP) {
                             temp = str + chr.getStr() - CAP;
                             trStat -= temp;
                             prStat += temp;
@@ -260,7 +267,7 @@ public class AssignAPProcessor {
                     case BRAWLER:
                     default:    //warrior, beginner, ...
                         CAP = 300;
-                        
+
                         boolean highDex = false;    // thanks lucasziron & Vcoc for finding out DEX autoassigning poorly for STR-based characters
                         if (chr.getLevel() < 40) {
                             if (chr.getDex() >= (2 * chr.getLevel()) + 2) {
@@ -271,13 +278,13 @@ public class AssignAPProcessor {
                                 highDex = true;
                             }
                         }
-                        
+
                         // other classes will start favoring more DEX only if a level-based threshold is reached.
-                        if(!highDex) {
+                        if (!highDex) {
                             scStat = 0;
-                            if(chr.getDex() < 80) {
+                            if (chr.getDex() < 80) {
                                 scStat = (2 * chr.getLevel()) - (chr.getDex() + dex - eqpDex);
-                                if(scStat < 0) scStat = 0;
+                                if (scStat < 0) scStat = 0;
 
                                 scStat = Math.min(80 - chr.getDex(), scStat);
                                 scStat = Math.min(tempAp, scStat);
@@ -285,34 +292,35 @@ public class AssignAPProcessor {
                             }
 
                             temp = (chr.getLevel() + 40) - Math.max(80, scStat + chr.getDex() + dex - eqpDex);
-                            if(temp < 0) temp = 0;
+                            if (temp < 0) temp = 0;
                             temp = Math.min(tempAp, temp);
                             scStat += temp;
                             tempAp -= temp;
                         } else {
                             scStat = 0;
-                            if(chr.getDex() < 96) {
-                                scStat = (int)(2.4 * chr.getLevel()) - (chr.getDex() + dex - eqpDex);
-                                if(scStat < 0) scStat = 0;
+                            if (chr.getDex() < 96) {
+                                scStat = (int) (2.4 * chr.getLevel()) - (chr.getDex() + dex - eqpDex);
+                                if (scStat < 0) scStat = 0;
 
                                 scStat = Math.min(96 - chr.getDex(), scStat);
                                 scStat = Math.min(tempAp, scStat);
                                 tempAp -= scStat;
                             }
 
-                            temp = 96 + (int)(1.2 * (chr.getLevel() - 40)) - Math.max(96, scStat + chr.getDex() + dex - eqpDex);
-                            if(temp < 0) temp = 0;
+                            temp = 96 + (int) (1.2 * (chr.getLevel() - 40)) - Math.max(96, scStat + chr.getDex() + dex - eqpDex);
+                            if (temp < 0) temp = 0;
                             temp = Math.min(tempAp, temp);
                             scStat += temp;
                             tempAp -= temp;
                         }
-                        
+
                         prStat = tempAp;
                         str = prStat;
                         dex = scStat;
-                        int_ = 0; luk = 0;
+                        int_ = 0;
+                        luk = 0;
 
-                        if(ServerConstants.USE_AUTOASSIGN_SECONDARY_CAP && dex + chr.getDex() > CAP) {
+                        if (ServerConstants.USE_AUTOASSIGN_SECONDARY_CAP && dex + chr.getDex() > CAP) {
                             temp = dex + chr.getDex() - CAP;
                             scStat -= temp;
                             prStat += temp;
@@ -330,7 +338,7 @@ public class AssignAPProcessor {
                 extras = gainStatByType(secondary, statGain, scStat + extras, statUpdate);
                 extras = gainStatByType(tertiary, statGain, trStat + extras, statUpdate);
 
-                if(extras > 0) {    //redistribute surplus in priority order
+                if (extras > 0) {    //redistribute surplus in priority order
                     extras = gainStatByType(primary, statGain, extras, statUpdate);
                     extras = gainStatByType(secondary, statGain, extras, statUpdate);
                     extras = gainStatByType(tertiary, statGain, extras, statUpdate);
@@ -344,9 +352,9 @@ public class AssignAPProcessor {
 
                 c.announce(MaplePacketCreator.serverNotice(1, "Better AP applications detected:\r\nSTR: +" + statGain[0] + "\r\nDEX: +" + statGain[1] + "\r\nINT: +" + statGain[3] + "\r\nLUK: +" + statGain[2]));
             } else {
-                if(slea.available() < 16) {
+                if (slea.available() < 16) {
                     AutobanFactory.PACKET_EDIT.alert(chr, "Didn't send full packet for Auto Assign.");
-                    
+
                     final MapleClient client = c;
                     ThreadManager.getInstance().newTask(new Runnable() {
                         @Override
@@ -354,20 +362,20 @@ public class AssignAPProcessor {
                             client.disconnect(false, false);
                         }
                     });
-                    
+
                     return;
                 }
-                
+
                 for (int i = 0; i < 2; i++) {
                     int type = slea.readInt();
                     int tempVal = slea.readInt();
                     if (tempVal < 0 || tempVal > remainingAp) {
                         return;
                     }
-                    
+
                     gainStatByType(MapleStat.getBy5ByteEncoding(type), statGain, tempVal, statUpdate);
                 }
-                
+
                 chr.assignStrDexIntLuk(statGain[0], statGain[1], statGain[3], statGain[2]);
                 c.announce(MaplePacketCreator.enableActions());
             }
@@ -375,14 +383,14 @@ public class AssignAPProcessor {
             c.unlockClient();
         }
     }
-    
+
     private static int getNthHighestStat(List<Short> statList, short rank) {    // ranks from 0
-        return(statList.size() <= rank ? 0 : statList.get(rank));
+        return (statList.size() <= rank ? 0 : statList.get(rank));
     }
-    
+
     private static int gainStatByType(MapleStat type, int[] statGain, int gain, int statUpdate[]) {
-        if(gain <= 0) return 0;
-        
+        if (gain <= 0) return 0;
+
         int newVal = 0;
         if (type.equals(MapleStat.STR)) {
             newVal = statUpdate[0] + gain;
@@ -421,18 +429,18 @@ public class AssignAPProcessor {
                 statUpdate[1] = newVal;
             }
         }
-        
+
         if (newVal > ServerConstants.MAX_AP) {
             return newVal - ServerConstants.MAX_AP;
         }
         return 0;
     }
-    
+
     private static MapleStat getQuaternaryStat(MapleJob stance) {
-        if(stance != MapleJob.MAGICIAN) return MapleStat.INT;
+        if (stance != MapleJob.MAGICIAN) return MapleStat.INT;
         return MapleStat.STR;
     }
-    
+
     public static boolean APResetAction(MapleClient c, int APFrom, int APTo) {
         c.lockClient();
         try {
@@ -488,14 +496,14 @@ public class AssignAPProcessor {
                     }
                     break;
                 case 2048: // HP
-                    if(ServerConstants.USE_ENFORCE_HPMP_SWAP) {
+                    if (ServerConstants.USE_ENFORCE_HPMP_SWAP) {
                         if (APTo != 8192) {
                             player.message("You can only swap HP ability points to MP.");
                             c.announce(MaplePacketCreator.enableActions());
                             return false;
                         }
                     }
-                    
+
                     if (player.getHpMpApUsed() < 1) {
                         player.message("You don't have enough HPMP stat points to spend on AP Reset.");
                         c.announce(MaplePacketCreator.enableActions());
@@ -509,24 +517,24 @@ public class AssignAPProcessor {
                         c.announce(MaplePacketCreator.enableActions());
                         return false;
                     }
-                    
+
                     int curHp = player.getHp();
                     int hplose = -takeHp(player.getJob());
                     player.assignHP(hplose, -1);
                     if (!ServerConstants.USE_FIXED_RATIO_HPMP_UPDATE) {
                         player.updateHp(Math.max(1, curHp + hplose));
                     }
-                    
+
                     break;
                 case 8192: // MP
-                    if(ServerConstants.USE_ENFORCE_HPMP_SWAP) {
+                    if (ServerConstants.USE_ENFORCE_HPMP_SWAP) {
                         if (APTo != 2048) {
                             player.message("You can only swap MP ability points to HP.");
                             c.announce(MaplePacketCreator.enableActions());
                             return false;
                         }
                     }
-                    
+
                     if (player.getHpMpApUsed() < 1) {
                         player.message("You don't have enough HPMP stat points to spend on AP Reset.");
                         c.announce(MaplePacketCreator.enableActions());
@@ -553,7 +561,7 @@ public class AssignAPProcessor {
                         c.announce(MaplePacketCreator.enableActions());
                         return false;
                     }
-                    
+
                     int curMp = player.getMp();
                     int mplose = -takeMp(job);
                     player.assignMP(mplose, -1);
@@ -572,7 +580,7 @@ public class AssignAPProcessor {
             c.unlockClient();
         }
     }
-    
+
     public static void APAssignAction(MapleClient c, int num) {
         c.lockClient();
         try {
@@ -581,7 +589,7 @@ public class AssignAPProcessor {
             c.unlockClient();
         }
     }
-    
+
     private static boolean addStat(MapleCharacter chr, int apTo, boolean usedAPReset) {
         switch (apTo) {
             case 64:
@@ -636,17 +644,17 @@ public class AssignAPProcessor {
     private static int calcHpChange(MapleCharacter player, boolean usedAPReset) {
         MapleJob job = player.getJob();
         int MaxHP = 0;
-        
+
         if (job.isA(MapleJob.WARRIOR) || job.isA(MapleJob.DAWNWARRIOR1)) {
-            if(!usedAPReset) {
+            if (!usedAPReset) {
                 Skill increaseHP = SkillFactory.getSkill(job.isA(MapleJob.DAWNWARRIOR1) ? DawnWarrior.MAX_HP_INCREASE : Warrior.IMPROVED_MAXHP);
                 int sLvl = player.getSkillLevel(increaseHP);
 
-                if(sLvl > 0)
+                if (sLvl > 0)
                     MaxHP += increaseHP.getEffect(sLvl).getY();
             }
-            
-            if(ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
+
+            if (ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
                 if (usedAPReset) {
                     MaxHP += 20;
                 } else {
@@ -655,8 +663,8 @@ public class AssignAPProcessor {
             } else {
                 MaxHP += 20;
             }
-        } else if(job.isA(MapleJob.ARAN1)) {
-            if(ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
+        } else if (job.isA(MapleJob.ARAN1)) {
+            if (ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
                 if (usedAPReset) {
                     MaxHP += 20;
                 } else {
@@ -666,7 +674,7 @@ public class AssignAPProcessor {
                 MaxHP += 28;
             }
         } else if (job.isA(MapleJob.MAGICIAN) || job.isA(MapleJob.BLAZEWIZARD1)) {
-            if(ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
+            if (ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
                 if (usedAPReset) {
                     MaxHP += 6;
                 } else {
@@ -676,7 +684,7 @@ public class AssignAPProcessor {
                 MaxHP += 6;
             }
         } else if (job.isA(MapleJob.THIEF) || job.isA(MapleJob.NIGHTWALKER1)) {
-            if(ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
+            if (ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
                 if (usedAPReset) {
                     MaxHP += 16;
                 } else {
@@ -685,8 +693,8 @@ public class AssignAPProcessor {
             } else {
                 MaxHP += 16;
             }
-        } else if(job.isA(MapleJob.BOWMAN) || job.isA(MapleJob.WINDARCHER1)) {
-            if(ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
+        } else if (job.isA(MapleJob.BOWMAN) || job.isA(MapleJob.WINDARCHER1)) {
+            if (ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
                 if (usedAPReset) {
                     MaxHP += 16;
                 } else {
@@ -696,15 +704,15 @@ public class AssignAPProcessor {
                 MaxHP += 16;
             }
         } else if (job.isA(MapleJob.PIRATE) || job.isA(MapleJob.THUNDERBREAKER1)) {
-            if(!usedAPReset) {
+            if (!usedAPReset) {
                 Skill increaseHP = SkillFactory.getSkill(Brawler.IMPROVE_MAX_HP);
                 int sLvl = player.getSkillLevel(increaseHP);
 
-                if(sLvl > 0)
+                if (sLvl > 0)
                     MaxHP += increaseHP.getEffect(sLvl).getY();
             }
-            
-            if(ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
+
+            if (ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
                 if (usedAPReset) {
                     MaxHP += 18;
                 } else {
@@ -716,23 +724,23 @@ public class AssignAPProcessor {
         } else if (usedAPReset) {
             MaxHP += 8;
         } else {
-            if(ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
+            if (ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
                 MaxHP += Randomizer.rand(8, 12);
             } else {
                 MaxHP += 10;
             }
         }
-        
+
         return MaxHP;
     }
 
     private static int calcMpChange(MapleCharacter player, boolean usedAPReset) {
         MapleJob job = player.getJob();
         int MaxMP = 0;
-        
+
         if (job.isA(MapleJob.WARRIOR) || job.isA(MapleJob.DAWNWARRIOR1) || job.isA(MapleJob.ARAN1)) {
-            if(ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
-                if(!usedAPReset) {
+            if (ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
+                if (!usedAPReset) {
                     MaxMP += (Randomizer.rand(2, 4) + (player.getInt() / 10));
                 } else {
                     MaxMP += 2;
@@ -741,16 +749,16 @@ public class AssignAPProcessor {
                 MaxMP += 3;
             }
         } else if (job.isA(MapleJob.MAGICIAN) || job.isA(MapleJob.BLAZEWIZARD1)) {
-            if(!usedAPReset) {
+            if (!usedAPReset) {
                 Skill increaseMP = SkillFactory.getSkill(job.isA(MapleJob.BLAZEWIZARD1) ? BlazeWizard.INCREASING_MAX_MP : Magician.IMPROVED_MAX_MP_INCREASE);
                 int sLvl = player.getSkillLevel(increaseMP);
 
-                if(sLvl > 0)
+                if (sLvl > 0)
                     MaxMP += increaseMP.getEffect(sLvl).getY();
             }
-            
-            if(ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
-                if(!usedAPReset) {
+
+            if (ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
+                if (!usedAPReset) {
                     MaxMP += (Randomizer.rand(12, 16) + (player.getInt() / 20));
                 } else {
                     MaxMP += 18;
@@ -759,8 +767,8 @@ public class AssignAPProcessor {
                 MaxMP += 18;
             }
         } else if (job.isA(MapleJob.BOWMAN) || job.isA(MapleJob.WINDARCHER1)) {
-            if(ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
-                if(!usedAPReset) {
+            if (ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
+                if (!usedAPReset) {
                     MaxMP += (Randomizer.rand(6, 8) + (player.getInt() / 10));
                 } else {
                     MaxMP += 10;
@@ -768,9 +776,9 @@ public class AssignAPProcessor {
             } else {
                 MaxMP += 10;
             }
-        } else if(job.isA(MapleJob.THIEF) || job.isA(MapleJob.NIGHTWALKER1)) {
-            if(ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
-                if(!usedAPReset) {
+        } else if (job.isA(MapleJob.THIEF) || job.isA(MapleJob.NIGHTWALKER1)) {
+            if (ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
+                if (!usedAPReset) {
                     MaxMP += (Randomizer.rand(6, 8) + (player.getInt() / 10));
                 } else {
                     MaxMP += 10;
@@ -779,8 +787,8 @@ public class AssignAPProcessor {
                 MaxMP += 10;
             }
         } else if (job.isA(MapleJob.PIRATE) || job.isA(MapleJob.THUNDERBREAKER1)) {
-            if(ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
-                if(!usedAPReset) {
+            if (ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
+                if (!usedAPReset) {
                     MaxMP += (Randomizer.rand(7, 9) + (player.getInt() / 10));
                 } else {
                     MaxMP += 14;
@@ -789,8 +797,8 @@ public class AssignAPProcessor {
                 MaxMP += 14;
             }
         } else {
-            if(ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
-                if(!usedAPReset) {
+            if (ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
+                if (!usedAPReset) {
                     MaxMP += (Randomizer.rand(4, 6) + (player.getInt() / 10));
                 } else {
                     MaxMP += 6;
@@ -799,48 +807,48 @@ public class AssignAPProcessor {
                 MaxMP += 6;
             }
         }
-        
+
         return MaxMP;
     }
-    
+
     private static int takeHp(MapleJob job) {
         int MaxHP = 0;
-        
+
         if (job.isA(MapleJob.WARRIOR) || job.isA(MapleJob.DAWNWARRIOR1) || job.isA(MapleJob.ARAN1)) {
             MaxHP += 54;
         } else if (job.isA(MapleJob.MAGICIAN) || job.isA(MapleJob.BLAZEWIZARD1)) {
             MaxHP += 10;
         } else if (job.isA(MapleJob.THIEF) || job.isA(MapleJob.NIGHTWALKER1)) {
             MaxHP += 20;
-        } else if(job.isA(MapleJob.BOWMAN) || job.isA(MapleJob.WINDARCHER1)) {
+        } else if (job.isA(MapleJob.BOWMAN) || job.isA(MapleJob.WINDARCHER1)) {
             MaxHP += 20;
         } else if (job.isA(MapleJob.PIRATE) || job.isA(MapleJob.THUNDERBREAKER1)) {
             MaxHP += 42;
         } else {
             MaxHP += 12;
         }
-        
+
         return MaxHP;
     }
-    
+
     private static int takeMp(MapleJob job) {
         int MaxMP = 0;
-        
+
         if (job.isA(MapleJob.WARRIOR) || job.isA(MapleJob.DAWNWARRIOR1) || job.isA(MapleJob.ARAN1)) {
             MaxMP += 4;
         } else if (job.isA(MapleJob.MAGICIAN) || job.isA(MapleJob.BLAZEWIZARD1)) {
             MaxMP += 31;
         } else if (job.isA(MapleJob.BOWMAN) || job.isA(MapleJob.WINDARCHER1)) {
             MaxMP += 12;
-        } else if(job.isA(MapleJob.THIEF) || job.isA(MapleJob.NIGHTWALKER1)) {
+        } else if (job.isA(MapleJob.THIEF) || job.isA(MapleJob.NIGHTWALKER1)) {
             MaxMP += 12;
         } else if (job.isA(MapleJob.PIRATE) || job.isA(MapleJob.THUNDERBREAKER1)) {
             MaxMP += 16;
         } else {
             MaxMP += 8;
         }
-        
+
         return MaxMP;
     }
-    
+
 }

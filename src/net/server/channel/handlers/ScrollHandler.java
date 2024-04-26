@@ -32,9 +32,11 @@ import client.inventory.MapleInventory;
 import client.inventory.MapleInventoryType;
 import client.inventory.ModifyInventory;
 import constants.ItemConstants;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import net.AbstractMaplePacketHandler;
 import client.inventory.manipulator.MapleInventoryManipulator;
 import server.MapleItemInformationProvider;
@@ -58,7 +60,7 @@ public final class ScrollHandler extends AbstractMaplePacketHandler {
         if ((ws & 2) == 2) {
             whiteScroll = true;
         }
-        
+
         MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
         MapleCharacter chr = c.getPlayer();
         Equip toScroll = (Equip) chr.getInventory(MapleInventoryType.EQUIPPED).getItem(dst);
@@ -83,7 +85,7 @@ public final class ScrollHandler extends AbstractMaplePacketHandler {
             c.announce(MaplePacketCreator.getInventoryFull());
             return;
         }
-        
+
         List<Integer> scrollReqs = ii.getScrollReqs(scroll.getItemId());
         if (scrollReqs.size() > 0 && !scrollReqs.contains(toScroll.getItemId())) {
             c.announce(MaplePacketCreator.getInventoryFull());
@@ -101,11 +103,11 @@ public final class ScrollHandler extends AbstractMaplePacketHandler {
                 return;
             }
         }
-        
+
         if (ItemConstants.isCleanSlate(scroll.getItemId()) && !ii.canUseCleanSlate(toScroll)) {
             return;
         }
-        
+
         Equip scrolled = (Equip) ii.scrollEquipWithId(toScroll, scroll.getItemId(), whiteScroll, 0, chr.isGM());
         ScrollResult scrollSuccess = Equip.ScrollResult.FAIL; // fail
         if (scrolled == null) {
@@ -119,11 +121,11 @@ public final class ScrollHandler extends AbstractMaplePacketHandler {
         }
         final List<ModifyInventory> mods = new ArrayList<>();
         if (scrollSuccess == Equip.ScrollResult.CURSE) {
-            if(!ItemConstants.isWeddingRing(toScroll.getItemId())) {
+            if (!ItemConstants.isWeddingRing(toScroll.getItemId())) {
                 mods.add(new ModifyInventory(3, toScroll));
                 if (dst < 0) {
                     MapleInventory inv = chr.getInventory(MapleInventoryType.EQUIPPED);
-                    
+
                     inv.lockInventory();
                     try {
                         chr.unequippedItem(toScroll);
@@ -137,7 +139,7 @@ public final class ScrollHandler extends AbstractMaplePacketHandler {
             } else {
                 scrolled = toScroll;
                 scrollSuccess = Equip.ScrollResult.FAIL;
-                
+
                 mods.add(new ModifyInventory(3, scrolled));
                 mods.add(new ModifyInventory(0, scrolled));
             }
@@ -154,11 +156,11 @@ public final class ScrollHandler extends AbstractMaplePacketHandler {
 
     private static boolean canScroll(int scrollid, int itemid) {
         int sid = scrollid / 100;
-        
-        switch(sid) {
+
+        switch (sid) {
             case 20492: //scroll for accessory (pendant, belt, ring)
                 return canScroll(2041100, itemid) || canScroll(2041200, itemid) || canScroll(2041300, itemid);
-                
+
             default:
                 return (scrollid / 100) % 100 == (itemid / 10000) % 100;
         }

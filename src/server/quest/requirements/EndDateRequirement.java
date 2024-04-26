@@ -22,39 +22,39 @@
 package server.quest.requirements;
 
 import client.MapleCharacter;
+
 import java.util.Calendar;
+
 import provider.MapleData;
 import provider.MapleDataTool;
 import server.quest.MapleQuest;
 import server.quest.MapleQuestRequirementType;
 
 /**
- *
  * @author Tyler (Twdtwd)
  */
 public class EndDateRequirement extends MapleQuestRequirement {
-	private String timeStr;
-	
-	
-	public EndDateRequirement(MapleQuest quest, MapleData data) {
-		super(MapleQuestRequirementType.END_DATE);
-		processData(data);
-	}
-	
-	/**
-	 * 
-	 * @param data 
-	 */
-	@Override
-	public void processData(MapleData data) {
-		timeStr = MapleDataTool.getString(data);
-	}
-	
-	
-	@Override
-	public boolean check(MapleCharacter chr, Integer npcid) {
-		Calendar cal = Calendar.getInstance();
-		cal.set(Integer.parseInt(timeStr.substring(0, 4)), Integer.parseInt(timeStr.substring(4, 6)), Integer.parseInt(timeStr.substring(6, 8)), Integer.parseInt(timeStr.substring(8, 10)), 0);
-		return cal.getTimeInMillis() >= System.currentTimeMillis();
-	}
+    private String timeStr;
+
+
+    public EndDateRequirement(MapleQuest quest, MapleData data) {
+        super(MapleQuestRequirementType.END_DATE);
+        processData(data);
+    }
+
+    /**
+     * @param data
+     */
+    @Override
+    public void processData(MapleData data) {
+        timeStr = MapleDataTool.getString(data);
+    }
+
+
+    @Override
+    public boolean check(MapleCharacter chr, Integer npcid) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Integer.parseInt(timeStr.substring(0, 4)), Integer.parseInt(timeStr.substring(4, 6)), Integer.parseInt(timeStr.substring(6, 8)), Integer.parseInt(timeStr.substring(8, 10)), 0);
+        return cal.getTimeInMillis() >= System.currentTimeMillis();
+    }
 }

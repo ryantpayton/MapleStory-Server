@@ -20,6 +20,7 @@
 package net.server.coordinator;
 
 import constants.ServerConstants;
+
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,30 +35,29 @@ import net.server.Server;
 import tools.Pair;
 
 /**
- *
  * @author Ronan
  */
 public class MapleLoginBypassCoordinator {
-    
+
     private final static MapleLoginBypassCoordinator instance = new MapleLoginBypassCoordinator();
-    
+
     public static MapleLoginBypassCoordinator getInstance() {
         return instance;
     }
-    
+
     private final ConcurrentHashMap<Pair<String, Integer>, Pair<Boolean, Long>> loginBypass = new ConcurrentHashMap<>();   // optimized PIN & PIC check
-    
+
     public boolean canLoginBypass(String nibbleHwid, int accId, boolean pic) {
         try {
             Pair<String, Integer> entry = new Pair<>(nibbleHwid, accId);
             Boolean p = loginBypass.get(entry).getLeft();
-            
+
             return !pic || p;
         } catch (NullPointerException npe) {
             return false;
         }
     }
-    
+
     public void registerLoginBypassEntry(String nibbleHwid, int accId, boolean pic) {
         long expireTime = (pic ? ServerConstants.BYPASS_PIC_EXPIRATION : ServerConstants.BYPASS_PIN_EXPIRATION);
         if (expireTime > 0) {
@@ -66,23 +66,24 @@ public class MapleLoginBypassCoordinator {
             try {
                 pic |= loginBypass.get(entry).getLeft();
                 expireTime = Math.max(loginBypass.get(entry).getRight(), expireTime);
-            } catch (NullPointerException npe) {}
-            
+            } catch (NullPointerException npe) {
+            }
+
             loginBypass.put(entry, new Pair<>(pic, expireTime));
         }
     }
-    
+
     public void unregisterLoginBypassEntry(String nibbleHwid, int accId) {
         Pair<String, Integer> entry = new Pair<>(nibbleHwid, accId);
         loginBypass.remove(entry);
     }
-    
+
     public void runUpdateLoginBypass() {
         if (!loginBypass.isEmpty()) {
             List<Pair<String, Integer>> toRemove = new LinkedList<>();
             Set<Integer> onlineAccounts = new HashSet<>();
             long timeNow = Server.getInstance().getCurrentTime();
-            
+
             for (World w : Server.getInstance().getWorlds()) {
                 for (MapleCharacter chr : w.getPlayerStorage().getAllCharacters()) {
                     MapleClient c = chr.getClient();
@@ -91,7 +92,7 @@ public class MapleLoginBypassCoordinator {
                     }
                 }
             }
-            
+
             for (Entry<Pair<String, Integer>, Pair<Boolean, Long>> e : loginBypass.entrySet()) {
                 if (onlineAccounts.contains(e.getKey().getRight())) {
                     long expireTime = timeNow + 2 * 60 * 1000;
@@ -102,7 +103,7 @@ public class MapleLoginBypassCoordinator {
                     toRemove.add(e.getKey());
                 }
             }
-            
+
             if (!toRemove.isEmpty()) {
                 for (Pair<String, Integer> p : toRemove) {
                     loginBypass.remove(p);
@@ -110,5 +111,5 @@ public class MapleLoginBypassCoordinator {
             }
         }
     }
-    
+
 }

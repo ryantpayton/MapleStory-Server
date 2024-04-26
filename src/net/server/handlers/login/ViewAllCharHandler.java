@@ -24,7 +24,9 @@ package net.server.handlers.login;
 import client.MapleCharacter;
 import client.MapleClient;
 import constants.ServerConstants;
+
 import java.util.List;
+
 import net.AbstractMaplePacketHandler;
 import net.server.Server;
 import tools.MaplePacketCreator;
@@ -35,34 +37,34 @@ public final class ViewAllCharHandler extends AbstractMaplePacketHandler {
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         try {
-            if(!c.canRequestCharlist()) {   // client breaks if the charlist request pops too soon
+            if (!c.canRequestCharlist()) {   // client breaks if the charlist request pops too soon
                 c.announce(MaplePacketCreator.showAllCharacter(0, 0));
                 return;
             }
-            
+
             int accountId = c.getAccID();
             Pair<Pair<Integer, List<MapleCharacter>>, List<Pair<Integer, List<MapleCharacter>>>> loginBlob = Server.getInstance().loadAccountCharlist(accountId, c.getVisibleWorlds());
-            
+
             List<Pair<Integer, List<MapleCharacter>>> worldChars = loginBlob.getRight();
             int chrTotal = loginBlob.getLeft().getLeft();
             List<MapleCharacter> lastwchars = loginBlob.getLeft().getRight();
-            
+
             if (chrTotal > 9) {
                 int padRight = chrTotal % 3;
                 if (padRight > 0 && lastwchars != null) {
                     MapleCharacter chr = lastwchars.get(lastwchars.size() - 1);
-                    
-                    for(int i = padRight; i < 3; i++) { // filling the remaining slots with the last character loaded
+
+                    for (int i = padRight; i < 3; i++) { // filling the remaining slots with the last character loaded
                         chrTotal++;
                         lastwchars.add(chr);
                     }
                 }
             }
-            
+
             int charsSize = chrTotal;
             int unk = charsSize + (3 - charsSize % 3); //rowSize?
             c.announce(MaplePacketCreator.showAllCharacter(charsSize, unk));
-            
+
             for (Pair<Integer, List<MapleCharacter>> wchars : worldChars) {
                 c.announce(MaplePacketCreator.showAllCharacterInfo(wchars.getLeft(), wchars.getRight(), ServerConstants.ENABLE_PIC && !c.canBypassPic()));
             }

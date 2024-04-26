@@ -37,13 +37,13 @@ public final class DamageSummonHandler extends AbstractMaplePacketHandler {
         slea.skip(1);   // -1
         int damage = slea.readInt();
         int monsterIdFrom = slea.readInt();
-        
+
         MapleCharacter player = c.getPlayer();
         MapleMapObject mmo = player.getMap().getMapObject(oid);
-        
-        if(mmo != null && mmo instanceof MapleSummon) {
+
+        if (mmo != null && mmo instanceof MapleSummon) {
             MapleSummon summon = (MapleSummon) mmo;
-        
+
             summon.addHP(-damage);
             if (summon.getHP() <= 0) {
                 player.cancelEffectFromBuffStat(MapleBuffStat.PUPPET);

@@ -24,7 +24,9 @@ package server.maps;
 import client.MapleClient;
 import client.MapleCharacter;
 import constants.GameConstants;
+
 import java.awt.Point;
+
 import scripting.portal.PortalScriptManager;
 import server.MaplePortal;
 import tools.MaplePacketCreator;
@@ -44,7 +46,7 @@ public class MapleGenericPortal implements MaplePortal {
     private String scriptName;
     private boolean portalState;
     private MonitoredReentrantLock scriptLock = null;
-    
+
     public MapleGenericPortal(int type) {
         this.type = type;
     }
@@ -117,9 +119,9 @@ public class MapleGenericPortal implements MaplePortal {
     @Override
     public void setScriptName(String scriptName) {
         this.scriptName = scriptName;
-        
-        if(scriptName != null) {
-            if(scriptLock == null) {
+
+        if (scriptName != null) {
+            if (scriptLock == null) {
                 scriptLock = MonitoredReentrantLockFactory.createLock(MonitoredLockType.PORTAL, true);
             }
         } else {
@@ -138,7 +140,7 @@ public class MapleGenericPortal implements MaplePortal {
                 } finally {
                     scriptLock.unlock();
                 }
-            } catch(NullPointerException npe) {
+            } catch (NullPointerException npe) {
                 npe.printStackTrace();
             }
         } else if (getTargetMapId() != 999999999) {

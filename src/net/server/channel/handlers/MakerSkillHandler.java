@@ -27,11 +27,10 @@ import net.AbstractMaplePacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
- *
  * @author Jay Estrella, Ronan
  */
 public final class MakerSkillHandler extends AbstractMaplePacketHandler {
-    
+
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         MakerProcessor.makerAction(slea, c);

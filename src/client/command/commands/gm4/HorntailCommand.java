@@ -4,6 +4,7 @@ import client.command.Command;
 import client.MapleClient;
 import client.MapleCharacter;
 import server.maps.MapleMap;
+
 import java.awt.*;
 
 public class HorntailCommand extends Command {

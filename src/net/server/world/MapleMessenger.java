@@ -27,27 +27,27 @@ import java.util.Collections;
 import java.util.List;
 
 public final class MapleMessenger {
-	
+
     private int id;
     private List<MapleMessengerCharacter> members = new ArrayList<MapleMessengerCharacter>(3);
     private boolean[] pos = new boolean[3];
 
     public MapleMessenger(int id, MapleMessengerCharacter chrfor) {
-        this.id = id;  
-    	for (int i = 0; i < 3; i++){
-    		pos[i] = false;
-    	}
+        this.id = id;
+        for (int i = 0; i < 3; i++) {
+            pos[i] = false;
+        }
         addMember(chrfor, chrfor.getPosition());
     }
-    
+
     public int getId() {
         return id;
     }
-    
+
     public Collection<MapleMessengerCharacter> getMembers() {
         return Collections.unmodifiableList(members);
     }
-    
+
     public void addMember(MapleMessengerCharacter member, int position) {
         members.add(member);
         member.setPosition(position);
@@ -55,7 +55,7 @@ public final class MapleMessenger {
     }
 
     public void removeMember(MapleMessengerCharacter member) {
-    	int position = member.getPosition();
+        int position = member.getPosition();
         pos[position] = false;
         members.remove(member);
     }

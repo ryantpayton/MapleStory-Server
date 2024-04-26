@@ -29,7 +29,7 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class CharInfoRequestHandler extends AbstractMaplePacketHandler {
-    
+
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         slea.skip(4);
@@ -38,8 +38,8 @@ public final class CharInfoRequestHandler extends AbstractMaplePacketHandler {
         if (target != null) {
             if (target instanceof MapleCharacter) {
                 MapleCharacter player = (MapleCharacter) target;
-                
-                if(c.getPlayer().getId() != player.getId()) {
+
+                if (c.getPlayer().getId() != player.getId()) {
                     player.exportExcludedItems(c);
                 }
                 c.announce(MaplePacketCreator.charInfo(player));

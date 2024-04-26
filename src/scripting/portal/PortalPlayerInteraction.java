@@ -22,10 +22,12 @@
 package scripting.portal;
 
 import client.MapleClient;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import scripting.AbstractPlayerInteraction;
 import server.MaplePortal;
 import server.quest.MapleQuest;
@@ -78,26 +80,26 @@ public class PortalPlayerInteraction extends AbstractPlayerInteraction {
                 ex.printStackTrace();
             }
         }
-        
+
         return getPlayer().getLevel() >= 30;
     }
-    
+
     public boolean forceStartQuest(int id) {
-            return forceStartQuest(id, 9010000);
+        return forceStartQuest(id, 9010000);
     }
 
     public boolean forceStartQuest(int id, int npc) {
-            return MapleQuest.getInstance(id).forceStart(getPlayer(), npc);
+        return MapleQuest.getInstance(id).forceStart(getPlayer(), npc);
     }
-    
+
     public boolean forceCompleteQuest(int id) {
-            return forceCompleteQuest(id, 9010000);
+        return forceCompleteQuest(id, 9010000);
     }
 
     public boolean forceCompleteQuest(int id, int npc) {
-            return MapleQuest.getInstance(id).forceComplete(getPlayer(), npc);
+        return MapleQuest.getInstance(id).forceComplete(getPlayer(), npc);
     }
-    
+
     public void blockPortal() {
         c.getPlayer().blockPortal(getPortal().getScriptName());
     }

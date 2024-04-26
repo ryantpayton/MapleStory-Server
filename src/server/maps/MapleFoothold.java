@@ -24,7 +24,6 @@ package server.maps;
 import java.awt.Point;
 
 /**
- * 
  * @author Matze
  */
 public class MapleFoothold implements Comparable<MapleFoothold> {
@@ -57,8 +56,8 @@ public class MapleFoothold implements Comparable<MapleFoothold> {
 
     public int getY2() {
         return p2.y;
-    }    
-    
+    }
+
     // XXX may need more precision
     public int calculateFooting(int x) {
         if (p1.y == p2.y) {

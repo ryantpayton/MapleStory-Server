@@ -22,10 +22,10 @@
 package server;
 
 import client.inventory.Item;
+
 import java.util.Calendar;
 
 /**
- *
  * @author Traitor
  */
 public class MTSItemInfo {

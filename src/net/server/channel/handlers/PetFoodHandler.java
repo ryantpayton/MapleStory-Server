@@ -62,13 +62,13 @@ public final class PetFoodHandler extends AbstractMaplePacketHandler {
                 }
             }
         }
-        
+
         MaplePet pet = chr.getPet(slot);
-        if(pet == null) return;
-        
+        if (pet == null) return;
+
         short pos = slea.readShort();
         int itemId = slea.readInt();
-        
+
         if (c.tryacquireClient()) {
             try {
                 MapleInventory useInv = chr.getInventory(MapleInventoryType.USE);

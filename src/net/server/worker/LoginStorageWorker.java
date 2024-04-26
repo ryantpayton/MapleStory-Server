@@ -23,11 +23,10 @@ import net.server.coordinator.MapleSessionCoordinator;
 import net.server.coordinator.MapleLoginBypassCoordinator;
 
 /**
- *
  * @author Ronan
  */
 public class LoginStorageWorker implements Runnable {
-    
+
     @Override
     public void run() {
         MapleSessionCoordinator.getInstance().runUpdateLoginHistory();

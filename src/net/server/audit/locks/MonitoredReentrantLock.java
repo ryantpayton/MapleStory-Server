@@ -20,17 +20,16 @@
 package net.server.audit.locks;
 
 /**
- *
  * @author RonanLana
  */
 public interface MonitoredReentrantLock {
-    
+
     public void lock();
-    
+
     public void unlock();
-    
+
     public boolean tryLock();
-    
+
     public MonitoredReentrantLock dispose();
-    
+
 }

@@ -26,11 +26,11 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import server.quest.MapleQuest;
 import tools.StringUtil;
 
 /**
- *
  * @author Matze
  */
 public class MapleQuestStatus {
@@ -58,6 +58,7 @@ public class MapleQuestStatus {
             return null;
         }
     }
+
     private short questID;
     private Status status;
     //private boolean updated;   //maybe this can be of use for someone?
@@ -74,8 +75,8 @@ public class MapleQuestStatus {
         this.completionTime = System.currentTimeMillis();
         this.expirationTime = 0;
         //this.updated = true;
-        if (status == Status.STARTED) 
-            registerMobs();      
+        if (status == Status.STARTED)
+            registerMobs();
     }
 
     public MapleQuestStatus(MapleQuest quest, Status status, int npc) {
@@ -93,7 +94,7 @@ public class MapleQuestStatus {
     public MapleQuest getQuest() {
         return MapleQuest.getInstance(questID);
     }
-	
+
     public short getQuestID() {
         return questID;
     }
@@ -174,18 +175,18 @@ public class MapleQuestStatus {
         if (!progress.isEmpty()) return progress.entrySet().iterator().next().getKey();
         return 0;
     }
-    
+
     public String getProgress(int id) {
         if (progress.get(id) == null) return "";
         return progress.get(id);
     }
-    
+
     public void resetProgress(int id) {
         setProgress(id, "000");
     }
-    
+
     public void resetAllProgress() {
-        for(Map.Entry<Integer, String> entry : progress.entrySet()) {
+        for (Map.Entry<Integer, String> entry : progress.entrySet()) {
             setProgress(entry.getKey(), "000");
         }
     }
@@ -201,11 +202,11 @@ public class MapleQuestStatus {
     public void setCompletionTime(long completionTime) {
         this.completionTime = completionTime;
     }
-    
+
     public long getExpirationTime() {
         return expirationTime;
     }
-    
+
     public void setExpirationTime(long expirationTime) {
         this.expirationTime = expirationTime;
     }
@@ -213,14 +214,14 @@ public class MapleQuestStatus {
     public int getForfeited() {
         return forfeited;
     }
-    
+
     public String getInfo() {
-        if(!progress.containsKey(0) && !getMedalMaps().isEmpty()) {
+        if (!progress.containsKey(0) && !getMedalMaps().isEmpty()) {
             return Integer.toString(getMedalProgress());
         }
         return getProgress(0);
     }
-    
+
     public void setInfo(String newInfo) {
         progress.put(0, newInfo);
         //this.setUpdated();
@@ -241,7 +242,7 @@ public class MapleQuestStatus {
     public final String getCustomData() {
         return customData;
     }
-    
+
     public String getQuestData() {
         StringBuilder str = new StringBuilder();
         for (String ps : progress.values()) {

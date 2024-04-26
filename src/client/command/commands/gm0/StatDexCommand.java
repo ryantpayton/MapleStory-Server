@@ -4,9 +4,11 @@ import client.MapleCharacter;
 import client.MapleClient;
 import client.command.Command;
 import constants.ServerConstants;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.javatuples.Quartet;
 
 public class StatDexCommand extends Command {

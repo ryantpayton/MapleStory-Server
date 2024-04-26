@@ -58,540 +58,541 @@ import client.inventory.Item;
 import client.inventory.ItemFactory;
 import client.inventory.MaplePet;
 import constants.ItemConstants;
+
 import java.awt.Point;
 import java.util.Arrays;
+
 import server.MapleSkillbookInformationProvider;
 import server.MapleSkillbookInformationProvider.SkillBookEntry;
 import server.maps.MapleMapObject;
 import server.maps.MapleMapObjectType;
 
 /**
- *
  * @author Matze
  */
 public class NPCConversationManager extends AbstractPlayerInteraction {
-	private int npc;
-        private int npcOid;
-	private String scriptName;
-	private String getText;
-        private boolean itemScript;
-        
-        public NPCConversationManager(MapleClient c, int npc, String scriptName) {
-               this(c, npc, -1, scriptName, false);
+    private int npc;
+    private int npcOid;
+    private String scriptName;
+    private String getText;
+    private boolean itemScript;
+
+    public NPCConversationManager(MapleClient c, int npc, String scriptName) {
+        this(c, npc, -1, scriptName, false);
+    }
+
+    public NPCConversationManager(MapleClient c, int npc, int oid, String scriptName, boolean itemScript) {
+        super(c);
+        this.npc = npc;
+        this.npcOid = oid;
+        this.scriptName = scriptName;
+        this.itemScript = itemScript;
+    }
+
+    public int getNpc() {
+        return npc;
+    }
+
+    public int getNpcObjectId() {
+        return npcOid;
+    }
+
+    public String getScriptName() {
+        return scriptName;
+    }
+
+    public boolean isItemScript() {
+        return itemScript;
+    }
+
+    public void resetItemScript() {
+        this.itemScript = false;
+    }
+
+    public void dispose() {
+        NPCScriptManager.getInstance().dispose(this);
+        getClient().announce(MaplePacketCreator.enableActions());
+    }
+
+    public void sendNext(String text) {
+        getClient().announce(MaplePacketCreator.getNPCTalk(npc, (byte) 0, text, "00 01", (byte) 0));
+    }
+
+    public void sendPrev(String text) {
+        getClient().announce(MaplePacketCreator.getNPCTalk(npc, (byte) 0, text, "01 00", (byte) 0));
+    }
+
+    public void sendNextPrev(String text) {
+        getClient().announce(MaplePacketCreator.getNPCTalk(npc, (byte) 0, text, "01 01", (byte) 0));
+    }
+
+    public void sendOk(String text) {
+        getClient().announce(MaplePacketCreator.getNPCTalk(npc, (byte) 0, text, "00 00", (byte) 0));
+    }
+
+    public void sendYesNo(String text) {
+        getClient().announce(MaplePacketCreator.getNPCTalk(npc, (byte) 1, text, "", (byte) 0));
+    }
+
+    public void sendAcceptDecline(String text) {
+        getClient().announce(MaplePacketCreator.getNPCTalk(npc, (byte) 0x0C, text, "", (byte) 0));
+    }
+
+    public void sendSimple(String text) {
+        getClient().announce(MaplePacketCreator.getNPCTalk(npc, (byte) 4, text, "", (byte) 0));
+    }
+
+    public void sendNext(String text, byte speaker) {
+        getClient().announce(MaplePacketCreator.getNPCTalk(npc, (byte) 0, text, "00 01", speaker));
+    }
+
+    public void sendPrev(String text, byte speaker) {
+        getClient().announce(MaplePacketCreator.getNPCTalk(npc, (byte) 0, text, "01 00", speaker));
+    }
+
+    public void sendNextPrev(String text, byte speaker) {
+        getClient().announce(MaplePacketCreator.getNPCTalk(npc, (byte) 0, text, "01 01", speaker));
+    }
+
+    public void sendOk(String text, byte speaker) {
+        getClient().announce(MaplePacketCreator.getNPCTalk(npc, (byte) 0, text, "00 00", speaker));
+    }
+
+    public void sendYesNo(String text, byte speaker) {
+        getClient().announce(MaplePacketCreator.getNPCTalk(npc, (byte) 1, text, "", speaker));
+    }
+
+    public void sendAcceptDecline(String text, byte speaker) {
+        getClient().announce(MaplePacketCreator.getNPCTalk(npc, (byte) 0x0C, text, "", speaker));
+    }
+
+    public void sendSimple(String text, byte speaker) {
+        getClient().announce(MaplePacketCreator.getNPCTalk(npc, (byte) 4, text, "", speaker));
+    }
+
+    public void sendStyle(String text, int styles[]) {
+        getClient().announce(MaplePacketCreator.getNPCTalkStyle(npc, text, styles));
+    }
+
+    public void sendGetNumber(String text, int def, int min, int max) {
+        getClient().announce(MaplePacketCreator.getNPCTalkNum(npc, text, def, min, max));
+    }
+
+    public void sendGetText(String text) {
+        getClient().announce(MaplePacketCreator.getNPCTalkText(npc, text, ""));
+    }
+
+    /*
+     * 0 = ariant colliseum
+     * 1 = Dojo
+     * 2 = Carnival 1
+     * 3 = Carnival 2
+     * 4 = Ghost Ship PQ?
+     * 5 = Pyramid PQ
+     * 6 = Kerning Subway
+     */
+    public void sendDimensionalMirror(String text) {
+        getClient().announce(MaplePacketCreator.getDimensionalMirror(text));
+    }
+
+    public void setGetText(String text) {
+        this.getText = text;
+    }
+
+    public String getText() {
+        return this.getText;
+    }
+
+    public int getJobId() {
+        return getPlayer().getJob().getId();
+    }
+
+    public MapleJob getJob() {
+        return getPlayer().getJob();
+    }
+
+    public void startQuest(short id) {
+        try {
+            MapleQuest.getInstance(id).forceStart(getPlayer(), npc);
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
         }
-        
-	public NPCConversationManager(MapleClient c, int npc, int oid, String scriptName, boolean itemScript) {
-		super(c);
-		this.npc = npc;
-                this.npcOid = oid;
-		this.scriptName = scriptName;
-                this.itemScript = itemScript;
-	}
+    }
 
-	public int getNpc() {
-		return npc;
-	}
-        
-        public int getNpcObjectId() {
-		return npcOid;
-	}
-
-	public String getScriptName() {
-		return scriptName;
-	}
-        
-        public boolean isItemScript() {
-                return itemScript;
+    public void completeQuest(short id) {
+        try {
+            MapleQuest.getInstance(id).forceComplete(getPlayer(), npc);
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
         }
-        
-        public void resetItemScript() {
-                this.itemScript = false;
+    }
+
+    public boolean forceStartQuest(int id) {
+        return MapleQuest.getInstance(id).forceStart(getPlayer(), npc);
+    }
+
+    public boolean forceCompleteQuest(int id) {
+        return MapleQuest.getInstance(id).forceComplete(getPlayer(), npc);
+    }
+
+    public void startQuest(int id) {
+        try {
+            MapleQuest.getInstance(id).forceStart(getPlayer(), npc);
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
         }
+    }
 
-	public void dispose() {
-		NPCScriptManager.getInstance().dispose(this);
-                getClient().announce(MaplePacketCreator.enableActions());
-	}
-
-	public void sendNext(String text) {
-		getClient().announce(MaplePacketCreator.getNPCTalk(npc, (byte) 0, text, "00 01", (byte) 0));
-	}
-
-	public void sendPrev(String text) {
-		getClient().announce(MaplePacketCreator.getNPCTalk(npc, (byte) 0, text, "01 00", (byte) 0));
-	}
-
-	public void sendNextPrev(String text) {
-		getClient().announce(MaplePacketCreator.getNPCTalk(npc, (byte) 0, text, "01 01", (byte) 0));
-	}
-
-	public void sendOk(String text) {
-		getClient().announce(MaplePacketCreator.getNPCTalk(npc, (byte) 0, text, "00 00", (byte) 0));
-	}
-
-	public void sendYesNo(String text) {
-		getClient().announce(MaplePacketCreator.getNPCTalk(npc, (byte) 1, text, "", (byte) 0));
-	}
-
-	public void sendAcceptDecline(String text) {
-		getClient().announce(MaplePacketCreator.getNPCTalk(npc, (byte) 0x0C, text, "", (byte) 0));
-	}
-
-	public void sendSimple(String text) {
-		getClient().announce(MaplePacketCreator.getNPCTalk(npc, (byte) 4, text, "", (byte) 0));
-	}
-
-	public void sendNext(String text, byte speaker) {
-		getClient().announce(MaplePacketCreator.getNPCTalk(npc, (byte) 0, text, "00 01", speaker));
-	}
-
-	public void sendPrev(String text, byte speaker) {
-		getClient().announce(MaplePacketCreator.getNPCTalk(npc, (byte) 0, text, "01 00", speaker));
-	}
-
-	public void sendNextPrev(String text, byte speaker) {
-		getClient().announce(MaplePacketCreator.getNPCTalk(npc, (byte) 0, text, "01 01", speaker));
-	}
-
-	public void sendOk(String text, byte speaker) {
-		getClient().announce(MaplePacketCreator.getNPCTalk(npc, (byte) 0, text, "00 00", speaker));
-	}
-
-	public void sendYesNo(String text, byte speaker) {
-		getClient().announce(MaplePacketCreator.getNPCTalk(npc, (byte) 1, text, "", speaker));
-	}
-
-	public void sendAcceptDecline(String text, byte speaker) {
-		getClient().announce(MaplePacketCreator.getNPCTalk(npc, (byte) 0x0C, text, "", speaker));
-	}
-
-	public void sendSimple(String text, byte speaker) {
-		getClient().announce(MaplePacketCreator.getNPCTalk(npc, (byte) 4, text, "", speaker));
-	}
-
-	public void sendStyle(String text, int styles[]) {
-		getClient().announce(MaplePacketCreator.getNPCTalkStyle(npc, text, styles));
-	}
-
-	public void sendGetNumber(String text, int def, int min, int max) {
-		getClient().announce(MaplePacketCreator.getNPCTalkNum(npc, text, def, min, max));
-	}
-
-	public void sendGetText(String text) {
-		getClient().announce(MaplePacketCreator.getNPCTalkText(npc, text, ""));
-	}
-
-	/*
-	 * 0 = ariant colliseum
-	 * 1 = Dojo
-	 * 2 = Carnival 1
-	 * 3 = Carnival 2
-	 * 4 = Ghost Ship PQ?
-	 * 5 = Pyramid PQ
-	 * 6 = Kerning Subway
-	 */
-	public void sendDimensionalMirror(String text) {
-		getClient().announce(MaplePacketCreator.getDimensionalMirror(text));
-	}
-
-	public void setGetText(String text) {
-		this.getText = text;
-	}
-
-	public String getText() {
-		return this.getText;
-	}
-
-	public int getJobId() {
-		return getPlayer().getJob().getId();
-	}
-
-	public MapleJob getJob(){
-		return getPlayer().getJob();
-	}
-
-	public void startQuest(short id) {
-		try {
-			MapleQuest.getInstance(id).forceStart(getPlayer(), npc);
-		} catch (NullPointerException ex) {
-                        ex.printStackTrace();
-		}
-	}
-
-	public void completeQuest(short id) {
-		try {
-			MapleQuest.getInstance(id).forceComplete(getPlayer(), npc);
-		} catch (NullPointerException ex) {
-                        ex.printStackTrace();
-		}
-	}
-
-        public boolean forceStartQuest(int id) {
-                return MapleQuest.getInstance(id).forceStart(getPlayer(), npc);
+    public void completeQuest(int id) {
+        try {
+            MapleQuest.getInstance(id).forceComplete(getPlayer(), npc);
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
         }
+    }
 
-        public boolean forceCompleteQuest(int id) {
-                return MapleQuest.getInstance(id).forceComplete(getPlayer(), npc);
+    public void startQuest(short id, int npcId) {
+        try {
+            MapleQuest.getInstance(id).forceStart(getPlayer(), npcId);
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
         }
-        
-	public void startQuest(int id) {
-		try {
-			MapleQuest.getInstance(id).forceStart(getPlayer(), npc);
-		} catch (NullPointerException ex) {
-                        ex.printStackTrace();
-		}
-	}
+    }
 
-	public void completeQuest(int id) {
-		try {
-			MapleQuest.getInstance(id).forceComplete(getPlayer(), npc);
-		} catch (NullPointerException ex) {
-                        ex.printStackTrace();
-		}
-	}
-        
-        public void startQuest(short id, int npcId) {
-                try {
-                        MapleQuest.getInstance(id).forceStart(getPlayer(), npcId);
-                } catch (NullPointerException ex) {
-                        ex.printStackTrace();
-                }
+    public void startQuest(int id, int npcId) {
+        try {
+            MapleQuest.getInstance(id).forceStart(getPlayer(), npcId);
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
         }
-        
-        public void startQuest(int id, int npcId) {
-                try {
-                        MapleQuest.getInstance(id).forceStart(getPlayer(), npcId);
-                } catch (NullPointerException ex) {
-                        ex.printStackTrace();
-                }
+    }
+
+    public void completeQuest(short id, int npcId) {
+        try {
+            MapleQuest.getInstance(id).forceComplete(getPlayer(), npcId);
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
         }
-        
-        public void completeQuest(short id, int npcId) {
-                try {
-                        MapleQuest.getInstance(id).forceComplete(getPlayer(), npcId);
-                } catch (NullPointerException ex) {
-                        ex.printStackTrace();
-                }
+    }
+
+    public void completeQuest(int id, int npcId) {
+        try {
+            MapleQuest.getInstance(id).forceComplete(getPlayer(), npcId);
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
         }
-        
-        public void completeQuest(int id, int npcId) {
-                try {
-                        MapleQuest.getInstance(id).forceComplete(getPlayer(), npcId);
-                } catch (NullPointerException ex) {
-                        ex.printStackTrace();
-                }
-        }
-        
-	public int getMeso() {
-		return getPlayer().getMeso();
-	}
+    }
 
-	public void gainMeso(int gain) {
-		getPlayer().gainMeso(gain);
-	}
+    public int getMeso() {
+        return getPlayer().getMeso();
+    }
 
-	public void gainExp(int gain) {
-		getPlayer().gainExp(gain, true, true);
-	}
+    public void gainMeso(int gain) {
+        getPlayer().gainMeso(gain);
+    }
 
-	public int getLevel() {
-		return getPlayer().getLevel();
-	}
+    public void gainExp(int gain) {
+        getPlayer().gainExp(gain, true, true);
+    }
 
-        @Override
-	public void showEffect(String effect) {
-		getPlayer().getMap().broadcastMessage(MaplePacketCreator.environmentChange(effect, 3));
-	}
+    public int getLevel() {
+        return getPlayer().getLevel();
+    }
 
-	public void setHair(int hair) {
-		getPlayer().setHair(hair);
-		getPlayer().updateSingleStat(MapleStat.HAIR, hair);
-		getPlayer().equipChanged();
-	}
+    @Override
+    public void showEffect(String effect) {
+        getPlayer().getMap().broadcastMessage(MaplePacketCreator.environmentChange(effect, 3));
+    }
 
-	public void setFace(int face) {
-		getPlayer().setFace(face);
-		getPlayer().updateSingleStat(MapleStat.FACE, face);
-		getPlayer().equipChanged();
-	}
+    public void setHair(int hair) {
+        getPlayer().setHair(hair);
+        getPlayer().updateSingleStat(MapleStat.HAIR, hair);
+        getPlayer().equipChanged();
+    }
 
-	public void setSkin(int color) {
-		getPlayer().setSkinColor(MapleSkinColor.getById(color));
-		getPlayer().updateSingleStat(MapleStat.SKIN, color);
-		getPlayer().equipChanged();
-	}
+    public void setFace(int face) {
+        getPlayer().setFace(face);
+        getPlayer().updateSingleStat(MapleStat.FACE, face);
+        getPlayer().equipChanged();
+    }
 
-	public int itemQuantity(int itemid) {
-		return getPlayer().getInventory(ItemConstants.getInventoryType(itemid)).countById(itemid);
-	}
+    public void setSkin(int color) {
+        getPlayer().setSkinColor(MapleSkinColor.getById(color));
+        getPlayer().updateSingleStat(MapleStat.SKIN, color);
+        getPlayer().equipChanged();
+    }
 
-	public void displayGuildRanks() {
-		MapleGuild.displayGuildRanks(getClient(), npc);
-	}
-        
-        public boolean canSpawnPlayerNpc(int mapid) {
-                MapleCharacter chr = getPlayer();
-                return !ServerConstants.PLAYERNPC_AUTODEPLOY && chr.getLevel() >= chr.getMaxClassLevel() && !chr.isGM() && MaplePlayerNPC.canSpawnPlayerNpc(chr.getName(), mapid);
-        }
-        
-        public MaplePlayerNPC getPlayerNPCByScriptid(int scriptId) {
-                for(MapleMapObject pnpcObj : getPlayer().getMap().getMapObjectsInRange(new Point(0, 0), Double.POSITIVE_INFINITY, Arrays.asList(MapleMapObjectType.PLAYER_NPC))) {
-                        MaplePlayerNPC pn = (MaplePlayerNPC) pnpcObj;
+    public int itemQuantity(int itemid) {
+        return getPlayer().getInventory(ItemConstants.getInventoryType(itemid)).countById(itemid);
+    }
 
-                        if(pn.getScriptId() == scriptId) {
-                                return pn;
-                        }
-                }
-                
-                return null;
+    public void displayGuildRanks() {
+        MapleGuild.displayGuildRanks(getClient(), npc);
+    }
+
+    public boolean canSpawnPlayerNpc(int mapid) {
+        MapleCharacter chr = getPlayer();
+        return !ServerConstants.PLAYERNPC_AUTODEPLOY && chr.getLevel() >= chr.getMaxClassLevel() && !chr.isGM() && MaplePlayerNPC.canSpawnPlayerNpc(chr.getName(), mapid);
+    }
+
+    public MaplePlayerNPC getPlayerNPCByScriptid(int scriptId) {
+        for (MapleMapObject pnpcObj : getPlayer().getMap().getMapObjectsInRange(new Point(0, 0), Double.POSITIVE_INFINITY, Arrays.asList(MapleMapObjectType.PLAYER_NPC))) {
+            MaplePlayerNPC pn = (MaplePlayerNPC) pnpcObj;
+
+            if (pn.getScriptId() == scriptId) {
+                return pn;
+            }
         }
 
-	@Override
-	public MapleParty getParty() {
-		return getPlayer().getParty();
-	}
+        return null;
+    }
 
-	@Override
-	public void resetMap(int mapid) {
-		getClient().getChannelServer().getMapFactory().getMap(mapid).resetReactors();
-	}
+    @Override
+    public MapleParty getParty() {
+        return getPlayer().getParty();
+    }
 
-	public void gainCloseness(int closeness) {
-		for (MaplePet pet : getPlayer().getPets()) {
-                        if(pet != null) {
-                                pet.gainClosenessFullness(getPlayer(), closeness, 0, 0);
-                        }
-		}
-	}
+    @Override
+    public void resetMap(int mapid) {
+        getClient().getChannelServer().getMapFactory().getMap(mapid).resetReactors();
+    }
 
-	public String getName() {
-		return getPlayer().getName();
-	}
+    public void gainCloseness(int closeness) {
+        for (MaplePet pet : getPlayer().getPets()) {
+            if (pet != null) {
+                pet.gainClosenessFullness(getPlayer(), closeness, 0, 0);
+            }
+        }
+    }
 
-	public int getGender() {
-		return getPlayer().getGender();
-	}
+    public String getName() {
+        return getPlayer().getName();
+    }
 
-	public void changeJobById(int a) {
-		getPlayer().changeJob(MapleJob.getById(a));
-	}
+    public int getGender() {
+        return getPlayer().getGender();
+    }
 
-	public void changeJob(MapleJob job) {
-		getPlayer().changeJob(job);
-	}
+    public void changeJobById(int a) {
+        getPlayer().changeJob(MapleJob.getById(a));
+    }
 
-	public MapleJob getJobName(int id) {
-		return MapleJob.getById(id);
-	}
+    public void changeJob(MapleJob job) {
+        getPlayer().changeJob(job);
+    }
 
-	public MapleStatEffect getItemEffect(int itemId) {
-		return MapleItemInformationProvider.getInstance().getItemEffect(itemId);
-	}
+    public MapleJob getJobName(int id) {
+        return MapleJob.getById(id);
+    }
 
-	public void resetStats() {
-		getPlayer().resetStats();
-	}
-        
-        public void openShopNPC(int id) {
-            MapleShopFactory.getInstance().getShop(id).sendShop(c);
+    public MapleStatEffect getItemEffect(int itemId) {
+        return MapleItemInformationProvider.getInstance().getItemEffect(itemId);
+    }
+
+    public void resetStats() {
+        getPlayer().resetStats();
+    }
+
+    public void openShopNPC(int id) {
+        MapleShopFactory.getInstance().getShop(id).sendShop(c);
+    }
+
+    public void maxMastery() {
+        for (MapleData skill_ : MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/" + "String.wz")).getData("Skill.img").getChildren()) {
+            try {
+                Skill skill = SkillFactory.getSkill(Integer.parseInt(skill_.getName()));
+                getPlayer().changeSkillLevel(skill, (byte) 0, skill.getMaxLevel(), -1);
+            } catch (NumberFormatException nfe) {
+                nfe.printStackTrace();
+                break;
+            } catch (NullPointerException npe) {
+                npe.printStackTrace();
+                continue;
+            }
+        }
+    }
+
+    public void doGachapon() {
+        int[] maps = {100000000, 101000000, 102000000, 103000000, 105040300, 800000000, 809000101, 809000201, 600000000, 120000000};
+
+        MapleGachaponItem item = MapleGachapon.getInstance().process(npc);
+
+        Item itemGained = gainItem(item.getId(), (short) (item.getId() / 10000 == 200 ? 100 : 1), true, true); // For normal potions, make it give 100.
+
+        sendNext("You have obtained a #b#t" + item.getId() + "##k.");
+
+        String map = c.getChannelServer().getMapFactory().getMap(maps[(getNpc() != 9100117 && getNpc() != 9100109) ? (getNpc() - 9100100) : getNpc() == 9100109 ? 8 : 9]).getMapName();
+
+        LogHelper.logGacha(getPlayer(), item.getId(), map);
+
+        if (item.getTier() > 0) { //Uncommon and Rare
+            Server.getInstance().broadcastMessage(c.getWorld(), MaplePacketCreator.gachaponMessage(itemGained, map, getPlayer()));
+        }
+    }
+
+    public void upgradeAlliance() {
+        MapleAlliance alliance = Server.getInstance().getAlliance(c.getPlayer().getGuild().getAllianceId());
+        alliance.increaseCapacity(1);
+
+        Server.getInstance().allianceMessage(alliance.getId(), MaplePacketCreator.getGuildAlliances(alliance, c.getWorld()), -1, -1);
+        Server.getInstance().allianceMessage(alliance.getId(), MaplePacketCreator.allianceNotice(alliance.getId(), alliance.getNotice()), -1, -1);
+
+        c.announce(MaplePacketCreator.updateAllianceInfo(alliance, c.getWorld()));  // thanks Vcoc for finding an alliance update to leader issue
+    }
+
+    public void disbandAlliance(MapleClient c, int allianceId) {
+        MapleAlliance.disbandAlliance(allianceId);
+    }
+
+    public boolean canBeUsedAllianceName(String name) {
+        return MapleAlliance.canBeUsedAllianceName(name);
+    }
+
+    public MapleAlliance createAlliance(String name) {
+        return MapleAlliance.createAlliance(getParty(), name);
+    }
+
+    public int getAllianceCapacity() {
+        return Server.getInstance().getAlliance(getPlayer().getGuild().getAllianceId()).getCapacity();
+    }
+
+    public boolean hasMerchant() {
+        return getPlayer().hasMerchant();
+    }
+
+    public boolean hasMerchantItems() {
+        try {
+            if (!ItemFactory.MERCHANT.loadItems(getPlayer().getId(), false).isEmpty()) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        if (getPlayer().getMerchantMeso() == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public void showFredrick() {
+        c.announce(MaplePacketCreator.getFredrick(getPlayer()));
+    }
+
+    public int partyMembersInMap() {
+        int inMap = 0;
+        for (MapleCharacter char2 : getPlayer().getMap().getCharacters()) {
+            if (char2.getParty() == getPlayer().getParty()) {
+                inMap++;
+            }
+        }
+        return inMap;
+    }
+
+    public MapleEvent getEvent() {
+        return c.getChannelServer().getEvent();
+    }
+
+    public void divideTeams() {
+        if (getEvent() != null) {
+            getPlayer().setTeam(getEvent().getLimit() % 2); //muhaha :D
+        }
+    }
+
+    public MapleCharacter getMapleCharacter(String player) {
+        MapleCharacter target = Server.getInstance().getWorld(c.getWorld()).getChannel(c.getChannel()).getPlayerStorage().getCharacterByName(player);
+        return target;
+    }
+
+    public void logLeaf(String prize) {
+        LogHelper.logLeaf(getPlayer(), true, prize);
+    }
+
+    public boolean createPyramid(String mode, boolean party) {//lol
+        PyramidMode mod = PyramidMode.valueOf(mode);
+
+        MapleParty partyz = getPlayer().getParty();
+        MapleMapFactory mf = c.getChannelServer().getMapFactory();
+
+        MapleMap map = null;
+        int mapid = 926010100;
+        if (party) {
+            mapid += 10000;
+        }
+        mapid += (mod.getMode() * 1000);
+
+        for (byte b = 0; b < 5; b++) {//They cannot warp to the next map before the timer ends (:
+            map = mf.getMap(mapid + b);
+            if (map.getCharacters().size() > 0) {
+                continue;
+            } else {
+                break;
+            }
         }
 
-	public void maxMastery() {
-		for (MapleData skill_ : MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/" + "String.wz")).getData("Skill.img").getChildren()) {
-			try {
-				Skill skill = SkillFactory.getSkill(Integer.parseInt(skill_.getName()));
-				getPlayer().changeSkillLevel(skill, (byte) 0, skill.getMaxLevel(), -1);
-			} catch (NumberFormatException nfe) {
-                                nfe.printStackTrace();
-				break;
-			} catch (NullPointerException npe) {
-                                npe.printStackTrace();
-				continue;
-			}
-		}
-	}
-
-	public void doGachapon() {
-		int[] maps = {100000000, 101000000, 102000000, 103000000, 105040300, 800000000, 809000101, 809000201, 600000000, 120000000};
-
-		MapleGachaponItem item = MapleGachapon.getInstance().process(npc);
-
-		Item itemGained = gainItem(item.getId(), (short) (item.getId() / 10000 == 200 ? 100 : 1), true, true); // For normal potions, make it give 100.
-
-		sendNext("You have obtained a #b#t" + item.getId() + "##k.");
-		
-		String map = c.getChannelServer().getMapFactory().getMap(maps[(getNpc() != 9100117 && getNpc() != 9100109) ? (getNpc() - 9100100) : getNpc() == 9100109 ? 8 : 9]).getMapName();
-		
-		LogHelper.logGacha(getPlayer(), item.getId(), map);
-		
-		if (item.getTier() > 0){ //Uncommon and Rare
-			Server.getInstance().broadcastMessage(c.getWorld(), MaplePacketCreator.gachaponMessage(itemGained, map, getPlayer()));
-		}
-	}
-        
-        public void upgradeAlliance() {
-                MapleAlliance alliance = Server.getInstance().getAlliance(c.getPlayer().getGuild().getAllianceId());
-                alliance.increaseCapacity(1);
-                
-                Server.getInstance().allianceMessage(alliance.getId(), MaplePacketCreator.getGuildAlliances(alliance, c.getWorld()), -1, -1);
-                Server.getInstance().allianceMessage(alliance.getId(), MaplePacketCreator.allianceNotice(alliance.getId(), alliance.getNotice()), -1, -1);
-                
-                c.announce(MaplePacketCreator.updateAllianceInfo(alliance, c.getWorld()));  // thanks Vcoc for finding an alliance update to leader issue
+        if (map == null) {
+            return false;
         }
 
-	public void disbandAlliance(MapleClient c, int allianceId) {
-		MapleAlliance.disbandAlliance(allianceId);
-	}
-
-	public boolean canBeUsedAllianceName(String name) {
-                return MapleAlliance.canBeUsedAllianceName(name);
-	}
-        
-        public MapleAlliance createAlliance(String name) {
-            return MapleAlliance.createAlliance(getParty(), name);
+        if (!party) {
+            partyz = new MapleParty(-1, new MaplePartyCharacter(getPlayer()));
         }
-        
-        public int getAllianceCapacity() {
-                return Server.getInstance().getAlliance(getPlayer().getGuild().getAllianceId()).getCapacity();
+        Pyramid py = new Pyramid(partyz, mod, map.getId());
+        getPlayer().setPartyQuest(py);
+        py.warp(mapid);
+        dispose();
+        return true;
+    }
+
+    public boolean itemExists(int itemid) {
+        return MapleItemInformationProvider.getInstance().getName(itemid) != null;
+    }
+
+    public int getCosmeticItem(int itemid) {
+        if (itemExists(itemid)) return itemid;
+
+        int baseid;
+        if (itemid < 30000) {
+            baseid = (itemid / 1000) * 1000 + (itemid % 100);
+        } else {
+            baseid = (itemid / 10) * 10;
         }
 
-	public boolean hasMerchant() {
-		return getPlayer().hasMerchant();
-	}
+        return itemid != baseid && itemExists(baseid) ? baseid : -1;
+    }
 
-	public boolean hasMerchantItems() {
-		try {
-			if (!ItemFactory.MERCHANT.loadItems(getPlayer().getId(), false).isEmpty()) {
-				return true;
-			}
-		} catch (SQLException e) {
-                        e.printStackTrace();
-			return false;
-		}
-		if (getPlayer().getMerchantMeso() == 0) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	public void showFredrick() {
-		c.announce(MaplePacketCreator.getFredrick(getPlayer()));
-	}
-
-	public int partyMembersInMap() {
-		int inMap = 0;
-		for (MapleCharacter char2 : getPlayer().getMap().getCharacters()) {
-			if (char2.getParty() == getPlayer().getParty()) {
-				inMap++;
-			}
-		}
-		return inMap;
-	}
-
-	public MapleEvent getEvent() {
-		return c.getChannelServer().getEvent();
-	}
-
-	public void divideTeams() {
-		if (getEvent() != null) {
-			getPlayer().setTeam(getEvent().getLimit() % 2); //muhaha :D
-		}
-	}
-
-	public MapleCharacter getMapleCharacter(String player) {
-		MapleCharacter target =  Server.getInstance().getWorld(c.getWorld()).getChannel(c.getChannel()).getPlayerStorage().getCharacterByName(player);
-		return target;
-	}
-
-	public void logLeaf(String prize) {
-		LogHelper.logLeaf(getPlayer(), true, prize);
-	}
-
-	public boolean createPyramid(String mode, boolean party) {//lol
-		PyramidMode mod = PyramidMode.valueOf(mode);
-
-		MapleParty partyz = getPlayer().getParty();
-		MapleMapFactory mf = c.getChannelServer().getMapFactory();
-
-		MapleMap map = null;
-		int mapid = 926010100;
-		if (party) {
-			mapid += 10000;
-		}
-		mapid += (mod.getMode() * 1000);
-
-		for (byte b = 0; b < 5; b++) {//They cannot warp to the next map before the timer ends (:
-			map = mf.getMap(mapid + b);
-			if (map.getCharacters().size() > 0) {
-				continue;
-			} else {
-				break;
-			}
-		}
-
-		if (map == null) {
-			return false;
-		}
-
-		if (!party) {
-			partyz = new MapleParty(-1, new MaplePartyCharacter(getPlayer()));
-		}
-		Pyramid py = new Pyramid(partyz, mod, map.getId());
-		getPlayer().setPartyQuest(py);
-		py.warp(mapid);
-		dispose();
-		return true;
-	}
-        
-        public boolean itemExists(int itemid) {
-                return MapleItemInformationProvider.getInstance().getName(itemid) != null;
+    private int getEquippedItemid(int itemid) {
+        if (itemid < 30000) {
+            return getPlayer().getFace();
+        } else {
+            return getPlayer().getHair();
         }
-        
-        public int getCosmeticItem(int itemid) {
-                if (itemExists(itemid)) return itemid;
-                
-                int baseid;
-                if (itemid < 30000) {
-                        baseid = (itemid / 1000) * 1000 + (itemid % 100);
-                } else {
-                        baseid = (itemid / 10) * 10;
-                }
-                
-                return itemid != baseid && itemExists(baseid) ? baseid : -1;
-        }
-        
-        private int getEquippedItemid(int itemid) {
-                if (itemid < 30000) {
-                        return getPlayer().getFace();
-                } else {
-                        return getPlayer().getHair();
-                }
-        }
-        
-        public boolean isCosmeticEquipped(int itemid) {
-                return getEquippedItemid(itemid) == itemid;
-        }
-        
-        public boolean isUsingOldPqNpcStyle() {
-                return ServerConstants.USE_OLD_GMS_STYLED_PQ_NPCS && this.getPlayer().getParty() != null;
-        }
-        
-        public Object[] getAvailableMasteryBooks() {
-                return MapleItemInformationProvider.getInstance().usableMasteryBooks(this.getPlayer()).toArray();
-        }
-        
-        public Object[] getAvailableSkillBooks() {
-                return MapleItemInformationProvider.getInstance().usableSkillBooks(this.getPlayer()).toArray();
-        }
-        
-        public Object[] getNamesWhoDropsItem(Integer itemId) {
-                return MapleItemInformationProvider.getInstance().getWhoDrops(itemId).toArray();
-        }
-        
-        public String getSkillBookInfo(int itemid) {
-                SkillBookEntry sbe = MapleSkillbookInformationProvider.getInstance().getSkillbookAvailability(itemid);
-                return sbe != SkillBookEntry.UNAVAILABLE ? "    Obtainable through #rquestline#k." : "";
-        }
-        
+    }
+
+    public boolean isCosmeticEquipped(int itemid) {
+        return getEquippedItemid(itemid) == itemid;
+    }
+
+    public boolean isUsingOldPqNpcStyle() {
+        return ServerConstants.USE_OLD_GMS_STYLED_PQ_NPCS && this.getPlayer().getParty() != null;
+    }
+
+    public Object[] getAvailableMasteryBooks() {
+        return MapleItemInformationProvider.getInstance().usableMasteryBooks(this.getPlayer()).toArray();
+    }
+
+    public Object[] getAvailableSkillBooks() {
+        return MapleItemInformationProvider.getInstance().usableSkillBooks(this.getPlayer()).toArray();
+    }
+
+    public Object[] getNamesWhoDropsItem(Integer itemId) {
+        return MapleItemInformationProvider.getInstance().getWhoDrops(itemId).toArray();
+    }
+
+    public String getSkillBookInfo(int itemid) {
+        SkillBookEntry sbe = MapleSkillbookInformationProvider.getInstance().getSkillbookAvailability(itemid);
+        return sbe != SkillBookEntry.UNAVAILABLE ? "    Obtainable through #rquestline#k." : "";
+    }
+
 }

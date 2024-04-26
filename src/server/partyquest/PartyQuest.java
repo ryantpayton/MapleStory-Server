@@ -33,7 +33,6 @@ import net.server.world.MapleParty;
 import net.server.world.MaplePartyCharacter;
 
 /**
- *
  * @author kevintjuh93
  */
 public class PartyQuest {
@@ -73,41 +72,41 @@ public class PartyQuest {
         }
     }
 
-	public static int getExp(String PQ, int level) {
-		if (PQ.equals("HenesysPQ")){
-			return 1250 * level / 5;
-		} else if(PQ.equals("KerningPQFinal")){
-			return 500 * level / 5;
-		} else if(PQ.equals("KerningPQ4th")){
-			return 400 * level / 5;
-		} else if(PQ.equals("KerningPQ3rd")){
-			return 300 * level / 5;
-		} else if(PQ.equals("KerningPQ2nd")){
-			return 200 * level / 5;
-		} else if(PQ.equals("KerningPQ1st")){
-			return 100 * level / 5;
-		} else if(PQ.equals("LudiMazePQ")){
-			return 2000 * level / 5;
-		} else if(PQ.equals("LudiPQ1st")) {
-                    return 100 * level / 5;
-                } else if(PQ.equals("LudiPQ2nd")) {
-                    return 250 * level / 5;
-                } else if(PQ.equals("LudiPQ3rd")) {
-                    return 350 * level / 5;
-                } else if(PQ.equals("LudiPQ4th")) {
-                    return 350 * level / 5;
-                } else if(PQ.equals("LudiPQ5th")) {
-                    return 400 * level / 5;
-                } else if(PQ.equals("LudiPQ6th")) {
-                    return 450 * level / 5;
-                } else if(PQ.equals("LudiPQ7th")) {
-                    return 500 * level / 5;
-                } else if(PQ.equals("LudiPQ8th")) {
-                    return 650 * level / 5;
-                } else if(PQ.equals("LudiPQLast")) {
-                    return 800 * level / 5;
-                }
-		FilePrinter.printError(FilePrinter.NPC, "Unhandled PartyQuest: " + PQ);
-		return 0;
-	}
+    public static int getExp(String PQ, int level) {
+        if (PQ.equals("HenesysPQ")) {
+            return 1250 * level / 5;
+        } else if (PQ.equals("KerningPQFinal")) {
+            return 500 * level / 5;
+        } else if (PQ.equals("KerningPQ4th")) {
+            return 400 * level / 5;
+        } else if (PQ.equals("KerningPQ3rd")) {
+            return 300 * level / 5;
+        } else if (PQ.equals("KerningPQ2nd")) {
+            return 200 * level / 5;
+        } else if (PQ.equals("KerningPQ1st")) {
+            return 100 * level / 5;
+        } else if (PQ.equals("LudiMazePQ")) {
+            return 2000 * level / 5;
+        } else if (PQ.equals("LudiPQ1st")) {
+            return 100 * level / 5;
+        } else if (PQ.equals("LudiPQ2nd")) {
+            return 250 * level / 5;
+        } else if (PQ.equals("LudiPQ3rd")) {
+            return 350 * level / 5;
+        } else if (PQ.equals("LudiPQ4th")) {
+            return 350 * level / 5;
+        } else if (PQ.equals("LudiPQ5th")) {
+            return 400 * level / 5;
+        } else if (PQ.equals("LudiPQ6th")) {
+            return 450 * level / 5;
+        } else if (PQ.equals("LudiPQ7th")) {
+            return 500 * level / 5;
+        } else if (PQ.equals("LudiPQ8th")) {
+            return 650 * level / 5;
+        } else if (PQ.equals("LudiPQLast")) {
+            return 800 * level / 5;
+        }
+        FilePrinter.printError(FilePrinter.NPC, "Unhandled PartyQuest: " + PQ);
+        return 0;
+    }
 }

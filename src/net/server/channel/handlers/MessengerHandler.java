@@ -50,7 +50,7 @@ public final class MessengerHandler extends AbstractMaplePacketHandler {
                     if (messenger == null) {
                         if (messengerid == 0) {
                             MapleInviteCoordinator.removeInvite(InviteType.MESSENGER, player.getId());
-                            
+
                             MapleMessengerCharacter messengerplayer = new MapleMessengerCharacter(player, 0);
                             messenger = world.createMessenger(messengerplayer);
                             player.setMessenger(messenger);

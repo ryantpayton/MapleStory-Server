@@ -20,6 +20,7 @@
 package net.server.worker;
 
 import java.util.Set;
+
 import net.server.world.World;
 import net.server.channel.Channel;
 import tools.Pair;
@@ -28,28 +29,28 @@ import tools.Pair;
  * @author Ronan
  */
 public class WeddingReservationWorker extends BaseWorker implements Runnable {
-    
+
     @Override
     public void run() {
-        for(Channel ch : wserv.getChannels()) {
+        for (Channel ch : wserv.getChannels()) {
             Pair<Boolean, Pair<Integer, Set<Integer>>> wedding;
-            
+
             wedding = ch.getNextWeddingReservation(true);   // start cathedral
-            if(wedding != null) {
+            if (wedding != null) {
                 ch.setOngoingWedding(true, wedding.getLeft(), wedding.getRight().getLeft(), wedding.getRight().getRight());
             } else {
                 ch.setOngoingWedding(true, null, null, null);
             }
-            
+
             wedding = ch.getNextWeddingReservation(false);  // start chapel
-            if(wedding != null) {
+            if (wedding != null) {
                 ch.setOngoingWedding(false, wedding.getLeft(), wedding.getRight().getLeft(), wedding.getRight().getRight());
             } else {
                 ch.setOngoingWedding(false, null, null, null);
             }
         }
     }
-    
+
     public WeddingReservationWorker(World world) {
         super(world);
     }

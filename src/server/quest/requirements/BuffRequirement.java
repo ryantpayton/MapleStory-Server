@@ -26,25 +26,24 @@ import server.quest.MapleQuest;
 import server.quest.MapleQuestRequirementType;
 
 /**
- *
  * @author Ronan
  */
 public class BuffRequirement extends MapleQuestRequirement {
-        private int buffId = 1;
-        
-	public BuffRequirement(MapleQuest quest, MapleData data) {
-		super(MapleQuestRequirementType.BUFF);
-		processData(data);
-	}
-	
-	@Override
-	public void processData(MapleData data) {
-                // item buffs are negative
-		buffId = -1 * Integer.valueOf(MapleDataTool.getString(data));
-	}
-	
-	@Override
-	public boolean check(MapleCharacter chr, Integer npcid) {
-                return chr.hasBuffFromSourceid(buffId);
-	}
+    private int buffId = 1;
+
+    public BuffRequirement(MapleQuest quest, MapleData data) {
+        super(MapleQuestRequirementType.BUFF);
+        processData(data);
+    }
+
+    @Override
+    public void processData(MapleData data) {
+        // item buffs are negative
+        buffId = -1 * Integer.valueOf(MapleDataTool.getString(data));
+    }
+
+    @Override
+    public boolean check(MapleCharacter chr, Integer npcid) {
+        return chr.hasBuffFromSourceid(buffId);
+    }
 }

@@ -39,7 +39,7 @@ public class AranComboHandler extends AbstractMaplePacketHandler {
             final long currentTime = currentServerTime();
             short combo = player.getCombo();
             if ((currentTime - player.getLastCombo()) > 3000 && combo > 0) {
-                combo = 0;                
+                combo = 0;
             }
             combo++;
             switch (combo) {

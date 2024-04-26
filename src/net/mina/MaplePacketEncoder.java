@@ -44,11 +44,11 @@ public class MaplePacketEncoder implements ProtocolEncoder {
                 final byte[] ret = new byte[unencrypted.length + 4];
                 final byte[] header = send_crypto.getPacketHeader(unencrypted.length);
                 MapleCustomEncryption.encryptData(unencrypted);
-            
+
                 send_crypto.crypt(unencrypted);
                 System.arraycopy(header, 0, ret, 0, 4);
                 System.arraycopy(unencrypted, 0, ret, 4, unencrypted.length);
-                
+
                 out.write(IoBuffer.wrap(ret));
             } finally {
                 client.unlockEncoder();
@@ -61,5 +61,6 @@ public class MaplePacketEncoder implements ProtocolEncoder {
     }
 
     @Override
-    public void dispose(IoSession session) throws Exception {}
+    public void dispose(IoSession session) throws Exception {
+    }
 }

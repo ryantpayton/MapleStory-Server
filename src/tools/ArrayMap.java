@@ -77,6 +77,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
             return key + "=" + value;
         }
     }
+
     private Set<? extends java.util.Map.Entry<K, V>> entries = null;
     private ArrayList<Entry<K, V>> list;
 
@@ -94,7 +95,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
     }
 
     @Override
-    @SuppressWarnings ("unchecked")
+    @SuppressWarnings("unchecked")
     public Set<java.util.Map.Entry<K, V>> entrySet() {
         if (entries == null) {
             entries = new AbstractSet<Entry<K, V>>() {

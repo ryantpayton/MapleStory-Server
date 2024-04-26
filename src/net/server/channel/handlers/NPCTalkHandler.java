@@ -40,18 +40,18 @@ public final class NPCTalkHandler extends AbstractMaplePacketHandler {
             c.announce(MaplePacketCreator.enableActions());
             return;
         }
-        
-        if(currentServerTime() - c.getPlayer().getNpcCooldown() < ServerConstants.BLOCK_NPC_RACE_CONDT) {
+
+        if (currentServerTime() - c.getPlayer().getNpcCooldown() < ServerConstants.BLOCK_NPC_RACE_CONDT) {
             c.announce(MaplePacketCreator.enableActions());
             return;
         }
-        
+
         int oid = slea.readInt();
         MapleMapObject obj = c.getPlayer().getMap().getMapObject(oid);
         if (obj instanceof MapleNPC) {
             MapleNPC npc = (MapleNPC) obj;
-            if(ServerConstants.USE_DEBUG == true) c.getPlayer().dropMessage(5, "Talking to NPC " + npc.getId());
-            
+            if (ServerConstants.USE_DEBUG == true) c.getPlayer().dropMessage(5, "Talking to NPC " + npc.getId());
+
             if (npc.getId() == 9010009) {   //is duey
                 c.getPlayer().setNpcCooldown(currentServerTime());
                 DueyProcessor.dueySendTalk(c);
@@ -60,7 +60,7 @@ public final class NPCTalkHandler extends AbstractMaplePacketHandler {
                     c.announce(MaplePacketCreator.enableActions());
                     return;
                 }
-                if(npc.getId() >= 9100100 && npc.getId() <= 9100200) {
+                if (npc.getId() >= 9100100 && npc.getId() <= 9100200) {
                     // Custom handling for gachapon scripts to reduce the amount of scripts needed.
                     NPCScriptManager.getInstance().start(c, npc.getId(), "gachapon", null);
                 } else {
@@ -69,11 +69,11 @@ public final class NPCTalkHandler extends AbstractMaplePacketHandler {
                         if (!npc.hasShop()) {
                             FilePrinter.printError(FilePrinter.NPC_UNCODED, "NPC " + npc.getName() + "(" + npc.getId() + ") is not coded.");
                             return;
-                        } else if(c.getPlayer().getShop() != null) {
+                        } else if (c.getPlayer().getShop() != null) {
                             c.announce(MaplePacketCreator.enableActions());
                             return;
                         }
-                        
+
                         npc.sendShop(c);
                     }
                 }
@@ -81,7 +81,7 @@ public final class NPCTalkHandler extends AbstractMaplePacketHandler {
         } else if (obj instanceof MaplePlayerNPC) {
             MaplePlayerNPC pnpc = (MaplePlayerNPC) obj;
             NPCScriptManager nsm = NPCScriptManager.getInstance();
-            
+
             if (pnpc.getScriptId() < 9977777 && !nsm.isNpcScriptAvailable(c, "" + pnpc.getScriptId())) {
                 nsm.start(c, pnpc.getScriptId(), "rank_user", null);
             } else {

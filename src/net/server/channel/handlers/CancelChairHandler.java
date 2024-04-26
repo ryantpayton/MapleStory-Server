@@ -27,13 +27,13 @@ import net.AbstractMaplePacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class CancelChairHandler extends AbstractMaplePacketHandler {
-    
+
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         int id = slea.readShort();
         MapleCharacter mc = c.getPlayer();
-        if(!mc.isLoggedinWorld()) return;
-        
+        if (!mc.isLoggedinWorld()) return;
+
         mc.sitChair(id == -1 ? 0 : id);
     }
 }

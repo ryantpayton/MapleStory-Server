@@ -11,6 +11,7 @@ import tools.data.input.ByteArrayByteStream;
 import tools.data.input.GenericSeekableLittleEndianAccessor;
 import tools.data.input.SeekableLittleEndianAccessor;
 import tools.data.output.MaplePacketLittleEndianWriter;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

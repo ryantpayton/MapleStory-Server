@@ -22,6 +22,7 @@
 package tools.data.input;
 
 import java.io.IOException;
+
 import tools.HexTool;
 
 public class ByteArrayByteStream implements SeekableInputStreamBytestream {
@@ -64,7 +65,7 @@ public class ByteArrayByteStream implements SeekableInputStreamBytestream {
         }
         return "All: " + HexTool.toString(arr) + "\nNow: " + nows;
     }
-  
+
     @Override
     public long available() {
         return arr.length - pos;

@@ -28,26 +28,25 @@ import server.quest.MapleQuest;
 import server.quest.MapleQuestRequirementType;
 
 /**
- *
  * @author Tyler (Twdtwd)
  */
 public class CompletedQuestRequirement extends MapleQuestRequirement {
-	private int reqQuest;
-	
-	
-	public CompletedQuestRequirement(MapleQuest quest, MapleData data) {
-		super(MapleQuestRequirementType.COMPLETED_QUEST);
-		processData(data);
-	}
-	
-	@Override
-	public void processData(MapleData data) {
-		reqQuest = MapleDataTool.getInt(data);
-	}
-	
-	
-	@Override
-	public boolean check(MapleCharacter chr, Integer npcid) {
-		return chr.getCompletedQuests().size() >= reqQuest;
-	}
+    private int reqQuest;
+
+
+    public CompletedQuestRequirement(MapleQuest quest, MapleData data) {
+        super(MapleQuestRequirementType.COMPLETED_QUEST);
+        processData(data);
+    }
+
+    @Override
+    public void processData(MapleData data) {
+        reqQuest = MapleDataTool.getInt(data);
+    }
+
+
+    @Override
+    public boolean check(MapleCharacter chr, Integer npcid) {
+        return chr.getCompletedQuests().size() >= reqQuest;
+    }
 }

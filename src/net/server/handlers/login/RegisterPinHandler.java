@@ -42,7 +42,7 @@ public final class RegisterPinHandler extends AbstractMaplePacketHandler {
             if (pin != null) {
                 c.setPin(pin);
                 c.announce(MaplePacketCreator.pinRegistered());
-                
+
                 MapleSessionCoordinator.getInstance().closeSession(c.getSession(), null);
                 c.updateLoginState(MapleClient.LOGIN_NOTLOGGEDIN);
             }

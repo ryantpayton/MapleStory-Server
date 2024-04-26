@@ -34,19 +34,20 @@ import net.server.channel.Channel;
 import scripting.AbstractScriptManager;
 
 /**
- *
  * @author Matze
  */
 public class EventScriptManager extends AbstractScriptManager {
-    
+
     private class EventEntry {
         public EventEntry(Invocable iv, EventManager em) {
             this.iv = iv;
             this.em = em;
         }
+
         public Invocable iv;
         public EventManager em;
     }
+
     private Map<String, EventEntry> events = new LinkedHashMap<>();
 
     public EventScriptManager(Channel cserv, String[] scripts) {
@@ -78,10 +79,10 @@ public class EventScriptManager extends AbstractScriptManager {
             }
         }
     }
-    
+
     private void reloadScripts() {
         if (events.isEmpty()) return;
-        
+
         Channel cserv = events.values().iterator().next().em.getChannelServer();
         for (Entry<String, EventEntry> entry : events.entrySet()) {
             String script = entry.getKey();
@@ -89,11 +90,11 @@ public class EventScriptManager extends AbstractScriptManager {
             events.put(script, new EventEntry(iv, new EventManager(cserv, iv, script)));
         }
     }
-    
+
     public void reload() {
-    	cancel();
+        cancel();
         reloadScripts();
-    	init();
+        init();
     }
 
     public void cancel() {

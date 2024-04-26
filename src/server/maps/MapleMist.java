@@ -40,7 +40,6 @@ import server.life.MobSkill;
 import tools.MaplePacketCreator;
 
 /**
- *
  * @author LaiLaiNoob
  */
 public class MapleMist extends AbstractMapleMapObject {
@@ -74,11 +73,11 @@ public class MapleMist extends AbstractMapleMapObject {
             case Evan.RECOVERY_AURA:
                 isRecoveryMist = true;
                 break;
-                
+
             case Shadower.SMOKE_SCREEN: // Smoke Screen
                 isPoisonMist = false;
                 break;
-                
+
             case FPMage.POISON_MIST: // FP mist
             case BlazeWizard.FLAME_GEAR: // Flame Gear
             case NightWalker.POISON_BOMB: // Poison Bomb
@@ -110,9 +109,9 @@ public class MapleMist extends AbstractMapleMapObject {
     }
 
     public boolean isRecoveryMist() {
-    	return isRecoveryMist;
+        return isRecoveryMist;
     }
-    
+
     public int getSkillDelay() {
         return skillDelay;
     }

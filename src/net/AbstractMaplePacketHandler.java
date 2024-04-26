@@ -29,7 +29,7 @@ public abstract class AbstractMaplePacketHandler implements MaplePacketHandler {
     public boolean validateState(MapleClient c) {
         return c.isLoggedIn();
     }
-    
+
     protected static long currentServerTime() {
         return Server.getInstance().getCurrentTime();
     }

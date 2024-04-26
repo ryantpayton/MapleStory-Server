@@ -27,12 +27,11 @@ import net.AbstractMaplePacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
- *
  * @author Matze
  */
 public final class StorageHandler extends AbstractMaplePacketHandler {
-	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
-		StorageProcessor.storageAction(slea, c);
-	}
+    @Override
+    public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+        StorageProcessor.storageAction(slea, c);
+    }
 }

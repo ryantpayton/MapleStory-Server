@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package scripting.reactor;
 
 import client.MapleClient;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import javax.script.Invocable;
 import javax.script.ScriptException;
+
 import scripting.AbstractScriptManager;
 import server.maps.MapleReactor;
 import server.maps.ReactorDropEntry;
@@ -43,24 +45,25 @@ import tools.FilePrinter;
 public class ReactorScriptManager extends AbstractScriptManager {
 
     private static ReactorScriptManager instance = new ReactorScriptManager();
-    
+
     public static ReactorScriptManager getInstance() {
         return instance;
     }
-    
+
     private Map<Integer, List<ReactorDropEntry>> drops = new HashMap<>();
-    
+
     public void onHit(MapleClient c, MapleReactor reactor) {
         try {
             Invocable iv = getInvocable("reactor/" + reactor.getId() + ".js", c);
             if (iv == null) return;
-            
+
             ReactorActionManager rm = new ReactorActionManager(c, reactor, iv);
             engine.put("rm", rm);
             iv.invokeFunction("hit");
-        } catch (final NoSuchMethodException e) {} //do nothing, hit is OPTIONAL
-        
-          catch (final ScriptException | NullPointerException e) {
+        } catch (final NoSuchMethodException e) {
+        } //do nothing, hit is OPTIONAL
+
+        catch (final ScriptException | NullPointerException e) {
             FilePrinter.printError(FilePrinter.REACTOR + reactor.getId() + ".txt", e);
         }
     }
@@ -69,7 +72,7 @@ public class ReactorScriptManager extends AbstractScriptManager {
         try {
             Invocable iv = getInvocable("reactor/" + reactor.getId() + ".js", c);
             if (iv == null) return;
-            
+
             ReactorActionManager rm = new ReactorActionManager(c, reactor, iv);
             engine.put("rm", rm);
             iv.invokeFunction("act");
@@ -92,7 +95,7 @@ public class ReactorScriptManager extends AbstractScriptManager {
                         }
                     }
                 }
-                
+
                 con.close();
             } catch (Throwable e) {
                 FilePrinter.printError(FilePrinter.REACTOR + rid + ".txt", e);
@@ -118,7 +121,7 @@ public class ReactorScriptManager extends AbstractScriptManager {
         try {
             Invocable iv = getInvocable("reactor/" + reactor.getId() + ".js", c);
             if (iv == null) return;
-            
+
             ReactorActionManager rm = new ReactorActionManager(c, reactor, iv);
             engine.put("rm", rm);
             if (touching) {

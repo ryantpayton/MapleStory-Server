@@ -32,7 +32,9 @@ import java.util.Set;
 
 import constants.ServerConstants;
 import client.MapleCharacter;
+
 import java.util.concurrent.ScheduledFuture;
+
 import net.server.Server;
 import net.server.audit.LockCollector;
 import server.life.MapleMonster;
@@ -44,57 +46,56 @@ import server.TimerManager;
 import tools.Pair;
 
 /**
- *
  * @author Ronan
  */
 public class MapleMonsterAggroCoordinator {
-    
+
     private MonitoredReentrantLock lock = MonitoredReentrantLockFactory.createLock(MonitoredLockType.MAP_AGGRO);
     private MonitoredReentrantLock idleLock = MonitoredReentrantLockFactory.createLock(MonitoredLockType.MAP_AGGRO_IDLE, true);
     private long lastStopTime = Server.getInstance().getCurrentTime();
-    
+
     private ScheduledFuture<?> aggroMonitor = null;
-    
+
     private Map<MapleMonster, Map<Integer, PlayerAggroEntry>> mobAggroEntries = new HashMap<>();
     private Map<MapleMonster, List<PlayerAggroEntry>> mobSortedAggros = new HashMap<>();
-    
+
     private Set<Integer> mapPuppetEntries = new HashSet<>();
-    
+
     private class PlayerAggroEntry {
         protected int cid;
         protected int averageDamage = 0;
         protected int currentDamageInstances = 0;
         protected long accumulatedDamage = 0;
-        
+
         protected int expireStreak = 0;
         protected int updateStreak = 0;
         protected int toNextUpdate = 0;
         protected int entryRank = -1;
-        
+
         protected PlayerAggroEntry(int cid) {
             this.cid = cid;
         }
     }
-    
+
     public void stopAggroCoordinator() {
         idleLock.lock();
         try {
             if (aggroMonitor == null) return;
-            
+
             aggroMonitor.cancel(false);
             aggroMonitor = null;
         } finally {
             idleLock.unlock();
         }
-        
+
         lastStopTime = Server.getInstance().getCurrentTime();
     }
-    
+
     public void startAggroCoordinator() {
         idleLock.lock();
         try {
             if (aggroMonitor != null) return;
-            
+
             aggroMonitor = TimerManager.getInstance().register(new Runnable() {
                 @Override
                 public void run() {
@@ -105,17 +106,17 @@ public class MapleMonsterAggroCoordinator {
         } finally {
             idleLock.unlock();
         }
-        
+
         int timeDelta = (int) Math.ceil((Server.getInstance().getCurrentTime() - lastStopTime) / ServerConstants.MOB_STATUS_AGGRO_INTERVAL);
         if (timeDelta > 0) {
             runAggroUpdate(timeDelta);
         }
     }
-    
+
     private static void updateEntryExpiration(PlayerAggroEntry pae) {
         pae.toNextUpdate = (int) Math.ceil((120000L / ServerConstants.MOB_STATUS_AGGRO_INTERVAL) / Math.pow(2, pae.expireStreak + pae.currentDamageInstances));
     }
-    
+
     private static void insertEntryDamage(PlayerAggroEntry pae, int damage) {
         synchronized (pae) {
             long totalDamage = pae.averageDamage;
@@ -127,16 +128,16 @@ public class MapleMonsterAggroCoordinator {
             updateEntryExpiration(pae);
 
             pae.currentDamageInstances += 1;
-            pae.averageDamage = (int)(totalDamage / pae.currentDamageInstances);
+            pae.averageDamage = (int) (totalDamage / pae.currentDamageInstances);
             pae.accumulatedDamage = totalDamage;
         }
     }
-    
+
     private static boolean expiredAfterUpdateEntryDamage(PlayerAggroEntry pae, int deltaTime) {
         synchronized (pae) {
             pae.updateStreak += 1;
             pae.toNextUpdate -= deltaTime;
-            
+
             if (pae.toNextUpdate <= 0) {    // reached dmg instance expire time
                 pae.expireStreak += 1;
                 updateEntryExpiration(pae);
@@ -147,14 +148,14 @@ public class MapleMonsterAggroCoordinator {
                 }
                 pae.accumulatedDamage = pae.averageDamage * pae.currentDamageInstances;
             }
-            
+
             return false;
         }
     }
-    
+
     public void addAggroDamage(MapleMonster mob, int cid, int damage) { // assumption: should not trigger after dispose()
         if (!mob.isAlive()) return;
-        
+
         List<PlayerAggroEntry> sortedAggro = mobSortedAggros.get(mob);
         Map<Integer, PlayerAggroEntry> mobAggro = mobAggroEntries.get(mob);
         if (mobAggro == null) {
@@ -164,7 +165,7 @@ public class MapleMonsterAggroCoordinator {
                     if (mobAggro == null) {
                         mobAggro = new HashMap<>();
                         mobAggroEntries.put(mob, mobAggro);
-                        
+
                         sortedAggro = new LinkedList<>();
                         mobSortedAggros.put(mob, sortedAggro);
                     } else {
@@ -177,15 +178,15 @@ public class MapleMonsterAggroCoordinator {
                 return;
             }
         }
-        
+
         PlayerAggroEntry aggroEntry = mobAggro.get(cid);
         if (aggroEntry == null) {
             aggroEntry = new PlayerAggroEntry(cid);
-            
+
             synchronized (mobAggro) {
                 synchronized (sortedAggro) {
                     PlayerAggroEntry mappedEntry = mobAggro.get(cid);
-                    
+
                     if (mappedEntry == null) {
                         mobAggro.put(aggroEntry.cid, aggroEntry);
                         sortedAggro.add(aggroEntry);
@@ -197,10 +198,10 @@ public class MapleMonsterAggroCoordinator {
         } else if (damage < 1) {
             return;
         }
-        
+
         insertEntryDamage(aggroEntry, damage);
     }
-    
+
     private void runAggroUpdate(int deltaTime) {
         List<Pair<MapleMonster, Map<Integer, PlayerAggroEntry>>> aggroMobs = new LinkedList<>();
         lock.lock();
@@ -211,11 +212,11 @@ public class MapleMonsterAggroCoordinator {
         } finally {
             lock.unlock();
         }
-        
+
         for (Pair<MapleMonster, Map<Integer, PlayerAggroEntry>> am : aggroMobs) {
             Map<Integer, PlayerAggroEntry> mobAggro = am.getRight();
             List<PlayerAggroEntry> sortedAggro = mobSortedAggros.get(am.getLeft());
-                    
+
             if (sortedAggro != null) {
                 List<Integer> toRemove = new LinkedList<>();
                 List<Integer> toRemoveIdx = new ArrayList<>(mobAggro.size());
@@ -235,7 +236,7 @@ public class MapleMonsterAggroCoordinator {
                             for (Integer cid : toRemove) {
                                 mobAggro.remove(cid);
                             }
-                            
+
                             if (mobAggro.isEmpty()) {   // all aggro on this mob expired
                                 am.getLeft().aggroResetAggro();
                             }
@@ -253,7 +254,7 @@ public class MapleMonsterAggroCoordinator {
                                 sortedAggro.remove(idx);
                             }
                         }
-                        
+
                         if (!toRemoveByFetch.isEmpty()) {
                             for (Integer cid : toRemoveByFetch) {
                                 for (int i = 0; i < sortedAggro.size(); i++) {
@@ -269,7 +270,7 @@ public class MapleMonsterAggroCoordinator {
             }
         }
     }
-    
+
     private static void insertionSortAggroList(List<PlayerAggroEntry> paeList) {
         for (int i = 1; i < paeList.size(); i++) {
             PlayerAggroEntry pae = paeList.get(i);
@@ -293,23 +294,23 @@ public class MapleMonsterAggroCoordinator {
             i += 1;
         }
     }
-    
+
     public boolean isLeadingCharacterAggro(MapleMonster mob, MapleCharacter player) {
         if (mob.isLeadingPuppetInVicinity()) {
             return false;
         } else if (mob.isCharacterPuppetInVicinity(player)) {
             return true;
         }
-        
+
         // by assuming the quasi-sorted nature of "mobAggroList", this method
         // returns whether the player given as parameter can be elected as next aggro leader
-        
+
         List<PlayerAggroEntry> mobAggroList = mobSortedAggros.get(mob);
         if (mobAggroList != null) {
             synchronized (mobAggroList) {
                 mobAggroList = new ArrayList<>(mobAggroList.subList(0, Math.min(mobAggroList.size(), 5)));
             }
-            
+
             MapleMap map = mob.getMap();
             for (PlayerAggroEntry pae : mobAggroList) {
                 MapleCharacter chr = map.getCharacterById(pae.cid);
@@ -322,10 +323,10 @@ public class MapleMonsterAggroCoordinator {
                 }
             }
         }
-        
+
         return false;
     }
-    
+
     public void runSortLeadingCharactersAggro() {
         List<List<PlayerAggroEntry>> aggroList;
         lock.lock();
@@ -334,14 +335,14 @@ public class MapleMonsterAggroCoordinator {
         } finally {
             lock.unlock();
         }
-        
+
         for (List<PlayerAggroEntry> mobAggroList : aggroList) {
             synchronized (mobAggroList) {
                 insertionSortAggroList(mobAggroList);
             }
         }
     }
-    
+
     public void removeAggroEntries(MapleMonster mob) {
         lock.lock();
         try {
@@ -351,28 +352,28 @@ public class MapleMonsterAggroCoordinator {
             lock.unlock();
         }
     }
-    
+
     public void addPuppetAggro(MapleCharacter player) {
         synchronized (mapPuppetEntries) {
             mapPuppetEntries.add(player.getId());
         }
     }
-    
+
     public void removePuppetAggro(Integer cid) {
         synchronized (mapPuppetEntries) {
             mapPuppetEntries.remove(cid);
         }
     }
-    
+
     public List<Integer> getPuppetAggroList() {
         synchronized (mapPuppetEntries) {
             return new ArrayList<>(mapPuppetEntries);
         }
     }
-    
+
     public void dispose() {
         stopAggroCoordinator();
-        
+
         lock.lock();
         try {
             mobAggroEntries.clear();
@@ -380,10 +381,10 @@ public class MapleMonsterAggroCoordinator {
         } finally {
             lock.unlock();
         }
-        
+
         disposeLocks();
     }
-    
+
     private void disposeLocks() {
         LockCollector.getInstance().registerDisposeAction(new Runnable() {
             @Override
@@ -392,7 +393,7 @@ public class MapleMonsterAggroCoordinator {
             }
         });
     }
-    
+
     private void emptyLocks() {
         lock = lock.dispose();
     }

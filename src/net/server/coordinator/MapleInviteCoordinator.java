@@ -29,17 +29,16 @@ import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- *
  * @author Ronan
  */
 public class MapleInviteCoordinator {
-    
+
     public enum InviteResult {
         ACCEPTED,
         DENIED,
         NOT_FOUND;
     }
-    
+
     public enum InviteType {
         //BUDDY, (not needed)
         //FAMILY, (not implemented)
@@ -48,7 +47,7 @@ public class MapleInviteCoordinator {
         PARTY,
         GUILD,
         ALLIANCE;
-        
+
         final ConcurrentHashMap<Integer, Object> invites;
         final ConcurrentHashMap<Integer, MapleCharacter> inviteFrom;
         final ConcurrentHashMap<Integer, Integer> inviteTimeouts;
@@ -62,76 +61,76 @@ public class MapleInviteCoordinator {
         private Map<Integer, Object> getRequestsTable() {
             return invites;
         }
-        
+
         private Map<Integer, Integer> getRequestsTimeoutTable() {
             return inviteTimeouts;
         }
-        
+
         private MapleCharacter removeRequest(Integer target) {
             invites.remove(target);
             MapleCharacter from = inviteFrom.remove(target);
             inviteTimeouts.remove(target);
-            
+
             return from;
         }
-        
+
         private boolean addRequest(MapleCharacter from, Object referenceFrom, int targetCid) {
             Object v = invites.putIfAbsent(targetCid, referenceFrom);
             if (v != null) {    // there was already an entry
                 return false;
             }
-            
+
             inviteFrom.put(targetCid, from);
             inviteTimeouts.put(targetCid, 0);
-            
+
             return true;
         }
-        
+
         private boolean hasRequest(int targetCid) {
             return invites.containsKey(targetCid);
         }
     }
-    
+
     // note: referenceFrom is a specific value that represents the "common association" created between the sender/recver parties
     public static boolean createInvite(InviteType type, MapleCharacter from, Object referenceFrom, int targetCid) {
         return type.addRequest(from, referenceFrom, targetCid);
     }
-    
+
     public static boolean hasInvite(InviteType type, int targetCid) {
         return type.hasRequest(targetCid);
     }
-    
+
     public static Pair<InviteResult, MapleCharacter> answerInvite(InviteType type, int targetCid, Object referenceFrom, boolean answer) {
         Map<Integer, Object> table = type.getRequestsTable();
-        
+
         MapleCharacter from = null;
         InviteResult result = InviteResult.NOT_FOUND;
-        
+
         Object reference = table.get(targetCid);
         if (referenceFrom.equals(reference)) {
             from = type.removeRequest(targetCid);
             if (from != null && !from.isLoggedinWorld()) from = null;
-            
+
             result = answer ? InviteResult.ACCEPTED : InviteResult.DENIED;
         }
-        
+
         return new Pair<>(result, from);
     }
-    
+
     public static void removeInvite(InviteType type, int targetCid) {
         type.removeRequest(targetCid);
     }
-    
+
     public static void removePlayerIncomingInvites(int cid) {
         for (InviteType it : InviteType.values()) {
             it.removeRequest(cid);
         }
     }
-    
+
     public static void runTimeoutSchedule() {
         for (InviteType it : InviteType.values()) {
             Map<Integer, Integer> timeoutTable = it.getRequestsTimeoutTable();
-            
+
             if (!timeoutTable.isEmpty()) {
                 Set<Entry<Integer, Integer>> entrySet = new HashSet<>(timeoutTable.entrySet());
                 for (Entry<Integer, Integer> e : entrySet) {

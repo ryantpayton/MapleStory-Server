@@ -41,13 +41,12 @@ import tools.MaplePacketCreator;
 import tools.Pair;
 
 /**
- *
  * @author XoticStory
  * @author Ronan
  */
 public class MapleAlliance {
     final private List<Integer> guilds = new LinkedList<>();
-    
+
     private int allianceId = -1;
     private int capacity;
     private String name;
@@ -62,7 +61,7 @@ public class MapleAlliance {
             rankTitles[i] = ranks[i];
         }
     }
-    
+
     public static boolean canBeUsedAllianceName(String name) {
         if (name.contains(" ") || name.length() > 12) {
             return false;
@@ -87,18 +86,18 @@ public class MapleAlliance {
             return false;
         }
     }
-    
+
     private static List<MapleCharacter> getPartyGuildMasters(MapleParty party) {
         List<MapleCharacter> mcl = new LinkedList<>();
 
-        for(MaplePartyCharacter mpc: party.getMembers()) {
-            if(mpc.getPlayer().getGuildRank() == 1 && mpc.getPlayer().getMapId() == party.getLeader().getPlayer().getMapId())
+        for (MaplePartyCharacter mpc : party.getMembers()) {
+            if (mpc.getPlayer().getGuildRank() == 1 && mpc.getPlayer().getMapId() == party.getLeader().getPlayer().getMapId())
                 mcl.add(mpc.getPlayer());
         }
 
-        if(!mcl.isEmpty() && !mcl.get(0).isPartyLeader()) {
-            for(int i = 1; i < mcl.size(); i++) {
-                if(mcl.get(i).isPartyLeader()) {
+        if (!mcl.isEmpty() && !mcl.get(0).isPartyLeader()) {
+            for (int i = 1; i < mcl.size(); i++) {
+                if (mcl.get(i).isPartyLeader()) {
                     MapleCharacter temp = mcl.get(0);
                     mcl.set(0, mcl.get(i));
                     mcl.set(i, temp);
@@ -111,19 +110,19 @@ public class MapleAlliance {
 
     public static MapleAlliance createAlliance(MapleParty party, String name) {
         List<MapleCharacter> guildMasters = getPartyGuildMasters(party);
-        if(guildMasters.size() != 2) return null;
+        if (guildMasters.size() != 2) return null;
 
         List<Integer> guilds = new LinkedList<>();
-        for(MapleCharacter mc: guildMasters) guilds.add(mc.getGuildId());
+        for (MapleCharacter mc : guildMasters) guilds.add(mc.getGuildId());
         MapleAlliance alliance = MapleAlliance.createAllianceOnDb(guilds, name);
-        if(alliance != null) {
+        if (alliance != null) {
             alliance.setCapacity(guilds.size());
-            for(Integer g: guilds)
+            for (Integer g : guilds)
                 alliance.addGuild(g);
-            
+
             int id = alliance.getId();
             try {
-                for(int i = 0; i < guildMasters.size(); i++) {
+                for (int i = 0; i < guildMasters.size(); i++) {
                     Server.getInstance().setGuildAllianceId(guilds.get(i), id);
                     Server.getInstance().resetAllianceGuildPlayersRank(guilds.get(i));
 
@@ -134,7 +133,7 @@ public class MapleAlliance {
                 }
 
                 Server.getInstance().addAlliance(id, alliance);
-                
+
                 int worldid = guildMasters.get(0).getWorld();
                 Server.getInstance().allianceMessage(id, MaplePacketCreator.updateAllianceInfo(alliance, worldid), -1, -1);
                 Server.getInstance().allianceMessage(id, MaplePacketCreator.getGuildAlliances(alliance, worldid), -1, -1);  // thanks Vcoc for noticing guilds from other alliances being visually stacked here due to this not being updated
@@ -146,39 +145,39 @@ public class MapleAlliance {
 
         return alliance;
     }
-    
+
     public static MapleAlliance createAllianceOnDb(List<Integer> guilds, String name) {
         // will create an alliance, where the first guild listed is the leader and the alliance name MUST BE already checked for unicity.
-        
+
         int id = -1;
         try {
             Connection con = DatabaseConnection.getConnection();
             PreparedStatement ps = con.prepareStatement("INSERT INTO `alliance` (`name`) VALUES (?)", PreparedStatement.RETURN_GENERATED_KEYS);
-            
+
             ps.setString(1, name);
             ps.executeUpdate();
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 rs.next();
                 id = rs.getInt(1);
             }
-            
-            for(int i = 0; i < guilds.size(); i++) {
+
+            for (int i = 0; i < guilds.size(); i++) {
                 int guild = guilds.get(i);
-                
+
                 ps = con.prepareStatement("INSERT INTO `allianceguilds` (`allianceid`, `guildid`) VALUES (?, ?)");
                 ps.setInt(1, id);
                 ps.setInt(2, guild);
                 ps.executeUpdate();
                 ps.close();
             }
-            
+
             ps.close();
             con.close();
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
-        
+
         return (new MapleAlliance(name, id));
     }
 
@@ -202,7 +201,7 @@ public class MapleAlliance {
             alliance.capacity = rs.getInt("capacity");
             alliance.name = rs.getString("name");
             alliance.notice = rs.getString("notice");
-            
+
             String ranks[] = new String[5];
             ranks[0] = rs.getString("rank1");
             ranks[1] = rs.getString("rank2");
@@ -210,18 +209,18 @@ public class MapleAlliance {
             ranks[3] = rs.getString("rank4");
             ranks[4] = rs.getString("rank5");
             alliance.rankTitles = ranks;
-            
+
             ps.close();
             rs.close();
-            
+
             ps = con.prepareStatement("SELECT guildid FROM allianceguilds WHERE allianceid = ?");
             ps.setInt(1, id);
             rs = ps.executeQuery();
-            
-            while(rs.next()) {
+
+            while (rs.next()) {
                 alliance.addGuild(rs.getInt("guildid"));
             }
-            
+
             ps.close();
             rs.close();
             con.close();
@@ -237,54 +236,54 @@ public class MapleAlliance {
             PreparedStatement ps = con.prepareStatement("UPDATE `alliance` SET capacity = ?, notice = ?, rank1 = ?, rank2 = ?, rank3 = ?, rank4 = ?, rank5 = ? WHERE id = ?");
             ps.setInt(1, this.capacity);
             ps.setString(2, this.notice);
-            
+
             ps.setString(3, this.rankTitles[0]);
             ps.setString(4, this.rankTitles[1]);
             ps.setString(5, this.rankTitles[2]);
             ps.setString(6, this.rankTitles[3]);
             ps.setString(7, this.rankTitles[4]);
-            
+
             ps.setInt(8, this.allianceId);
             ps.executeUpdate();
             ps.close();
-            
+
             ps = con.prepareStatement("DELETE FROM `allianceguilds` WHERE allianceid = ?");
             ps.setInt(1, this.allianceId);
             ps.executeUpdate();
             ps.close();
-            
-            for(int i = 0; i < guilds.size(); i++) {
+
+            for (int i = 0; i < guilds.size(); i++) {
                 int guild = guilds.get(i);
-                
+
                 ps = con.prepareStatement("INSERT INTO `allianceguilds` (`allianceid`, `guildid`) VALUES (?, ?)");
                 ps.setInt(1, this.allianceId);
                 ps.setInt(2, guild);
                 ps.executeUpdate();
                 ps.close();
             }
-            
+
             con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-    
+
     public static void disbandAlliance(int allianceId) {
         PreparedStatement ps = null;
         Connection con = null;
         try {
             con = DatabaseConnection.getConnection();
-            
+
             ps = con.prepareStatement("DELETE FROM `alliance` WHERE id = ?");
             ps.setInt(1, allianceId);
             ps.executeUpdate();
             ps.close();
-            
+
             ps = con.prepareStatement("DELETE FROM `allianceguilds` WHERE allianceid = ?");
             ps.setInt(1, allianceId);
             ps.executeUpdate();
             ps.close();
-            
+
             con.close();
             Server.getInstance().allianceMessage(allianceId, MaplePacketCreator.disbandAlliance(allianceId), -1, -1);
             Server.getInstance().disbandAlliance(allianceId);
@@ -303,18 +302,18 @@ public class MapleAlliance {
             }
         }
     }
-    
+
     private static void removeGuildFromAllianceOnDb(int guildId) {
         PreparedStatement ps = null;
         Connection con = null;
         try {
             con = DatabaseConnection.getConnection();
-            
+
             ps = con.prepareStatement("DELETE FROM `allianceguilds` WHERE guildid = ?");
             ps.setInt(1, guildId);
             ps.executeUpdate();
             ps.close();
-            
+
             con.close();
         } catch (SQLException sqle) {
             sqle.printStackTrace();
@@ -331,39 +330,39 @@ public class MapleAlliance {
             }
         }
     }
-    
+
     public static boolean removeGuildFromAlliance(int allianceId, int guildId, int worldId) {
         Server srv = Server.getInstance();
         MapleAlliance alliance = srv.getAlliance(allianceId);
-    
+
         if (alliance.getLeader().getGuildId() == guildId) {
             return false;
         }
-        
+
         srv.allianceMessage(alliance.getId(), MaplePacketCreator.removeGuildFromAlliance(alliance, guildId, worldId), -1, -1);
         srv.removeGuildFromAlliance(alliance.getId(), guildId);
         removeGuildFromAllianceOnDb(guildId);
-        
+
         srv.allianceMessage(alliance.getId(), MaplePacketCreator.getGuildAlliances(alliance, worldId), -1, -1);
         srv.allianceMessage(alliance.getId(), MaplePacketCreator.allianceNotice(alliance.getId(), alliance.getNotice()), -1, -1);
         srv.guildMessage(guildId, MaplePacketCreator.disbandAlliance(alliance.getId()));
-        
+
         alliance.dropMessage("[" + srv.getGuild(guildId, worldId).getName() + "] guild has left the union.");
         return true;
     }
-    
+
     public void updateAlliancePackets(MapleCharacter chr) {
         if (allianceId > 0) {
             this.broadcastMessage(MaplePacketCreator.updateAllianceInfo(this, chr.getWorld()));
             this.broadcastMessage(MaplePacketCreator.allianceNotice(this.getId(), this.getNotice()));
         }
     }
-    
+
     public boolean removeGuild(int gid) {
         synchronized (guilds) {
             int index = getGuildIndex(gid);
-            if(index == -1) return false;
-            
+            if (index == -1) return false;
+
             guilds.remove(index);
             return true;
         }
@@ -371,8 +370,8 @@ public class MapleAlliance {
 
     public boolean addGuild(int gid) {
         synchronized (guilds) {
-            if(guilds.size() == capacity || getGuildIndex(gid) > -1) return false;
-            
+            if (guilds.size() == capacity || getGuildIndex(gid) > -1) return false;
+
             guilds.add(gid);
             return true;
         }
@@ -388,7 +387,7 @@ public class MapleAlliance {
             return -1;
         }
     }
-    
+
     public void setRankTitle(String[] ranks) {
         rankTitles = ranks;
     }
@@ -396,9 +395,9 @@ public class MapleAlliance {
     public String getRankTitle(int rank) {
         return rankTitles[rank - 1];
     }
-    
+
     public List<Integer> getGuilds() {
-        synchronized(guilds) {
+        synchronized (guilds) {
             List<Integer> guilds_ = new LinkedList<>();
             for (int guild : guilds) {
                 if (guild != -1) {
@@ -408,7 +407,7 @@ public class MapleAlliance {
             return guilds_;
         }
     }
-    
+
     public String getAllianceNotice() {
         return notice;
     }
@@ -416,7 +415,7 @@ public class MapleAlliance {
     public String getNotice() {
         return notice;
     }
-    
+
     public void setNotice(String notice) {
         this.notice = notice;
     }
@@ -428,11 +427,11 @@ public class MapleAlliance {
     public void setCapacity(int newCapacity) {
         this.capacity = newCapacity;
     }
-    
+
     public int getCapacity() {
         return this.capacity;
     }
-    
+
     public int getId() {
         return allianceId;
     }
@@ -440,40 +439,40 @@ public class MapleAlliance {
     public String getName() {
         return name;
     }
-    
+
     public MapleGuildCharacter getLeader() {
-        synchronized(guilds) {
-            for(Integer gId: guilds) {
+        synchronized (guilds) {
+            for (Integer gId : guilds) {
                 MapleGuild guild = Server.getInstance().getGuild(gId);
                 MapleGuildCharacter mgc = guild.getMGC(guild.getLeaderId());
 
-                if(mgc.getAllianceRank() == 1) return mgc;
+                if (mgc.getAllianceRank() == 1) return mgc;
             }
 
             return null;
         }
     }
-    
+
     public void dropMessage(String message) {
         dropMessage(5, message);
     }
-    
+
     public void dropMessage(int type, String message) {
-        synchronized(guilds) {
-            for(Integer gId: guilds) {
+        synchronized (guilds) {
+            for (Integer gId : guilds) {
                 MapleGuild guild = Server.getInstance().getGuild(gId);
                 guild.dropMessage(type, message);
             }
         }
     }
-    
+
     public void broadcastMessage(byte[] packet) {
         Server.getInstance().allianceMessage(allianceId, packet, -1, -1);
     }
-    
+
     public static void sendInvitation(MapleClient c, String targetGuildName, int allianceId) {
         MapleGuild mg = Server.getInstance().getGuildByName(targetGuildName);
-        if(mg == null) {
+        if (mg == null) {
             c.getPlayer().dropMessage(5, "The entered guild does not exist.");
         } else {
             if (mg.getAllianceId() > 0) {
@@ -492,28 +491,28 @@ public class MapleAlliance {
             }
         }
     }
-    
+
     public static boolean answerInvitation(int targetId, String targetGuildName, int allianceId, boolean answer) {
         Pair<InviteResult, MapleCharacter> res = MapleInviteCoordinator.answerInvite(InviteType.ALLIANCE, targetId, allianceId, answer);
-        
+
         String msg;
         MapleCharacter sender = res.getRight();
         switch (res.getLeft()) {
             case ACCEPTED:
                 return true;
-                
+
             case DENIED:
                 msg = "[" + targetGuildName + "] guild has denied your guild alliance invitation.";
                 break;
-                
+
             default:
                 msg = "The guild alliance request has not been accepted, since the invitation expired.";
         }
-        
+
         if (sender != null) {
             sender.dropMessage(5, msg);
         }
-        
+
         return false;
     }
 }

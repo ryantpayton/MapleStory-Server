@@ -4,9 +4,11 @@ import client.command.Command;
 import client.MapleClient;
 import client.MapleCharacter;
 import constants.ServerConstants;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.javatuples.Quartet;
 
 public class ApCommand extends Command {

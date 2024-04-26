@@ -32,6 +32,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.Semaphore;
+
 import tools.DatabaseConnection;
 import tools.MaplePacketCreator;
 import net.server.audit.locks.MonitoredLockType;
@@ -39,7 +40,7 @@ import net.server.audit.locks.factory.MonitoredReentrantLockFactory;
 
 public final class MonsterBook {
     private static final Semaphore semaphore = new Semaphore(10);
-    
+
     private int specialCard = 0;
     private int normalCard = 0;
     private int bookLevel = 1;
@@ -54,23 +55,23 @@ public final class MonsterBook {
             lock.unlock();
         }
     }
-    
+
     public void addCard(final MapleClient c, final int cardid) {
         c.getPlayer().getMap().broadcastMessage(c.getPlayer(), MaplePacketCreator.showForeignCardEffect(c.getPlayer().getId()), false);
-        
+
         Integer qty;
         lock.lock();
         try {
             qty = cards.get(cardid);
-            
-            if(qty != null) {
-                if(qty < 5) {
+
+            if (qty != null) {
+                if (qty < 5) {
                     cards.put(cardid, qty + 1);
                 }
             } else {
                 cards.put(cardid, 1);
                 qty = 0;
-                
+
                 if (cardid / 1000 >= 2388) {
                     specialCard++;
                 } else {
@@ -80,10 +81,10 @@ public final class MonsterBook {
         } finally {
             lock.unlock();
         }
-        
-        if(qty < 5) {
+
+        if (qty < 5) {
             calculateLevel();   // current leveling system only accounts unique cards...
-            
+
             c.announce(MaplePacketCreator.addCard(false, cardid, qty + 1));
             c.announce(MaplePacketCreator.showGainCard());
         } else {
@@ -170,23 +171,23 @@ public final class MonsterBook {
         } finally {
             lock.unlock();
         }
-        
+
         calculateLevel();
     }
 
     private static int saveStringConcat(char[] data, int pos, Integer i) {
         return saveStringConcat(data, pos, i.toString());
     }
-    
+
     private static int saveStringConcat(char[] data, int pos, String s) {
         int len = s.length();
-        for(int j = 0; j < len; j++) {
+        for (int j = 0; j < len; j++) {
             data[pos + j] = s.charAt(j);
         }
-        
+
         return pos + len;
     }
-    
+
     private static String getSaveString(Integer charid, Set<Entry<Integer, Integer>> cardSet) {
         semaphore.acquireUninterruptibly();
         try {
@@ -204,16 +205,16 @@ public final class MonsterBook {
                 i = saveStringConcat(save, i, all.getValue());  //1 char due to being 0 ~ 5
                 i = saveStringConcat(save, i, "),");
             }
-            
+
             return new String(save, 0, i - 1);
         } finally {
             semaphore.release();
         }
     }
-    
+
     public void saveCards(final int charid) {
         Set<Entry<Integer, Integer>> cardSet = getCardSet();
-        
+
         if (cardSet.isEmpty()) {
             return;
         }
@@ -223,7 +224,7 @@ public final class MonsterBook {
             ps.setInt(1, charid);
             ps.execute();
             ps.close();
-            
+
             ps = con.prepareStatement(getSaveString(charid, cardSet));
             ps.execute();
             ps.close();

@@ -22,14 +22,13 @@ package net.server.channel.worker;
 import net.server.audit.locks.MonitoredLockType;
 
 /**
- *
  * @author Ronan
  */
 public class EventScheduler extends BaseScheduler {
     public EventScheduler() {
         super(MonitoredLockType.CHANNEL_EVENTS);
     }
-    
+
     public void registerDelayedAction(Runnable runAction, long delay) {
         registerEntry(runAction, runAction, delay);
     }

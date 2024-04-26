@@ -25,12 +25,12 @@ import net.server.world.World;
  * @author Ronan
  */
 public class HiredMerchantWorker extends BaseWorker implements Runnable {
-    
+
     @Override
     public void run() {
         wserv.runHiredMerchantSchedule();
     }
-    
+
     public HiredMerchantWorker(World world) {
         super(world);
     }

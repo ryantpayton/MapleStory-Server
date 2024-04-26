@@ -49,7 +49,9 @@ import client.inventory.MapleInventoryType;
 import client.inventory.MaplePet;
 import constants.ItemConstants;
 import constants.ServerConstants;
+
 import java.util.Collections;
+
 import net.server.audit.locks.MonitoredLockType;
 
 /*
@@ -99,7 +101,7 @@ public class CashShop {
             if (ItemConstants.isPet(itemId)) {
                 petid = MaplePet.createPet(itemId);
             }
-            
+
             if (ItemConstants.getInventoryType(itemId).equals(MapleInventoryType.EQUIP)) {
                 item = MapleItemInformationProvider.getInstance().getEquipById(itemId);
             } else {
@@ -107,28 +109,28 @@ public class CashShop {
             }
 
             if (ItemConstants.EXPIRING_ITEMS) {
-                    if(period == 1) {
-                            if(itemId == 5211048 || itemId == 5360042) { // 4 Hour 2X coupons, the period is 1, but we don't want them to last a day.
-                                    item.setExpiration(Server.getInstance().getCurrentTime() + (1000 * 60 * 60 * 4));
+                if (period == 1) {
+                    if (itemId == 5211048 || itemId == 5360042) { // 4 Hour 2X coupons, the period is 1, but we don't want them to last a day.
+                        item.setExpiration(Server.getInstance().getCurrentTime() + (1000 * 60 * 60 * 4));
                             /*
                             } else if(itemId == 5211047 || itemId == 5360014) { // 3 Hour 2X coupons, unused as of now
                                     item.setExpiration(Server.getInstance().getCurrentTime() + (1000 * 60 * 60 * 3));
                             */
-                            } else if(itemId == 5211060) { // 2 Hour 3X coupons.
-                                    item.setExpiration(Server.getInstance().getCurrentTime() + (1000 * 60 * 60 * 2));
-                            } else {
-                                    item.setExpiration(Server.getInstance().getCurrentTime() + (1000 * 60 * 60 * 24));
-                            }
+                    } else if (itemId == 5211060) { // 2 Hour 3X coupons.
+                        item.setExpiration(Server.getInstance().getCurrentTime() + (1000 * 60 * 60 * 2));
                     } else {
-                            item.setExpiration(Server.getInstance().getCurrentTime() + (1000 * 60 * 60 * 24 * period));
+                        item.setExpiration(Server.getInstance().getCurrentTime() + (1000 * 60 * 60 * 24));
                     }
+                } else {
+                    item.setExpiration(Server.getInstance().getCurrentTime() + (1000 * 60 * 60 * 24 * period));
+                }
             }
-            
+
             item.setSN(sn);
             return item;
         }
     }
-    
+
     public static class SpecialCashItem {
         private int sn, modifier;
         private byte info; //?
@@ -181,13 +183,13 @@ public class CashShop {
 
                 packages.put(Integer.parseInt(cashPackage.getName()), cPackage);
             }
-            
-            for(Entry<Integer, CashItem> e : items.entrySet()) {
-                if(e.getValue().isOnSale()) {
+
+            for (Entry<Integer, CashItem> e : items.entrySet()) {
+                if (e.getValue().isOnSale()) {
                     randomitemids.add(e.getKey());
                 }
             }
-            
+
             PreparedStatement ps = null;
             ResultSet rs = null;
             Connection con = null;
@@ -212,12 +214,12 @@ public class CashShop {
         }
 
         public static CashItem getRandomCashItem() {
-            if(randomitemids.isEmpty()) return null;
-            
-            int rnd = (int)(Math.random() * randomitemids.size());
+            if (randomitemids.isEmpty()) return null;
+
+            int rnd = (int) (Math.random() * randomitemids.size());
             return items.get(randomitemids.get(rnd));
         }
-        
+
         public static CashItem getItem(int sn) {
             return items.get(sn);
         }
@@ -239,7 +241,7 @@ public class CashShop {
         public static List<SpecialCashItem> getSpecialCashItems() {
             return specialcashitems;
         }
-        
+
         public static void reloadSpecialCashItems() {//Yay?
             specialcashitems.clear();
             PreparedStatement ps = null;
@@ -262,10 +264,10 @@ public class CashShop {
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
-            }            
+            }
         }
     }
-    
+
     private int accountId, characterId, nxCredit, maplePoint, nxPrepaid;
     private boolean opened;
     private ItemFactory factory;
@@ -355,10 +357,11 @@ public class CashShop {
                 break;
         }
     }
-    
+
     public void gainCash(int type, CashItem buyItem, int world) {
         gainCash(type, -buyItem.getPrice());
-        if(!ServerConstants.USE_ENFORCE_ITEM_SUGGESTION) Server.getInstance().getWorld(world).addCashItemBought(buyItem.getSN());
+        if (!ServerConstants.USE_ENFORCE_ITEM_SUGGESTION)
+            Server.getInstance().getWorld(world).addCashItemBought(buyItem.getSN());
     }
 
     public boolean isOpened() {
@@ -388,7 +391,7 @@ public class CashShop {
             } else {
                 isRing = false;
             }
-            
+
             if ((item.getPetId() > -1 ? item.getPetId() : isRing ? equip.getRingId() : item.getCashId()) == cashId) {
                 return item;
             }
@@ -541,39 +544,39 @@ public class CashShop {
 
         ps.close();
     }
-    
+
     private Item getCashShopItemByItemid(int itemid) {
         lock.lock();
         try {
-            for(Item it : inventory) {
-                if(it.getItemId() == itemid) {
+            for (Item it : inventory) {
+                if (it.getItemId() == itemid) {
                     return it;
                 }
             }
         } finally {
             lock.unlock();
         }
-        
+
         return null;
     }
-    
+
     public synchronized Item openCashShopSurprise() {
         Item css = getCashShopItemByItemid(5222000);
-        
-        if(css != null) {
+
+        if (css != null) {
             CashItem cItem = CashItemFactory.getRandomCashItem();
-            
-            if(cItem != null) {
-                if(css.getQuantity() > 1) {
+
+            if (cItem != null) {
+                if (css.getQuantity() > 1) {
                     /* if(NOT ENOUGH SPACE) { looks like we're not dealing with cash inventory limit whatsoever, k then
                         return null;
                     } */
-                    
+
                     css.setQuantity((short) (css.getQuantity() - 1));
                 } else {
                     removeFromInventory(css);
                 }
-                
+
                 Item item = cItem.toItem();
                 addToInventory(item);
 
@@ -585,7 +588,7 @@ public class CashShop {
             return null;
         }
     }
-    
+
     public static Item generateCouponItem(int itemId, short quantity) {
         CashItem it = new CashItem(77777777, itemId, 7777, ItemConstants.isPet(itemId) ? 30 : 0, quantity, true);
         return it.toItem();

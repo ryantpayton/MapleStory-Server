@@ -30,7 +30,6 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
- *
  * @author kevintjuh93 :3
  */
 public class RemoteStoreHandler extends AbstractMaplePacketHandler {
@@ -46,7 +45,7 @@ public class RemoteStoreHandler extends AbstractMaplePacketHandler {
             }
             return;
         } else {
-           chr.dropMessage(1, "You don't have a Merchant open.");
+            chr.dropMessage(1, "You don't have a Merchant open.");
         }
         c.announce(MaplePacketCreator.enableActions());
     }

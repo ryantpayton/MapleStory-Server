@@ -28,31 +28,30 @@ import client.MapleCharacter;
 import client.MapleClient;
 
 /**
- *
  * @author Matze
  */
 public final class MesoDropHandler extends AbstractMaplePacketHandler {
-        @Override
-        public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
-                MapleCharacter player = c.getPlayer();
-                if (!player.isAlive()) {
-                        c.announce(MaplePacketCreator.enableActions());
-                        return;
-                }
-                if (!player.canDropMeso()){
-                        player.announce(MaplePacketCreator.serverNotice(5, "Fast meso drop has been patched, cut that out. ;)"));
-                        return;
-                }
-                slea.skip(4);
-                int meso = slea.readInt();
-                if (meso <= player.getMeso() && meso > 9 && meso < 50001) {
-                        player.gainMeso(-meso, false, true, false);
-                        
-                        if (player.attemptCatchFish(meso)) {
-                                player.getMap().disappearingMesoDrop(meso, player, player, player.getPosition());
-                        } else {
-                                player.getMap().spawnMesoDrop(meso, player.getPosition(), player, player, true, (byte) 2);
-                        }
-                }
+    @Override
+    public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+        MapleCharacter player = c.getPlayer();
+        if (!player.isAlive()) {
+            c.announce(MaplePacketCreator.enableActions());
+            return;
         }
+        if (!player.canDropMeso()) {
+            player.announce(MaplePacketCreator.serverNotice(5, "Fast meso drop has been patched, cut that out. ;)"));
+            return;
+        }
+        slea.skip(4);
+        int meso = slea.readInt();
+        if (meso <= player.getMeso() && meso > 9 && meso < 50001) {
+            player.gainMeso(-meso, false, true, false);
+
+            if (player.attemptCatchFish(meso)) {
+                player.getMap().disappearingMesoDrop(meso, player, player, player.getPosition());
+            } else {
+                player.getMap().spawnMesoDrop(meso, player.getPosition(), player, player, true, (byte) 2);
+            }
+        }
+    }
 }

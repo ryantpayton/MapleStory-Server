@@ -26,25 +26,24 @@ import server.quest.MapleQuestRequirementType;
 import client.MapleCharacter;
 
 /**
- *
  * @author Ronan
  */
 public class MesoRequirement extends MapleQuestRequirement {
-        private int meso = 0;
-    
-	public MesoRequirement(MapleQuest quest, MapleData data) {
-		super(MapleQuestRequirementType.MESO);
-		processData(data);
-	}
-	
-	@Override
-	public void processData(MapleData data) {
-		meso = MapleDataTool.getInt(data);
-	}
-	
-	
-	@Override
-	public boolean check(MapleCharacter chr, Integer npcid) {
-		return chr.getMeso() >= meso;
-	}
+    private int meso = 0;
+
+    public MesoRequirement(MapleQuest quest, MapleData data) {
+        super(MapleQuestRequirementType.MESO);
+        processData(data);
+    }
+
+    @Override
+    public void processData(MapleData data) {
+        meso = MapleDataTool.getInt(data);
+    }
+
+
+    @Override
+    public boolean check(MapleCharacter chr, Integer npcid) {
+        return chr.getMeso() >= meso;
+    }
 }

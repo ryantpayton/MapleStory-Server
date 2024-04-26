@@ -22,7 +22,6 @@ package net.server.channel.worker;
 import java.util.List;
 
 /**
- *
  * @author Ronan
  */
 public interface SchedulerListener {

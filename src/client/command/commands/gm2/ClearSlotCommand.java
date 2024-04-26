@@ -6,9 +6,11 @@ import client.MapleCharacter;
 import client.inventory.Item;
 import client.inventory.MapleInventoryType;
 import client.inventory.manipulator.MapleInventoryManipulator;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.javatuples.Quartet;
 
 public class ClearSlotCommand extends Command {

@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
+
 import net.server.audit.locks.MonitoredLockType;
 import net.server.audit.locks.MonitoredReentrantReadWriteLock;
 import provider.MapleData;
@@ -53,7 +54,7 @@ import tools.StringUtil;
 
 public class MapleMapFactory {
     private static Map<Integer, Float> mapRecoveryRate = new HashMap<>();
-    
+
     private MapleDataProvider source;
     private MapleData nameData;
     private EventInstanceManager event;
@@ -68,12 +69,12 @@ public class MapleMapFactory {
         this.world = world;
         this.channel = channel;
         this.event = eim;
-        
+
         ReentrantReadWriteLock rrwl = new MonitoredReentrantReadWriteLock(MonitoredLockType.MAP_FACTORY);
         this.mapsRLock = rrwl.readLock();
         this.mapsWLock = rrwl.writeLock();
     }
-    
+
     public MapleMap resetMap(int mapid) {
         mapsWLock.lock();
         try {
@@ -81,10 +82,10 @@ public class MapleMapFactory {
         } finally {
             mapsWLock.unlock();
         }
-        
+
         return getMap(mapid);
     }
-    
+
     private void loadLifeFromWz(MapleMap map, MapleData mapData) {
         for (MapleData life : mapData.getChildByPath("life")) {
             String id = MapleDataTool.getString(life.getChildByPath("id"));
@@ -104,7 +105,7 @@ public class MapleMapFactory {
             loadLifeRaw(map, Integer.parseInt(id), type, cy, f, fh, rx0, rx1, x, y, hide, mobTime, team);
         }
     }
-    
+
     private void loadLifeFromDb(MapleMap map) {
         try {
             Connection con = DatabaseConnection.getConnection();
@@ -113,7 +114,7 @@ public class MapleMapFactory {
             ps.setInt(2, map.getWorld());
 
             ResultSet rs = ps.executeQuery();
-            while(rs.next()) {
+            while (rs.next()) {
                 int id = rs.getInt("life");
                 String type = rs.getString("type");
                 int cy = rs.getInt("cy");
@@ -137,12 +138,12 @@ public class MapleMapFactory {
             sqle.printStackTrace();
         }
     }
-    
+
     private void loadLifeRaw(MapleMap map, int id, String type, int cy, int f, int fh, int rx0, int rx1, int x, int y, int hide, int mobTime, int team) {
         AbstractLoadedMapleLife myLife = loadLife(id, type, cy, f, fh, rx0, rx1, x, y, hide);
         if (myLife instanceof MapleMonster) {
             MapleMonster monster = (MapleMonster) myLife;
-            
+
             if (mobTime == -1) { //does not respawn, force spawn once
                 map.spawnMonster(monster);
             } else {
@@ -155,10 +156,10 @@ public class MapleMapFactory {
             map.addMapObject(myLife);
         }
     }
-    
+
     private synchronized MapleMap loadMapFromWz(int mapid, Integer omapid) {
         MapleMap map;
-        
+
         mapsRLock.lock();
         try {
             map = maps.get(omapid);
@@ -169,7 +170,7 @@ public class MapleMapFactory {
         if (map != null) {
             return map;
         }
-        
+
         String mapName = getMapName(mapid);
         MapleData mapData = source.getData(mapName);    // source.getData issue with giving nulls in rare ocasions found thanks to MedicOP
         MapleData infoData = mapData.getChildByPath("info");
@@ -209,9 +210,9 @@ public class MapleMapFactory {
         bounds[0] = MapleDataTool.getInt(infoData.getChildByPath("VRTop"));
         bounds[1] = MapleDataTool.getInt(infoData.getChildByPath("VRBottom"));
 
-        if(bounds[0] == bounds[1]) {    // old-style baked map
+        if (bounds[0] == bounds[1]) {    // old-style baked map
             MapleData minimapData = mapData.getChildByPath("miniMap");
-            if(minimapData != null) {
+            if (minimapData != null) {
                 bounds[0] = MapleDataTool.getInt(minimapData.getChildByPath("centerX")) * -1;
                 bounds[1] = MapleDataTool.getInt(minimapData.getChildByPath("centerY")) * -1;
                 bounds[2] = MapleDataTool.getInt(minimapData.getChildByPath("height"));
@@ -272,7 +273,7 @@ public class MapleMapFactory {
                 map.addMapleArea(new Rectangle(x1, y1, (x2 - x1), (y2 - y1)));
             }
         }
-        if(event == null) {
+        if (event == null) {
             try {
                 Connection con = DatabaseConnection.getConnection();
                 try (PreparedStatement ps = con.prepareStatement("SELECT * FROM playernpcs WHERE map = ? AND world = ?")) {
@@ -288,18 +289,18 @@ public class MapleMapFactory {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            
+
             List<MaplePlayerNPC> dnpcs = MaplePlayerNPCFactory.getDeveloperNpcsFromMapid(mapid);
-            if(dnpcs != null) {
-                for(MaplePlayerNPC dnpc : dnpcs) {
+            if (dnpcs != null) {
+                for (MaplePlayerNPC dnpc : dnpcs) {
                     map.addPlayerNPCMapObject(dnpc);
                 }
             }
         }
-        
+
         loadLifeFromWz(map, mapData);
         loadLifeFromDb(map);
-        
+
         if (mapData.getChildByPath("reactor") != null) {
             for (MapleData reactor : mapData.getChildByPath("reactor")) {
                 String id = MapleDataTool.getString(reactor.getChildByPath("id"));
@@ -313,7 +314,7 @@ public class MapleMapFactory {
             map.setMapName(MapleDataTool.getString("mapName", nameData.getChildByPath(getMapStringName(omapid)), ""));
             map.setStreetName(MapleDataTool.getString("streetName", nameData.getChildByPath(getMapStringName(omapid)), ""));
         } catch (Exception e) {
-            if(omapid / 1000 != 1020) {     // explorer job introducion scenes
+            if (omapid / 1000 != 1020) {     // explorer job introducion scenes
                 e.printStackTrace();
                 System.err.println("Not found mapid " + omapid);
             }
@@ -332,13 +333,13 @@ public class MapleMapFactory {
         map.setTimeLimit(MapleDataTool.getIntConvert("timeLimit", infoData, -1));
         map.setFieldType(MapleDataTool.getIntConvert("fieldType", infoData, 0));
         map.setMobCapacity(MapleDataTool.getIntConvert("fixedMobCapacity", infoData, 500));//Is there a map that contains more than 500 mobs?
-        
+
         MapleData recData = infoData.getChildByPath("recovery");
-        if(recData != null) {
+        if (recData != null) {
             float recoveryRate = MapleDataTool.getFloat(recData);
             mapRecoveryRate.put(mapid, recoveryRate);
         }
-        
+
         HashMap<Integer, Integer> backTypes = new HashMap<>();
         try {
             for (MapleData layer : mapData.getChildByPath("back")) { // yolo
@@ -351,7 +352,7 @@ public class MapleMapFactory {
             e.printStackTrace();
             // swallow cause I'm cool
         }
-        
+
         map.setBackgroundTypes(backTypes);
         map.generateMapDropRangeCache();
 
@@ -361,21 +362,21 @@ public class MapleMapFactory {
         } finally {
             mapsWLock.unlock();
         }
-        
+
         return map;
     }
-    
+
     public MapleMap getMap(int mapid) {
         Integer omapid = Integer.valueOf(mapid);
         MapleMap map;
-        
+
         mapsRLock.lock();
         try {
             map = maps.get(omapid);
         } finally {
             mapsRLock.unlock();
         }
-        
+
         return (map != null) ? map : loadMapFromWz(mapid, omapid);
     }
 
@@ -387,7 +388,7 @@ public class MapleMapFactory {
             mapsRLock.unlock();
         }
     }
-    
+
     private AbstractLoadedMapleLife loadLife(int id, String type, int cy, int f, int fh, int rx0, int rx1, int x, int y, int hide) {
         AbstractLoadedMapleLife myLife = MapleLifeFactory.getLife(id, type);
         myLife.setCy(cy);
@@ -442,7 +443,7 @@ public class MapleMapFactory {
         } else if (mapid >= 677000000 && mapid < 677100000) {
             builder.append("Episode1GL");
         } else if (mapid >= 670000000 && mapid < 682000000) {
-            if((mapid >= 674030000 && mapid < 674040000) || (mapid >= 680100000 && mapid < 680200000)) {
+            if ((mapid >= 674030000 && mapid < 674040000) || (mapid >= 680100000 && mapid < 680200000)) {
                 builder.append("etc");
             } else {
                 builder.append("weddingGL");
@@ -452,7 +453,7 @@ public class MapleMapFactory {
         } else if (mapid >= 683000000 && mapid < 684000000) {
             builder.append("event");
         } else if (mapid >= 800000000 && mapid < 900000000) {
-            if((mapid >= 889100000 && mapid < 889200000)) {
+            if ((mapid >= 889100000 && mapid < 889200000)) {
                 builder.append("etc");
             } else {
                 builder.append("jp");
@@ -480,17 +481,17 @@ public class MapleMapFactory {
             mapsRLock.unlock();
         }
     }
-    
+
     public void dispose() {
         Collection<MapleMap> mapValues = getMaps().values();
-        
-        for(MapleMap map: mapValues) {
+
+        for (MapleMap map : mapValues) {
             map.dispose();
         }
-        
+
         this.event = null;
     }
-    
+
     public static float getMapRecoveryRate(int mapid) {
         Float recRate = mapRecoveryRate.get(mapid);
         return recRate != null ? recRate : 1.0f;

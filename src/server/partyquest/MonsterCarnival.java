@@ -23,17 +23,18 @@
 package server.partyquest;
 
 import client.MapleCharacter;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.concurrent.ScheduledFuture;
+
 import server.TimerManager;
 import server.maps.MapleMap;
 import tools.DatabaseConnection;
 import tools.MaplePacketCreator;
 
 /**
- *
  * @author kevintjuh93 - LOST MOTIVATION >=(
  */
 public class MonsterCarnival {
@@ -44,44 +45,44 @@ public class MonsterCarnival {
     private long timeStarted = 0;
     private ScheduledFuture<?> schedule = null;
 
-        public MonsterCarnival(int room, byte channel, MonsterCarnivalParty red1, MonsterCarnivalParty blue1) {
-            //this.map = Channel.getInstance(channel).getMapFactory().getMap(980000001 + (room * 100));
-            this.room = room;
-            this.red = red1;
-            this.blue = blue1;
-            this.timeStarted = System.currentTimeMillis();
-            this.time = 600000;
-            map.broadcastMessage(MaplePacketCreator.getClock((int) (time / 1000)));
+    public MonsterCarnival(int room, byte channel, MonsterCarnivalParty red1, MonsterCarnivalParty blue1) {
+        //this.map = Channel.getInstance(channel).getMapFactory().getMap(980000001 + (room * 100));
+        this.room = room;
+        this.red = red1;
+        this.blue = blue1;
+        this.timeStarted = System.currentTimeMillis();
+        this.time = 600000;
+        map.broadcastMessage(MaplePacketCreator.getClock((int) (time / 1000)));
 
-            for (MapleCharacter chr : red.getMembers())
-                chr.setCarnival(this);
-            for (MapleCharacter chr : blue.getMembers())
-                chr.setCarnival(this);
-            
-            this.schedule = TimerManager.getInstance().schedule(new Runnable() {
-                @Override
-                public void run() {
-                    if (red.getTotalCP() > blue.getTotalCP()) {
-                        red.setWinner(true);
-                        blue.setWinner(false);
-                        red.displayMatchResult();
-                        blue.displayMatchResult();
-                    } else if (blue.getTotalCP() > red.getTotalCP()) {
-                        red.setWinner(false);
-                        blue.setWinner(true);
-                        red.displayMatchResult();
-                        blue.displayMatchResult();
-                    } else {
-                        red.setWinner(false);
-                        blue.setWinner(false);
-                        red.displayMatchResult();
-                        blue.displayMatchResult();
-                    }
-                    saveResults();
-                    warpOut();
+        for (MapleCharacter chr : red.getMembers())
+            chr.setCarnival(this);
+        for (MapleCharacter chr : blue.getMembers())
+            chr.setCarnival(this);
+
+        this.schedule = TimerManager.getInstance().schedule(new Runnable() {
+            @Override
+            public void run() {
+                if (red.getTotalCP() > blue.getTotalCP()) {
+                    red.setWinner(true);
+                    blue.setWinner(false);
+                    red.displayMatchResult();
+                    blue.displayMatchResult();
+                } else if (blue.getTotalCP() > red.getTotalCP()) {
+                    red.setWinner(false);
+                    blue.setWinner(true);
+                    red.displayMatchResult();
+                    blue.displayMatchResult();
+                } else {
+                    red.setWinner(false);
+                    blue.setWinner(false);
+                    red.displayMatchResult();
+                    blue.displayMatchResult();
                 }
+                saveResults();
+                warpOut();
+            }
 
-            }, time);
+        }, time);
            /* if (room == 0) {
                 MapleData data = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Map.wz")).getData("Map/Map9" + (980000001 + (room * 100)) + ".img").getChildByPath("monsterCarnival");
                 if (data != null) {
@@ -107,68 +108,68 @@ public class MonsterCarnival {
                     }
                 }
             } */
-        }
+    }
 
-        public long getTimeLeft() {
-            return time - (System.currentTimeMillis() - timeStarted);
-        }
+    public long getTimeLeft() {
+        return time - (System.currentTimeMillis() - timeStarted);
+    }
 
-        public MonsterCarnivalParty getPartyRed() {
-            return red;
-        }
+    public MonsterCarnivalParty getPartyRed() {
+        return red;
+    }
 
-        public MonsterCarnivalParty getPartyBlue() {
+    public MonsterCarnivalParty getPartyBlue() {
+        return blue;
+    }
+
+    public MonsterCarnivalParty oppositeTeam(MonsterCarnivalParty team) {
+        if (team == red)
             return blue;
-        }
+        else
+            return red;
+    }
 
-        public MonsterCarnivalParty oppositeTeam(MonsterCarnivalParty team) {
-            if (team == red)
-                return blue;
-            else
-                return red;
-        }
+    public void playerLeft(MapleCharacter chr) {
+        map.broadcastMessage(chr, MaplePacketCreator.leaveCPQ(chr));
+    }
 
-        public void playerLeft(MapleCharacter chr) {
-            map.broadcastMessage(chr, MaplePacketCreator.leaveCPQ(chr));
-        }
+    private void warpOut() {
+        this.schedule = TimerManager.getInstance().schedule(new Runnable() {
+            @Override
+            public void run() {
+                red.warpOut();
+                blue.warpOut();
+            }
+        }, 12000);
+    }
 
-        private void warpOut() {
-            this.schedule = TimerManager.getInstance().schedule(new Runnable() {
-                @Override
-                public void run() {
-                    red.warpOut();
-                    blue.warpOut();
-                }
-            }, 12000);
-        }
+    public int getRoom() {
+        return room;
+    }
 
-        public int getRoom() {
-            return room;
+    public void saveResults() {
+        Connection con = null;
+        try {
+            con = DatabaseConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement("INSERT INTO carnivalresults VALUES (?,?,?,?)");
+            for (MapleCharacter chr : red.getMembers()) {
+                ps.setInt(1, chr.getId());
+                ps.setInt(2, chr.getCP());
+                ps.setInt(3, red.getTotalCP());
+                ps.setInt(4, red.isWinner() ? 1 : 0);
+                ps.execute();
+            }
+            for (MapleCharacter chr : blue.getMembers()) {
+                ps.setInt(1, chr.getId());
+                ps.setInt(2, chr.getCP());
+                ps.setInt(3, blue.getTotalCP());
+                ps.setInt(4, blue.isWinner() ? 1 : 0);
+                ps.execute();
+            }
+            ps.close();
+            con.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
-
-        public void saveResults() {
-                Connection con = null;
-                try {
-                    con = DatabaseConnection.getConnection();
-                    PreparedStatement ps = con.prepareStatement("INSERT INTO carnivalresults VALUES (?,?,?,?)");
-                    for (MapleCharacter chr : red.getMembers()) {
-                        ps.setInt(1, chr.getId());
-                        ps.setInt(2, chr.getCP());
-                        ps.setInt(3, red.getTotalCP());
-                        ps.setInt(4, red.isWinner() ? 1 : 0);
-                        ps.execute();
-                    }
-                    for (MapleCharacter chr : blue.getMembers()) {
-                        ps.setInt(1, chr.getId());
-                        ps.setInt(2, chr.getCP());
-                        ps.setInt(3, blue.getTotalCP());
-                        ps.setInt(4, blue.isWinner() ? 1 : 0);
-                        ps.execute();
-                    }
-                    ps.close();
-                    con.close();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-        }
+    }
 }

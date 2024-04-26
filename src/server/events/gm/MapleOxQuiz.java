@@ -23,9 +23,11 @@ package server.events.gm;
 
 import client.MapleCharacter;
 import tools.Randomizer;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
 import provider.MapleDataProvider;
 import provider.MapleDataProviderFactory;
 import provider.MapleDataTool;
@@ -34,7 +36,6 @@ import server.maps.MapleMap;
 import tools.MaplePacketCreator;
 
 /**
- *
  * @author FloppyDisk
  */
 public final class MapleOxQuiz {
@@ -73,8 +74,8 @@ public final class MapleOxQuiz {
             @Override
             public void run() {
                 map.broadcastMessage(MaplePacketCreator.showOXQuiz(round, question, true));
-				List<MapleCharacter> chars = new ArrayList<>(map.getCharacters());
-				
+                List<MapleCharacter> chars = new ArrayList<>(map.getCharacters());
+
                 for (MapleCharacter chr : chars) {
                     if (chr != null) // make sure they aren't null... maybe something can happen in 12 seconds.
                     {

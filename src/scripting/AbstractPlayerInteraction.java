@@ -1067,7 +1067,7 @@ public class AbstractPlayerInteraction {
                 }
         }
         
-        public static String getFirstJobStatRequirement(int jobType) {
+        public String getFirstJobStatRequirement(int jobType) {
                 switch(jobType) {
                     case 1:
                         return "STR " + 35;

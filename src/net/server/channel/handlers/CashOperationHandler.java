@@ -29,10 +29,12 @@ import client.inventory.Item;
 import client.inventory.MapleInventory;
 import client.inventory.MapleInventoryType;
 import constants.ItemConstants;
+
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+
 import net.AbstractMaplePacketHandler;
 import server.CashShop;
 import server.CashShop.CashItem;
@@ -51,12 +53,12 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         MapleCharacter chr = c.getPlayer();
         CashShop cs = chr.getCashShop();
-        
+
         if (!cs.isOpened()) {
             c.announce(MaplePacketCreator.enableActions());
             return;
         }
-        
+
         if (c.tryacquireClient()) {     // thanks Thora for finding out an exploit within cash operations
             try {
                 final int action = slea.readByte();
@@ -198,7 +200,7 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
                         }
                     }
                 } else if (action == 0x08) { // Increase Character Slots
-                    slea.skip(1); 
+                    slea.skip(1);
                     int cash = slea.readInt();
                     CashItem cItem = CashItemFactory.getItem(slea.readInt());
 
@@ -226,9 +228,9 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
                         cs.removeFromInventory(item);
                         c.announce(MaplePacketCreator.takeFromCashInventory(item));
 
-                        if(item instanceof Equip) {
+                        if (item instanceof Equip) {
                             Equip equip = (Equip) item;
-                            if(equip.getRingId() >= 0) {
+                            if (equip.getRingId() >= 0) {
                                 MapleRing ring = MapleRing.loadFromDb(equip.getRingId());
                                 chr.addPlayerRing(ring);
                             }
@@ -280,7 +282,7 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
                                 return;
                             }*/ //Gotta let them faggots marry too, hence why this is commented out <3 
 
-                            if(itemRing.toItem() instanceof Equip) {
+                            if (itemRing.toItem() instanceof Equip) {
                                 Equip eqp = (Equip) itemRing.toItem();
                                 Pair<Integer, Integer> rings = MapleRing.createRing(itemRing.getItemId(), chr, partner);
                                 eqp.setRingId(rings.getLeft());
@@ -295,7 +297,7 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
                                     ex.printStackTrace();
                                 }
                                 partner.showNote();
-                            }   
+                            }
                         }
                     } else {
                         c.announce(MaplePacketCreator.showCashShopMessage((byte) 0xC4));
@@ -346,7 +348,7 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
                             chr.dropMessage(5, "The partner you specified cannot be found. Please make sure your partner is online and in the same channel.");
                         } else {
                             // Need to check to make sure its actually an equip and the right SN...
-                            if(itemRing.toItem() instanceof Equip) {
+                            if (itemRing.toItem() instanceof Equip) {
                                 Equip eqp = (Equip) itemRing.toItem();
                                 Pair<Integer, Integer> rings = MapleRing.createRing(itemRing.getItemId(), chr, partner);
                                 eqp.setRingId(rings.getLeft());
@@ -388,7 +390,7 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
         cal.set(year, month - 1, day);
         return c.checkBirthDate(cal);
     }
-    
+
     private static boolean canBuy(MapleCharacter chr, CashItem item, int cash) {
         if (item != null && item.isOnSale() && item.getPrice() <= cash) {
             FilePrinter.print(FilePrinter.CASHITEM_BOUGHT, chr + " bought " + MapleItemInformationProvider.getInstance().getName(item.getItemId()) + " (SN " + item.getSN() + ") for " + item.getPrice());

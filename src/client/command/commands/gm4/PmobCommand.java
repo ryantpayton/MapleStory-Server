@@ -3,13 +3,16 @@ package client.command.commands.gm4;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
 import net.server.channel.Channel;
 import server.life.MapleLifeFactory;
 import server.maps.MapleMap;
 import client.command.Command;
 import client.MapleCharacter;
 import client.MapleClient;
+
 import java.awt.Point;
+
 import server.life.MapleMonster;
 import tools.DatabaseConnection;
 

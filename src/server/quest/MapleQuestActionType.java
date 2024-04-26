@@ -22,7 +22,6 @@
 package server.quest;
 
 /**
- *
  * @author Matze
  */
 public enum MapleQuestActionType {

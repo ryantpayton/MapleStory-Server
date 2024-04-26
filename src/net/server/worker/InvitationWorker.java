@@ -25,7 +25,7 @@ import net.server.coordinator.MapleInviteCoordinator;
  * @author Ronan
  */
 public class InvitationWorker implements Runnable {
-    
+
     @Override
     public void run() {
         MapleInviteCoordinator.runTimeoutSchedule();

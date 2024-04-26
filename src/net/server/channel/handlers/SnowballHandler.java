@@ -29,10 +29,9 @@ import server.maps.MapleMap;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
- *
  * @author kevintjuh93
  */
-public final class SnowballHandler extends AbstractMaplePacketHandler{
+public final class SnowballHandler extends AbstractMaplePacketHandler {
 
     public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         //D3 00 02 00 00 A5 01

@@ -42,7 +42,7 @@ public final class UseItemHandler extends AbstractMaplePacketHandler {
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         MapleCharacter chr = c.getPlayer();
-        
+
         if (!chr.isAlive()) {
             c.announce(MaplePacketCreator.enableActions());
             return;
@@ -58,29 +58,29 @@ public final class UseItemHandler extends AbstractMaplePacketHandler {
                 remove(c, slot);
                 return;
             } else if (itemId == 2050001) {
-		chr.dispelDebuff(MapleDisease.DARKNESS);
+                chr.dispelDebuff(MapleDisease.DARKNESS);
                 remove(c, slot);
                 return;
-	    } else if (itemId == 2050002) {
-		chr.dispelDebuff(MapleDisease.WEAKEN);
+            } else if (itemId == 2050002) {
+                chr.dispelDebuff(MapleDisease.WEAKEN);
                 chr.dispelDebuff(MapleDisease.SLOW);
                 remove(c, slot);
                 return;
             } else if (itemId == 2050003) {
                 chr.dispelDebuff(MapleDisease.SEAL);
-		chr.dispelDebuff(MapleDisease.CURSE);
+                chr.dispelDebuff(MapleDisease.CURSE);
                 remove(c, slot);
                 return;
             } else if (ItemConstants.isTownScroll(itemId)) {
                 int banMap = chr.getMapId();
                 int banSp = chr.getMap().findClosestPlayerSpawnpoint(chr.getPosition()).getId();
                 long banTime = currentServerTime();
-                
+
                 if (ii.getItemEffect(toUse.getItemId()).applyTo(chr)) {
-                    if(ServerConstants.USE_BANISHABLE_TOWN_SCROLL) {
+                    if (ServerConstants.USE_BANISHABLE_TOWN_SCROLL) {
                         chr.setBanishPlayerData(banMap, banSp, banTime);
                     }
-                    
+
                     remove(c, slot);
                 }
                 return;
@@ -92,14 +92,14 @@ public final class UseItemHandler extends AbstractMaplePacketHandler {
                 }
                 return;
             }
-            
+
             remove(c, slot);
-            
-            if(toUse.getItemId() != 2022153) {
+
+            if (toUse.getItemId() != 2022153) {
                 ii.getItemEffect(toUse.getItemId()).applyTo(chr);
             } else {
                 MapleStatEffect mse = ii.getItemEffect(toUse.getItemId());
-                for(MapleCharacter player : chr.getMap().getCharacters()) {
+                for (MapleCharacter player : chr.getMap().getCharacters()) {
                     mse.applyTo(player);
                 }
             }

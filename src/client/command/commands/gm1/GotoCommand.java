@@ -4,14 +4,18 @@ import client.MapleCharacter;
 import client.command.Command;
 import client.MapleClient;
 import constants.GameConstants;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+
 import server.MaplePortal;
 import server.maps.FieldLimit;
 import server.maps.MapleMap;
 import server.maps.MapleMiniDungeonInfo;
+
 import java.util.HashMap;
 import java.util.List;
+
 import org.javatuples.Quartet;
 
 public class GotoCommand extends Command {

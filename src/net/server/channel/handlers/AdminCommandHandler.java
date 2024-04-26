@@ -76,10 +76,10 @@ public final class AdminCommandHandler extends AbstractMaplePacketHandler {
                 c.getPlayer().setExp(slea.readInt());
                 break;
             case 0x03: // /ban <name>
-            	c.getPlayer().yellowMessage("Please use !ban <IGN> <Reason>");
-            	break;
+                c.getPlayer().yellowMessage("Please use !ban <IGN> <Reason>");
+                break;
             case 0x04: // /block <name> <duration (in days)> <HACK/BOT/AD/HARASS/CURSE/SCAM/MISCONDUCT/SELL/ICASH/TEMP/GM/IPROGRAM/MEGAPHONE>
-            	victim = slea.readMapleAsciiString();
+                victim = slea.readMapleAsciiString();
                 int type = slea.readByte(); //reason
                 int duration = slea.readInt();
                 String description = slea.readMapleAsciiString();

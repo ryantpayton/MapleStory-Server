@@ -20,6 +20,7 @@
 package server.loot;
 
 import client.MapleCharacter;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,11 +30,10 @@ import server.life.MonsterDropEntry;
 import server.quest.MapleQuest;
 
 /**
- *
  * @author Ronan
  */
 public class MapleLootManager {
-    
+
     private static boolean isRelevantDrop(MonsterDropEntry dropEntry, List<MapleCharacter> partyMembers, List<MapleLootInventory> partyInv) {
         int qStartAmount = 0, qCompleteAmount = 0;
         MapleQuest quest = MapleQuest.getInstance(dropEntry.questid);
@@ -41,11 +41,11 @@ public class MapleLootManager {
             qStartAmount = quest.getStartItemAmountNeeded(dropEntry.itemId);
             qCompleteAmount = quest.getCompleteItemAmountNeeded(dropEntry.itemId);
         }
-        
+
         boolean restricted = MapleItemInformationProvider.getInstance().isPickupRestricted(dropEntry.itemId);
         for (int i = 0; i < partyMembers.size(); i++) {
             MapleLootInventory chrInv = partyInv.get(i);
-            
+
             if (dropEntry.questid > 0) {
                 int qItemAmount, chrQuestStatus = partyMembers.get(i).getQuestStatus(dropEntry.questid);
                 if (chrQuestStatus == 0) {
@@ -55,11 +55,11 @@ public class MapleLootManager {
                 } else {
                     qItemAmount = qCompleteAmount;
                 }
-                
+
                 if (qItemAmount <= 0) {
                     continue;
                 }
-                
+
                 int qItemStatus = chrInv.hasItem(dropEntry.itemId, qItemAmount);
                 if (qItemStatus == 2) {
                     continue;
@@ -69,31 +69,31 @@ public class MapleLootManager {
             } else if (restricted && chrInv.hasItem(dropEntry.itemId, 1) > 0) {
                 continue;
             }
-            
+
             return true;
         }
-        
+
         return false;
     }
-    
+
     public static List<MonsterDropEntry> retrieveRelevantDrops(int monsterId, List<MapleCharacter> partyMembers) {
         List<MonsterDropEntry> loots = MapleMonsterInformationProvider.getInstance().retrieveEffectiveDrop(monsterId);
-        if(loots.isEmpty()) return loots;
-        
+        if (loots.isEmpty()) return loots;
+
         List<MapleLootInventory> partyInv = new LinkedList<>();
-        for(MapleCharacter chr : partyMembers) {
+        for (MapleCharacter chr : partyMembers) {
             MapleLootInventory lootInv = new MapleLootInventory(chr);
             partyInv.add(lootInv);
         }
-        
+
         List<MonsterDropEntry> effectiveLoot = new LinkedList<>();
-        for(MonsterDropEntry mde : loots) {
-            if(isRelevantDrop(mde, partyMembers, partyInv)) {
+        for (MonsterDropEntry mde : loots) {
+            if (isRelevantDrop(mde, partyMembers, partyInv)) {
                 effectiveLoot.add(mde);
             }
         }
-        
+
         return effectiveLoot;
     }
-    
+
 }

@@ -23,7 +23,6 @@
 package server.events.gm;
 
 /**
- *
  * @author kevintjuh93
  */
 public class MapleEvent {

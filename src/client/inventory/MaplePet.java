@@ -22,11 +22,13 @@
 package client.inventory;
 
 import constants.ExpTable;
+
 import java.awt.Point;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+
 import tools.DatabaseConnection;
 import server.MapleItemInformationProvider;
 import server.movement.AbsoluteLifeMovement;
@@ -34,12 +36,13 @@ import server.movement.LifeMovement;
 import server.movement.LifeMovementFragment;
 import client.MapleCharacter;
 import client.inventory.manipulator.MapleCashidGenerator;
+
 import java.sql.Connection;
+
 import tools.MaplePacketCreator;
 import tools.Pair;
 
 /**
- *
  * @author Matze
  */
 public class MaplePet extends Item {
@@ -53,10 +56,10 @@ public class MaplePet extends Item {
     private int stance;
     private boolean summoned;
     private int petFlag = 0;
-    
+
     public enum PetFlag {
         OWNER_SPEED(0x01);
-        
+
         private int i;
 
         private PetFlag(int i) {
@@ -97,30 +100,30 @@ public class MaplePet extends Item {
             return null;
         }
     }
-    
+
     public static void deleteFromDb(MapleCharacter owner, int petid) {
         try {
             Connection con = DatabaseConnection.getConnection();
-            
+
             PreparedStatement ps = con.prepareStatement("DELETE FROM pets WHERE `petid` = ?");
             ps.setInt(1, petid);
             ps.executeUpdate();
             ps.close();
-            
+
             ps = con.prepareStatement("DELETE FROM petignores WHERE `petid` = ?");  // thanks Vcoc for detecting petignores remaining after deletion
             ps.setInt(1, petid);
             ps.executeUpdate();
             ps.close();
-            
+
             con.close();
-            
+
             owner.resetExcluded(petid);
             MapleCashidGenerator.freeCashId(petid);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
-    
+
     public void saveToDb() {
         try {
             Connection con = DatabaseConnection.getConnection();
@@ -204,29 +207,29 @@ public class MaplePet extends Item {
     public byte getLevel() {
         return level;
     }
-    
+
     public void gainClosenessFullness(MapleCharacter owner, int incCloseness, int incFullness, int type) {
         byte slot = owner.getPetIndex(this);
         boolean enjoyed;
-        
+
         //will NOT increase pet's closeness if tried to feed pet with 100% fullness
         if (fullness < 100 || incFullness == 0) {   //incFullness == 0: command given
             int newFullness = fullness + incFullness;
             if (newFullness > 100) newFullness = 100;
             fullness = newFullness;
-            
+
             if (incCloseness > 0 && closeness < 30000) {
                 int newCloseness = closeness + incCloseness;
                 if (newCloseness > 30000) newCloseness = 30000;
-                
+
                 closeness = newCloseness;
-                while(newCloseness >= ExpTable.getClosenessNeededForLevel(level)) {
+                while (newCloseness >= ExpTable.getClosenessNeededForLevel(level)) {
                     level += 1;
                     owner.getClient().announce(MaplePacketCreator.showOwnPetLevelUp(slot));
                     owner.getMap().broadcastMessage(MaplePacketCreator.showPetLevelUp(owner, slot));
                 }
             }
-            
+
             enjoyed = true;
         } else {
             int newCloseness = closeness - 1;
@@ -236,13 +239,13 @@ public class MaplePet extends Item {
             if (level > 1 && newCloseness < ExpTable.getClosenessNeededForLevel(level - 1)) {
                 level -= 1;
             }
-            
+
             enjoyed = false;
         }
-        
+
         owner.getMap().broadcastMessage(MaplePacketCreator.petFoodResponse(owner.getId(), slot, enjoyed, false));
         saveToDb();
-        
+
         Item petz = owner.getInventory(MapleInventoryType.CASH).getItem(getPosition());
         if (petz != null)
             owner.forceUpdateItem(petz);
@@ -291,28 +294,28 @@ public class MaplePet extends Item {
     public void setSummoned(boolean yes) {
         this.summoned = yes;
     }
-    
+
     public int getPetFlag() {
         return this.petFlag;
     }
-    
+
     private void setPetFlag(int flag) {
         this.petFlag = flag;
     }
-    
+
     public void addPetFlag(MapleCharacter owner, PetFlag flag) {
         this.petFlag |= flag.getValue();
         saveToDb();
-        
+
         Item petz = owner.getInventory(MapleInventoryType.CASH).getItem(getPosition());
         if (petz != null)
             owner.forceUpdateItem(petz);
     }
-    
+
     public void removePetFlag(MapleCharacter owner, PetFlag flag) {
         this.petFlag &= 0xFFFFFFFF ^ flag.getValue();
         saveToDb();
-        
+
         Item petz = owner.getInventory(MapleInventoryType.CASH).getItem(getPosition());
         if (petz != null)
             owner.forceUpdateItem(petz);

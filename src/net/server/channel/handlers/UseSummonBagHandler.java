@@ -33,7 +33,6 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
- *
  * @author AngelSL
  */
 public final class UseSummonBagHandler extends AbstractMaplePacketHandler {

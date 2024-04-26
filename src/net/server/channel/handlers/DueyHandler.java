@@ -30,14 +30,14 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class DueyHandler extends AbstractMaplePacketHandler {
-    
+
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
-    	if (!ServerConstants.USE_DUEY){
+        if (!ServerConstants.USE_DUEY) {
             c.announce(MaplePacketCreator.enableActions());
             return;
-    	}
-            
+        }
+
         byte operation = slea.readByte();
         if (operation == DueyProcessor.Actions.TOSERVER_SEND_ITEM.getCode()) {
             byte inventId = slea.readByte();
@@ -45,15 +45,15 @@ public final class DueyHandler extends AbstractMaplePacketHandler {
             short amount = slea.readShort();
             int mesos = slea.readInt();
             String recipient = slea.readMapleAsciiString();
-            
+
             DueyProcessor.dueySendItem(c, inventId, itemPos, amount, mesos, recipient);
         } else if (operation == DueyProcessor.Actions.TOSERVER_REMOVE_PACKAGE.getCode()) {
             int packageid = slea.readInt();
-            
+
             DueyProcessor.dueyRemovePackage(c, packageid);
         } else if (operation == DueyProcessor.Actions.TOSERVER_CLAIM_PACKAGE.getCode()) {
             int packageid = slea.readInt();
-            
+
             DueyProcessor.dueyClaimPackage(c, packageid);
         }
     }

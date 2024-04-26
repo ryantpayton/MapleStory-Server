@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
+
 import tools.data.input.GenericSeekableLittleEndianAccessor;
 import tools.data.input.RandomAccessByteStream;
 import tools.data.input.SeekableLittleEndianAccessor;
@@ -35,7 +36,7 @@ public class WZIMGFile {
     private WZFileEntry file;
     private WZIMGEntry root;
     private boolean provideImages;
-    @SuppressWarnings ("unused")
+    @SuppressWarnings("unused")
     private boolean modernImg;
 
     public WZIMGFile(File wzfile, WZFileEntry file, boolean provideImages, boolean modernImg) throws IOException {

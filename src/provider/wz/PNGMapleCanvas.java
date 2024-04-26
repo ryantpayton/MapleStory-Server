@@ -31,6 +31,7 @@ import java.awt.image.SampleModel;
 import java.awt.image.WritableRaster;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
+
 import provider.MapleCanvas;
 
 public class PNGMapleCanvas implements MapleCanvas {
@@ -73,7 +74,7 @@ public class PNGMapleCanvas implements MapleCanvas {
         int maxWriteBuf = 2;
         int maxHeight = 3;
         byte[] writeBuf = new byte[maxWriteBuf];
-        @SuppressWarnings ("unused")
+        @SuppressWarnings("unused")
         byte[] rowPointers = new byte[maxHeight];
         switch (getFormat()) {
             case 1:

@@ -25,15 +25,14 @@ import server.maps.MapleMap;
 import tools.MaplePacketCreator;
 
 /**
- *
  * @author RonanLana
  */
 public class BuybackProcessor {
-    
+
     public static void processBuyback(MapleClient c) {
         MapleCharacter chr = c.getPlayer();
         boolean buyback;
-        
+
         c.lockClient();
         try {
             buyback = !chr.isAlive() && chr.couldBuyback();
@@ -43,7 +42,7 @@ public class BuybackProcessor {
 
         if (buyback) {
             String jobString;
-            switch(chr.getJobStyle()) {
+            switch (chr.getJobStyle()) {
                 case WARRIOR:
                     jobString = "warrior";
                     break;
@@ -71,7 +70,7 @@ public class BuybackProcessor {
 
             chr.healHpMp();
             chr.broadcastStance(chr.isFacingLeft() ? 5 : 4);
-            
+
             MapleMap map = chr.getMap();
             map.broadcastMessage(MaplePacketCreator.playSound("Buyback/" + jobString));
             map.broadcastMessage(MaplePacketCreator.earnTitleMessage(chr.getName() + " just bought back into the game!"));

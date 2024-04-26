@@ -36,7 +36,6 @@ import constants.ServerConstants;
 import tools.FilePrinter;
 
 /**
- *
  * @author Matze
  */
 public abstract class AbstractScriptManager {
@@ -68,9 +67,9 @@ public abstract class AbstractScriptManager {
                 c.setScriptEngine(path, engine);
             }
             try (FileReader fr = new FileReader(scriptFile)) {
-            	if (ServerConstants.JAVA_8){
-            		engine.eval("load('nashorn:mozilla_compat.js');" + System.lineSeparator());
-            	}
+                if (ServerConstants.JAVA_8) {
+                    engine.eval("load('nashorn:mozilla_compat.js');" + System.lineSeparator());
+                }
                 engine.eval(fr);
             } catch (final ScriptException | IOException t) {
                 FilePrinter.printError(FilePrinter.INVOCABLE + path.substring(12, path.length()), t, path);

@@ -25,12 +25,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import tools.Pair;
 import tools.DatabaseConnection;
 import client.inventory.manipulator.MapleCashidGenerator;
 
 /**
- *
  * @author Danny
  */
 public class MapleRing implements Comparable<MapleRing> {
@@ -74,38 +74,38 @@ public class MapleRing implements Comparable<MapleRing> {
             if (ring == null) {
                 return;
             }
-            
+
             Connection con = DatabaseConnection.getConnection();
-            
+
             PreparedStatement ps = con.prepareStatement("DELETE FROM rings WHERE id=?");
             ps.setInt(1, ring.getRingId());
             ps.addBatch();
-            
+
             ps.setInt(1, ring.getPartnerRingId());
             ps.addBatch();
-            
+
             ps.executeBatch();
             ps.close();
-            
+
             MapleCashidGenerator.freeCashId(ring.getRingId());
             MapleCashidGenerator.freeCashId(ring.getPartnerRingId());
-            
+
             ps = con.prepareStatement("UPDATE inventoryequipment SET ringid=-1 WHERE ringid=?");
             ps.setInt(1, ring.getRingId());
             ps.addBatch();
-            
+
             ps.setInt(1, ring.getPartnerRingId());
             ps.addBatch();
-            
+
             ps.executeBatch();
             ps.close();
-            
+
             con.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
-    
+
     public static Pair<Integer, Integer> createRing(int itemid, final MapleCharacter partner1, final MapleCharacter partner2) {
         try {
             if (partner1 == null) {
@@ -113,11 +113,11 @@ public class MapleRing implements Comparable<MapleRing> {
             } else if (partner2 == null) {
                 return new Pair<>(-2, -2);
             }
-            
+
             int[] ringID = new int[2];
             ringID[0] = MapleCashidGenerator.generateCashId();
             ringID[1] = MapleCashidGenerator.generateCashId();
-            
+
             Connection con = DatabaseConnection.getConnection();
             PreparedStatement ps = con.prepareStatement("INSERT INTO rings (id, itemid, partnerRingId, partnerChrId, partnername) VALUES (?, ?, ?, ?, ?)");
             ps.setInt(1, ringID[0]);

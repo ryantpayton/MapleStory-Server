@@ -34,10 +34,10 @@ public class MaplePartyCharacter {
     private boolean online;
     private MapleJob job;
     private MapleCharacter character;
-    
+
     public MaplePartyCharacter(MapleCharacter maplechar) {
         this.character = maplechar;
-    	this.name = maplechar.getName();
+        this.name = maplechar.getName();
         this.level = maplechar.getLevel();
         this.channel = maplechar.getClient().getChannel();
         this.world = maplechar.getWorld();
@@ -51,9 +51,9 @@ public class MaplePartyCharacter {
     public MaplePartyCharacter() {
         this.name = "";
     }
-    
+
     public MapleCharacter getPlayer() {
-    	return character;
+        return character;
     }
 
     public MapleJob getJob() {
@@ -71,7 +71,7 @@ public class MaplePartyCharacter {
     public void setChannel(int channel) {
         this.channel = channel;
     }
-    
+
     public boolean isLeader() {
         return getPlayer().isPartyLeader();
     }
@@ -103,11 +103,11 @@ public class MaplePartyCharacter {
     public int getJobId() {
         return jobid;
     }
-    
+
     public int getGuildId() {
         return character.getGuildId();
     }
-    
+
     @Override
     public int hashCode() {
         final int prime = 31;

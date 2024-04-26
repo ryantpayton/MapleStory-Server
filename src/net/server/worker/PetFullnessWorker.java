@@ -25,12 +25,12 @@ import net.server.world.World;
  * @author Ronan
  */
 public class PetFullnessWorker extends BaseWorker implements Runnable {
-    
+
     @Override
     public void run() {
         wserv.runPetSchedule();
     }
-    
+
     public PetFullnessWorker(World world) {
         super(world);
     }

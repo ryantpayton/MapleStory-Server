@@ -1,8 +1,10 @@
 package client.command;
 
 import client.MapleClient;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import org.javatuples.Quartet;
 
 public abstract class Command {

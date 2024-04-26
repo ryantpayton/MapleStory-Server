@@ -30,7 +30,7 @@ public enum MapleGuildResponse {
     NOT_FOUND_INVITE(0x2e),
     MANAGING_INVITE(0x36),
     DENIED_INVITE(0x37);
-    
+
     private int value;
 
     private MapleGuildResponse(int val) {

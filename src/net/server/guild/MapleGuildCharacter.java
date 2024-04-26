@@ -64,11 +64,11 @@ public class MapleGuildCharacter {
         this.guildid = _gid;
         this.allianceRank = _allianceRank;
     }
-    
+
     public void setCharacter(MapleCharacter ch) {
         this.character = ch;
     }
-    
+
     public MapleCharacter getCharacter() {
         return character;
     }
@@ -113,7 +113,7 @@ public class MapleGuildCharacter {
         guildid = gid;
         character.setGuildId(gid);
     }
-    
+
     public int getGuildRank() {
         return guildrank;
     }
@@ -121,16 +121,16 @@ public class MapleGuildCharacter {
     public void setOfflineGuildRank(int rank) {
         guildrank = rank;
     }
-    
+
     public void setGuildRank(int rank) {
         guildrank = rank;
         character.setGuildRank(rank);
     }
-    
+
     public int getAllianceRank() {
         return allianceRank;
     }
-    
+
     public void setAllianceRank(int rank) {
         allianceRank = rank;
         character.setAllianceRank(rank);

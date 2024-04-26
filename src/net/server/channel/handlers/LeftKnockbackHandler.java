@@ -28,12 +28,11 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
- *
  * @author kevintjuh93
  */
 public class LeftKnockbackHandler extends AbstractMaplePacketHandler {
-        public void handlePacket(SeekableLittleEndianAccessor slea, final MapleClient c) {
-            c.announce(MaplePacketCreator.leftKnockBack());
-            c.announce(MaplePacketCreator.enableActions());
-        }
+    public void handlePacket(SeekableLittleEndianAccessor slea, final MapleClient c) {
+        c.announce(MaplePacketCreator.leftKnockBack());
+        c.announce(MaplePacketCreator.enableActions());
+    }
 }

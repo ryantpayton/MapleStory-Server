@@ -33,7 +33,7 @@ public class MonsterStatusEffect {
     private Skill skill;
     private MobSkill mobskill;
     private boolean monsterSkill;
-    
+
     public MonsterStatusEffect(Map<MonsterStatus, Integer> stati, Skill skillId, MobSkill mobskill, boolean monsterSkill) {
         this.stati = new ConcurrentHashMap<>(stati);
         this.skill = skillId;

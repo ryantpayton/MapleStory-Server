@@ -29,10 +29,9 @@ public class BuddylistEntry {
     private boolean visible;
 
     /**
-     *
      * @param name
      * @param characterId
-     * @param channel should be -1 if the buddy is offline
+     * @param channel     should be -1 if the buddy is offline
      * @param visible
      */
     public BuddylistEntry(String name, String group, int characterId, int channel, boolean visible) {

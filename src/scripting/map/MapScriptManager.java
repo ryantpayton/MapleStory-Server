@@ -23,6 +23,7 @@ package scripting.map;
 
 import client.MapleClient;
 import constants.ServerConstants;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -35,16 +36,17 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+
 import tools.FilePrinter;
 
 public class MapScriptManager {
 
     private static MapScriptManager instance = new MapScriptManager();
-    
+
     public static MapScriptManager getInstance() {
         return instance;
     }
-    
+
     private Map<String, Invocable> scripts = new HashMap<>();
     private ScriptEngineFactory sef;
 
@@ -81,14 +83,14 @@ public class MapScriptManager {
         ScriptEngine se = sef.getScriptEngine();
         try {
             fr = new FileReader(scriptFile);
-            
+
             // java 8 support here thanks to Arufonsu
-            if (ServerConstants.JAVA_8){
-                    se.eval("load('nashorn:mozilla_compat.js');" + System.lineSeparator());
+            if (ServerConstants.JAVA_8) {
+                se.eval("load('nashorn:mozilla_compat.js');" + System.lineSeparator());
             }
-            
+
             ((Compilable) se).compile(fr).eval();
-            
+
             final Invocable script = ((Invocable) se);
             scripts.put(scriptName, script);
             script.invokeFunction("start", new MapScriptMethods(c));

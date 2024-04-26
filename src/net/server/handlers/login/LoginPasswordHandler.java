@@ -35,12 +35,14 @@ import tools.HexTool;
 import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 import client.MapleClient;
+
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
 import org.apache.mina.core.session.IoSession;
 
 public final class LoginPasswordHandler implements MaplePacketHandler {
@@ -59,7 +61,7 @@ public final class LoginPasswordHandler implements MaplePacketHandler {
     private static String getRemoteIp(IoSession session) {
         return ((InetSocketAddress) session.getRemoteAddress()).getAddress().getHostAddress();
     }
-    
+
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         String remoteHost = getRemoteIp(c.getSession());
@@ -67,11 +69,11 @@ public final class LoginPasswordHandler implements MaplePacketHandler {
             c.announce(MaplePacketCreator.getLoginFailed(13));   // cannot login as localhost if it's not a test server
             return;
         }
-        
+
         String login = slea.readMapleAsciiString();
         String pwd = slea.readMapleAsciiString();
         c.setAccountName(login);
-        
+
         slea.skip(6);   // localhost masked the initial part with zeroes...
         byte[] hwidNibbles = slea.read(4);
         int loginok = c.login(login, pwd, HexTool.toCompressedString(hwidNibbles));
@@ -88,7 +90,7 @@ public final class LoginPasswordHandler implements MaplePacketHandler {
                 ps.setString(3, "2018-06-20"); //Jayd's idea: was added to solve the MySQL 5.7 strict checking (birthday)
                 ps.setString(4, "2018-06-20"); //Jayd's idea: was added to solve the MySQL 5.7 strict checking (tempban)
                 ps.executeUpdate();
-                
+
                 ResultSet rs = ps.getGeneratedKeys();
                 rs.next();
                 c.setAccID(rs.getInt(1));
@@ -142,7 +144,7 @@ public final class LoginPasswordHandler implements MaplePacketHandler {
         }
     }
 
-    private static void login(MapleClient c){
+    private static void login(MapleClient c) {
         c.announce(MaplePacketCreator.getAuthSuccess(c));//why the fk did I do c.getAccountName()?
         Server.getInstance().registerLoginState(c);
     }

@@ -33,57 +33,55 @@ import client.MapleCharacter;
 import client.MapleQuestStatus;
 
 /**
- *
  * @author Tyler (Twdtwd)
  */
 public class MobRequirement extends MapleQuestRequirement {
-	Map<Integer, Integer> mobs = new HashMap<>();
-	private int questID;
-	
-	public MobRequirement(MapleQuest quest, MapleData data) {
-		super(MapleQuestRequirementType.MOB);
-		processData(data);
-		questID = quest.getId();
-	}
-	
-	/**
-	 * 
-	 * @param data 
-	 */
-	@Override
-	public void processData(MapleData data) {
-		for (MapleData questEntry : data.getChildren()) {
-			int mobID = MapleDataTool.getInt(questEntry.getChildByPath("id"));
-			int countReq = MapleDataTool.getInt(questEntry.getChildByPath("count"));
-			mobs.put(mobID, countReq);
-		}
-	}
-	
-	
-	@Override
-	public boolean check(MapleCharacter chr, Integer npcid) {
-		MapleQuestStatus status = chr.getQuest(MapleQuest.getInstance(questID));
-		for(Integer mobID : mobs.keySet()) {
-			int countReq = mobs.get(mobID);
-			int progress;
-			
-			try {
-				progress = Integer.parseInt(status.getProgress(mobID));
-			} catch (NumberFormatException ex) {
-				FilePrinter.printError(FilePrinter.EXCEPTION_CAUGHT, ex, "Mob: " + mobID + " Quest: " + questID + "CID: " + chr.getId() + " Progress: " + status.getProgress(mobID));
-				return false;
-			}
-			
-			if(progress < countReq)
-				return false;
-		}
-		return true;
-	}
-	
-	public int getRequiredMobCount(int mobid) {
-		if(mobs.containsKey(mobid)) {
-			return mobs.get(mobid);
-		}
-		return 0;
-	}
+    Map<Integer, Integer> mobs = new HashMap<>();
+    private int questID;
+
+    public MobRequirement(MapleQuest quest, MapleData data) {
+        super(MapleQuestRequirementType.MOB);
+        processData(data);
+        questID = quest.getId();
+    }
+
+    /**
+     * @param data
+     */
+    @Override
+    public void processData(MapleData data) {
+        for (MapleData questEntry : data.getChildren()) {
+            int mobID = MapleDataTool.getInt(questEntry.getChildByPath("id"));
+            int countReq = MapleDataTool.getInt(questEntry.getChildByPath("count"));
+            mobs.put(mobID, countReq);
+        }
+    }
+
+
+    @Override
+    public boolean check(MapleCharacter chr, Integer npcid) {
+        MapleQuestStatus status = chr.getQuest(MapleQuest.getInstance(questID));
+        for (Integer mobID : mobs.keySet()) {
+            int countReq = mobs.get(mobID);
+            int progress;
+
+            try {
+                progress = Integer.parseInt(status.getProgress(mobID));
+            } catch (NumberFormatException ex) {
+                FilePrinter.printError(FilePrinter.EXCEPTION_CAUGHT, ex, "Mob: " + mobID + " Quest: " + questID + "CID: " + chr.getId() + " Progress: " + status.getProgress(mobID));
+                return false;
+            }
+
+            if (progress < countReq)
+                return false;
+        }
+        return true;
+    }
+
+    public int getRequiredMobCount(int mobid) {
+        if (mobs.containsKey(mobid)) {
+            return mobs.get(mobid);
+        }
+        return 0;
+    }
 }

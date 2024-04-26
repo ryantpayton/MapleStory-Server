@@ -26,11 +26,10 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
- *
  * @author Ronan
  */
 public final class TransferNameHandler extends AbstractMaplePacketHandler {
-    
+
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         slea.readInt(); //cid
@@ -40,7 +39,7 @@ public final class TransferNameHandler extends AbstractMaplePacketHandler {
             c.announce(MaplePacketCreator.enableActions());
             return;
         }
-        
+
         c.announce(MaplePacketCreator.sendNameTransferRules(4));
     }
 }

@@ -30,7 +30,6 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
- *
  * @author Matze
  */
 public final class DoorHandler extends AbstractMaplePacketHandler {
@@ -38,13 +37,13 @@ public final class DoorHandler extends AbstractMaplePacketHandler {
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         int ownerid = slea.readInt();
         slea.readByte(); // specifies if backwarp or not, 1 town to target, 0 target to town
-        
+
         MapleCharacter chr = c.getPlayer();
         if (chr.isChangingMaps() || chr.isBanned()) {
             c.announce(MaplePacketCreator.enableActions());
             return;
         }
-        
+
         for (MapleMapObject obj : chr.getMap().getMapObjects()) {
             if (obj instanceof MapleDoorObject) {
                 MapleDoorObject door = (MapleDoorObject) obj;
@@ -54,7 +53,7 @@ public final class DoorHandler extends AbstractMaplePacketHandler {
                 }
             }
         }
-        
+
         c.announce(MaplePacketCreator.blockedMessage(6));
         c.announce(MaplePacketCreator.enableActions());
     }

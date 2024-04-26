@@ -3,14 +3,17 @@ package client.command.commands.gm4;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
 import net.server.channel.Channel;
 import client.command.Command;
 import client.MapleCharacter;
 import client.MapleClient;
+
 import java.awt.Point;
 import java.sql.ResultSet;
 import java.util.LinkedList;
 import java.util.List;
+
 import server.maps.MapleMap;
 import tools.DatabaseConnection;
 import tools.Pair;

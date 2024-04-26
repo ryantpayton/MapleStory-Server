@@ -39,17 +39,17 @@ public class MaplePacketDecoder extends CumulativeProtocolDecoder {
     @Override
     protected boolean doDecode(IoSession session, IoBuffer in, ProtocolDecoderOutput out) throws Exception {
         final MapleClient client = (MapleClient) session.getAttribute(MapleClient.CLIENT_KEY);
-        if(client == null) {
+        if (client == null) {
             MapleSessionCoordinator.getInstance().closeSession(session, true);
             return false;
         }
-        
+
         DecoderState decoderState = (DecoderState) session.getAttribute(DECODER_STATE_KEY);
         if (decoderState == null) {
             decoderState = new DecoderState();
             session.setAttribute(DECODER_STATE_KEY, decoderState);
         }
-        
+
         MapleAESOFB rcvdCrypto = client.getReceiveCrypto();
         if (in.remaining() >= 4 && decoderState.packetlength == -1) {
             int packetHeader = in.getInt();

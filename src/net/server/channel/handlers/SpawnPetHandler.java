@@ -27,14 +27,14 @@ import net.AbstractMaplePacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class SpawnPetHandler extends AbstractMaplePacketHandler {
-    
+
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         slea.readInt();
         byte slot = slea.readByte();
         slea.readByte();
         boolean lead = slea.readByte() == 1;
-        
+
         SpawnPetProcessor.processSpawnPet(c, slot, lead);
     }
 }

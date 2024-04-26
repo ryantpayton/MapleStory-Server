@@ -3,9 +3,11 @@ package client.command.commands.gm0;
 import client.MapleCharacter;
 import client.command.Command;
 import client.MapleClient;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import net.server.Server;
 import org.javatuples.Quartet;
 import tools.FilePrinter;
@@ -28,11 +30,11 @@ public class GmCommand extends Command {
     @Override
     public void execute(MapleClient c, String[] params) {
         String[] tips = {
-            "Please only use @gm in emergencies or to report somebody.",
-            "To report a bug or make a suggestion, use the forum.",
-            "Please do not use @gm to ask if a GM is online.",
-            "Do not ask if you can receive help, just state your issue.",
-            "Do not say 'I have a bug to report', just state it."
+                "Please only use @gm in emergencies or to report somebody.",
+                "To report a bug or make a suggestion, use the forum.",
+                "Please do not use @gm to ask if a GM is online.",
+                "Do not ask if you can receive help, just state your issue.",
+                "Do not say 'I have a bug to report', just state it."
         };
 
         MapleCharacter player = c.getPlayer();

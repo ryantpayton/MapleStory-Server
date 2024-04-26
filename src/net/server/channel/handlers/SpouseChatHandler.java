@@ -34,7 +34,7 @@ public final class SpouseChatHandler extends AbstractMaplePacketHandler {
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         slea.readMapleAsciiString();//recipient
         String msg = slea.readMapleAsciiString();
-        
+
         int partnerId = c.getPlayer().getPartnerId();
         if (partnerId > 0) { // yay marriage
             MapleCharacter spouse = c.getWorldServer().getPlayerStorage().getCharacterById(partnerId);

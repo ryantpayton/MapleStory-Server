@@ -5,9 +5,11 @@ import client.SkillFactory;
 import client.command.Command;
 import client.MapleClient;
 import client.MapleCharacter;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.javatuples.Quartet;
 
 public class BuffCommand extends Command {

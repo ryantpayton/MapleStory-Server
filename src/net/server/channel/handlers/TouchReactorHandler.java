@@ -28,11 +28,10 @@ import server.maps.MapleReactor;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
- *
  * @author Generic
  */
 public final class TouchReactorHandler extends AbstractMaplePacketHandler {
-    
+
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         int oid = slea.readInt();
