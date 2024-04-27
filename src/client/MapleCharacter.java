@@ -9097,7 +9097,45 @@ public class MapleCharacter extends AbstractMapleCharacterObject {
         if (slots <= 128) {
             inventory[type].setSlotLimit(slots);
 
-            this.saveCharToDB();
+            synchronized (this) {
+                effLock.lock();
+                statWlock.lock();
+                Connection con = null;
+
+                try {
+                    con = DatabaseConnection.getConnection();
+                    con.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+                    con.setAutoCommit(false);
+
+                    PreparedStatement ps;
+                    ps = con.prepareStatement("UPDATE CHARACTERS SET ? = ? WHERE id = ?");
+                    String invtype = "";
+                    switch (type) {
+                        case 1:
+                            invtype = "equipslots";
+                            break;
+                        case 2:
+                            invtype = "useslots";
+                            break;
+                        case 3:
+                            invtype = "setupslots";
+                            break;
+                        case 4:
+                            invtype = "etcslots";
+                            break;
+                    }
+                    ps.setString(1, invtype);
+                    ps.setInt(2, slots);
+                    ps.setInt(3, id);
+                    ps.executeUpdate();
+                    ps.close();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                } finally {
+                    effLock.unlock();
+                    statWlock.unlock();
+                }
+            }
 
             if (update)
                 client.announce(MaplePacketCreator.updateInventorySlotLimit(type, slots));
